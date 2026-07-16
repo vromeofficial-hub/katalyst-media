@@ -1,0 +1,65 @@
+.campaign-structure {
+  position: relative;
+  border-radius: 20px;
+  padding: 2px;
+  overflow: hidden;
+  background: rgba(198, 255, 0, 0.08);
+}
+
+.campaign-structure__glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.campaign-structure__neon {
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    transparent 300deg,
+    rgba(198, 255, 0, 0.05) 312deg,
+    rgba(198, 255, 0, 0.35) 328deg,
+    rgba(198, 255, 0, 0.85) 340deg,
+    #c6ff00 348deg,
+    #f3ffc2 352deg,
+    #c6ff00 355deg,
+    rgba(198, 255, 0, 0.4) 358deg,
+    transparent 360deg
+  );
+  animation: campaign-neon-orbit 6s linear infinite;
+  will-change: transform;
+}
+
+.campaign-structure__panel {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #080809;
+  padding: 1.25rem;
+}
+
+.campaign-structure__panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(198, 255, 0, 0.1);
+  z-index: 2;
+}
+
+@keyframes campaign-neon-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

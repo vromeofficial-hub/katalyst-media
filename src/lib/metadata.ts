@@ -1,0 +1,53 @@
+import type { Metadata } from "next";
+import { company } from "@/content/company";
+
+const siteUrl = company.url;
+
+export function createMetadata({
+  title,
+  description,
+  path = "/",
+  type = "website",
+}: {
+  title: string;
+  description: string;
+  path?: string;
+  type?: "website" | "article";
+}): Metadata {
+  const url = `${siteUrl}${path}`;
+  const absoluteTitle =
+    title === company.name || title === company.pageTitle
+      ? company.pageTitle
+      : `${title} | ${company.name}`;
+
+  return {
+    title: absoluteTitle,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: absoluteTitle,
+      description,
+      url,
+      siteName: company.name,
+      type,
+      locale: "en_GB",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: absoluteTitle,
+      description,
+    },
+  };
+}
+
+export const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: company.name,
+  url: siteUrl,
+  description: company.description,
+  email: company.email,
+  sameAs: [],
+};
