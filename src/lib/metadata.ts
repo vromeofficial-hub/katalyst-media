@@ -48,6 +48,6 @@ export const organizationJsonLd = {
   name: company.name,
   url: siteUrl,
   description: company.description,
-  email: company.email,
+  ...(company.email ? { email: company.email } : {}),
   sameAs: [],
 };

@@ -1,6 +1,6 @@
 import { Container } from "@/components/layout/Container";
 import { PageHero } from "@/components/ui/PageHero";
-import { company } from "@/content/company";
+import { company, hasPublicEmail } from "@/content/company";
 import { createMetadata } from "@/lib/metadata";
 
 export const metadata = createMetadata({
@@ -57,13 +57,19 @@ export default function TermsPage() {
           <div>
             <h2 className="font-display text-2xl font-semibold text-off-white">Contact</h2>
             <p className="mt-3 leading-relaxed">
-              Questions about these terms can be sent to{" "}
-              <a
-                href={`mailto:${company.email}`}
-                className="text-off-white underline underline-offset-4"
-              >
-                {company.email}
-              </a>
+              Questions about these terms can be sent to {company.name}
+              {hasPublicEmail() ? (
+                <>
+                  {" "}
+                  at{" "}
+                  <a
+                    href={`mailto:${company.email}`}
+                    className="text-off-white underline underline-offset-4"
+                  >
+                    {company.email}
+                  </a>
+                </>
+              ) : null}
               .
             </p>
           </div>

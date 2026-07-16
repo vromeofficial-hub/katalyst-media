@@ -1,6 +1,6 @@
 import { Container } from "@/components/layout/Container";
 import { PageHero } from "@/components/ui/PageHero";
-import { company } from "@/content/company";
+import { company, hasPublicEmail } from "@/content/company";
 import { createMetadata } from "@/lib/metadata";
 
 export const metadata = createMetadata({
@@ -22,13 +22,19 @@ export default function PrivacyPage() {
           <div>
             <h2 className="font-display text-2xl font-semibold text-off-white">Who we are</h2>
             <p className="mt-3 leading-relaxed">
-              {company.name} operates this website and can be contacted at{" "}
-              <a
-                href={`mailto:${company.email}`}
-                className="text-off-white underline underline-offset-4"
-              >
-                {company.email}
-              </a>
+              {company.name} operates this website
+              {hasPublicEmail() ? (
+                <>
+                  {" "}
+                  and can be contacted at{" "}
+                  <a
+                    href={`mailto:${company.email}`}
+                    className="text-off-white underline underline-offset-4"
+                  >
+                    {company.email}
+                  </a>
+                </>
+              ) : null}
               . We help artists promote music through coordinated creator campaigns.
             </p>
           </div>
@@ -63,7 +69,7 @@ export default function PrivacyPage() {
             <h2 className="font-display text-2xl font-semibold text-off-white">Your rights</h2>
             <p className="mt-3 leading-relaxed">
               Depending on applicable law, you may request access to, correction of, or deletion of
-              personal information we hold about you. Contact us using the email above to make a request.
+              personal information we hold about you. Contact {company.name} to make a request.
             </p>
           </div>
           <div>

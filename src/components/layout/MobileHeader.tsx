@@ -6,7 +6,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { SectionNavLink } from "@/components/ui/SectionNavLink";
-import { company } from "@/content/company";
+import { company, hasPublicEmail } from "@/content/company";
 import { primaryNav } from "@/content/navigation";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { cn } from "@/lib/utils";
@@ -145,12 +145,16 @@ export function MobileHeader() {
 
             <div className="mt-6 border-t border-border-dark pt-6">
               <p className="label-caps text-muted-grey">Contact</p>
-              <a
-                href={`mailto:${company.email}`}
-                className="mt-2 block text-sm text-off-white underline-offset-4 hover:underline"
-              >
-                {company.email}
-              </a>
+              {hasPublicEmail() ? (
+                <a
+                  href={`mailto:${company.email}`}
+                  className="mt-2 block text-sm text-off-white underline-offset-4 hover:underline"
+                >
+                  {company.email}
+                </a>
+              ) : (
+                <p className="mt-2 text-sm text-muted-grey">—</p>
+              )}
             </div>
           </div>
         </div>

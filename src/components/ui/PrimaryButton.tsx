@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { company, getMailtoHref } from "@/content/company";
+import { company, getMailtoHref, hasPublicEmail } from "@/content/company";
 
 type ButtonBaseProps = {
   children: React.ReactNode;
@@ -98,6 +98,8 @@ export function EmailKatalystButton({
   label?: string;
   onClick?: () => void;
 }) {
+  if (!hasPublicEmail()) return null;
+
   return (
     <PrimaryButton href={getMailtoHref()} className={className} onClick={onClick}>
       {label}
@@ -106,6 +108,8 @@ export function EmailKatalystButton({
 }
 
 export function EmailAddressLink({ className }: { className?: string }) {
+  if (!hasPublicEmail()) return null;
+
   return (
     <a
       href={getMailtoHref()}

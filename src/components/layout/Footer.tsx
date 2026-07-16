@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { Wordmark } from "@/components/ui/Wordmark";
-import { company } from "@/content/company";
+import { company, hasPublicEmail } from "@/content/company";
 import { legalNav } from "@/content/navigation";
 
 export function Footer() {
@@ -13,12 +13,14 @@ export function Footer() {
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <Wordmark />
-            <a
-              href={`mailto:${company.email}`}
-              className="mt-4 block text-sm text-soft-grey underline-offset-4 hover:text-acid-lime hover:underline"
-            >
-              {company.email}
-            </a>
+            {hasPublicEmail() ? (
+              <a
+                href={`mailto:${company.email}`}
+                className="mt-4 block text-sm text-soft-grey underline-offset-4 hover:text-acid-lime hover:underline"
+              >
+                {company.email}
+              </a>
+            ) : null}
           </div>
           <div className="flex flex-col gap-4 sm:items-end">
             <ul className="flex flex-wrap gap-5">

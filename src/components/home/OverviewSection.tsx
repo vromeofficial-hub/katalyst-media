@@ -6,7 +6,7 @@ import { CampaignStructureVisual } from "@/components/brand/CampaignStructureVis
 import { Container } from "@/components/layout/Container";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
-import { getMailtoHref } from "@/content/company";
+import { getMailtoHref, hasPublicEmail } from "@/content/company";
 
 export function OverviewSection() {
   const reduceMotion = useReducedMotion();
@@ -62,7 +62,11 @@ export function OverviewSection() {
             transition={{ duration: 0.45, delay: 0.22 }}
           >
             <PrimaryButton href="#process">See how it works</PrimaryButton>
-            <SecondaryButton href={getMailtoHref()}>Email Katalyst Media</SecondaryButton>
+            {hasPublicEmail() ? (
+              <SecondaryButton href={getMailtoHref()}>Email Katalyst Media</SecondaryButton>
+            ) : (
+              <SecondaryButton href="#contact">Get in touch</SecondaryButton>
+            )}
           </motion.div>
         </div>
 
