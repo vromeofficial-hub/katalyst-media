@@ -12,7 +12,7 @@ export const company = {
   focusLabel: "Current focus",
   email: "",
   location: "United Kingdom",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://katalystmedia.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.katalystmedia.xyz",
   pageTitle: "Katalyst Media | Music Promotion Through Creator Campaigns",
   foundingYear: 2024,
 } as const;
