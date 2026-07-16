@@ -1,6 +1,7 @@
 import { Container } from "@/components/layout/Container";
 import { EmailAddressLink, EmailKatalystButton } from "@/components/ui/PrimaryButton";
 import { Reveal } from "@/components/ui/Reveal";
+import { hasPublicEmail } from "@/content/company";
 import { contactCopy } from "@/content/contact";
 
 export function ContactSection() {
@@ -17,8 +18,14 @@ export function ContactSection() {
             </h2>
             <p className="mt-4 text-soft-grey">{contactCopy.description}</p>
             <div className="mt-7 flex flex-col gap-3">
-              <EmailKatalystButton label={contactCopy.buttonLabel} />
-              <EmailAddressLink />
+              {hasPublicEmail() ? (
+                <>
+                  <EmailKatalystButton label={contactCopy.buttonLabel} />
+                  <EmailAddressLink />
+                </>
+              ) : (
+                <p className="label-caps text-acid-lime">{contactCopy.pendingLabel}</p>
+              )}
             </div>
           </div>
         </Reveal>

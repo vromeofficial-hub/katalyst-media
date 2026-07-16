@@ -65,7 +65,7 @@ export function OverviewSection() {
             {hasPublicEmail() ? (
               <SecondaryButton href={getMailtoHref()}>Email Katalyst Media</SecondaryButton>
             ) : (
-              <SecondaryButton href="#contact">Get in touch</SecondaryButton>
+              <SecondaryButton href="#contact">In Progress</SecondaryButton>
             )}
           </motion.div>
         </div>

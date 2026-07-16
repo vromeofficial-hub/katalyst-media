@@ -68,7 +68,7 @@ export function Sidebar() {
               {company.email}
             </a>
           ) : (
-            <p className="mt-2 text-sm text-muted-grey">—</p>
+            <p className="mt-2 text-sm text-acid-lime">In Progress</p>
           )}
         </div>
       </div>

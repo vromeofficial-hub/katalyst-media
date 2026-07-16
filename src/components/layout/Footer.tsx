@@ -20,7 +20,9 @@ export function Footer() {
               >
                 {company.email}
               </a>
-            ) : null}
+            ) : (
+              <p className="mt-4 text-sm text-acid-lime">In Progress</p>
+            )}
           </div>
           <div className="flex flex-col gap-4 sm:items-end">
             <ul className="flex flex-wrap gap-5">
