@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   }),
   metadataBase: new URL(company.url),
   icons: {
-    icon: "/favicon.svg",
+    icon: [{ url: "/icon.png", sizes: "48x48", type: "image/png" }],
   },
 };
 
