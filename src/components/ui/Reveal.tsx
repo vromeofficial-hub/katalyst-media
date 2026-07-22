@@ -10,24 +10,24 @@ type RevealProps = {
 };
 
 /**
- * Scroll reveal. Only disables motion when reduced-motion is explicitly on.
- * (Treating unresolved `null` as “allow motion” so animations actually run.)
+ * Scroll reveal that never leaves content stuck invisible.
+ * Motion only runs when reduced-motion is explicitly off.
  */
 export function Reveal({ children, className, delay = 0 }: RevealProps) {
   const reduceMotion = useReducedMotion();
 
-  if (reduceMotion === true) {
+  if (reduceMotion !== false) {
     return <div className={className}>{children}</div>;
   }
 
   return (
     <motion.div
       className={cn(className)}
-      initial={{ opacity: 0, y: 14 }}
+      initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15 }}
+      viewport={{ once: true, amount: 0.05, margin: "80px 0px" }}
       transition={{
-        duration: 0.5,
+        duration: 0.45,
         delay,
         ease: [0.22, 1, 0.36, 1],
       }}

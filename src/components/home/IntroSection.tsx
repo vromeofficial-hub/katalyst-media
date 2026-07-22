@@ -46,14 +46,15 @@ export function IntroSection() {
                 index === introCopy.points.length - 1;
 
               return (
-                <Reveal key={point.title} delay={index * 0.04}>
-                  <li
-                    className={cn(
-                      "h-full",
-                      isLastOdd &&
-                        "sm:col-span-2 sm:mx-auto sm:w-full sm:max-w-md lg:col-span-1 lg:mx-0 lg:max-w-none",
-                    )}
-                  >
+                <li
+                  key={point.title}
+                  className={cn(
+                    "h-full",
+                    isLastOdd &&
+                      "sm:col-span-2 sm:mx-auto sm:w-full sm:max-w-md lg:col-span-1 lg:mx-0 lg:max-w-none",
+                  )}
+                >
+                  <Reveal className="h-full" delay={index * 0.04}>
                     <article className="group flex h-full flex-col rounded-[18px] border border-border-dark bg-carbon p-6 transition-colors duration-200 hover:border-lime-border hover:bg-lime-soft/25">
                       <div className="flex items-center justify-between gap-3">
                         <span className="flex size-12 items-center justify-center rounded-full border border-lime-border bg-deep-black text-acid-lime transition-colors duration-200 group-hover:border-acid-lime group-hover:bg-lime-soft">
@@ -71,8 +72,8 @@ export function IntroSection() {
                         {point.description}
                       </p>
                     </article>
-                  </li>
-                </Reveal>
+                  </Reveal>
+                </li>
               );
             })}
           </ul>

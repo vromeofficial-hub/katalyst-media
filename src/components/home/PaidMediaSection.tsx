@@ -1,7 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
 import { Container } from "@/components/layout/Container";
 import { EqualizerWave } from "@/components/ui/EqualizerWave";
 import { Reveal } from "@/components/ui/Reveal";
@@ -10,23 +8,6 @@ import { cn } from "@/lib/utils";
 import "./paid-media.css";
 
 export function PaidMediaSection() {
-  const reduceMotion = useReducedMotion();
-  const shouldAnimate = reduceMotion !== true;
-  const [cycleIndex, setCycleIndex] = useState(0);
-  const activeIndex = shouldAnimate
-    ? cycleIndex
-    : paidMediaCopy.stages.length - 1;
-
-  useEffect(() => {
-    if (!shouldAnimate) return;
-
-    const timer = window.setInterval(() => {
-      setCycleIndex((current) => (current + 1) % paidMediaCopy.stages.length);
-    }, 2400);
-
-    return () => window.clearInterval(timer);
-  }, [shouldAnimate]);
-
   return (
     <section
       id="paid-media"
@@ -83,30 +64,22 @@ export function PaidMediaSection() {
 
                 <ol className="relative space-y-2">
                   {paidMediaCopy.stages.map((stage, index) => {
-                    const isActive = index === activeIndex;
+                    const isLast = index === paidMediaCopy.stages.length - 1;
 
                     return (
-                      <motion.li
+                      <li
                         key={stage.number}
-                        initial={shouldAnimate ? { opacity: 0, x: 12 } : false}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true, amount: 0.4 }}
-                        transition={{
-                          duration: 0.4,
-                          delay: shouldAnimate ? index * 0.05 : 0,
-                          ease: [0.22, 1, 0.36, 1],
-                        }}
                         className={cn(
-                          "group relative grid grid-cols-[auto_1fr] items-center gap-4 rounded-[12px] border px-3.5 py-3.5 transition-colors duration-300 sm:gap-5 sm:px-4 sm:py-4",
-                          isActive
+                          "group relative grid grid-cols-[auto_1fr] items-center gap-4 rounded-[12px] border px-3.5 py-3.5 transition-colors duration-200 sm:gap-5 sm:px-4 sm:py-4",
+                          isLast
                             ? "border-lime-border bg-lime-soft"
                             : "border-border-dark bg-graphite/70 hover:border-lime-border/50 hover:bg-elevated/60",
                         )}
                       >
                         <span
                           className={cn(
-                            "flex size-10 shrink-0 items-center justify-center rounded-[10px] font-sans text-xs tabular-nums tracking-[0.08em] transition-colors duration-300",
-                            isActive
+                            "flex size-10 shrink-0 items-center justify-center rounded-[10px] font-sans text-xs tabular-nums tracking-[0.08em]",
+                            isLast
                               ? "bg-acid-lime text-carbon"
                               : "border border-lime-border/60 bg-deep-black text-acid-lime",
                           )}
@@ -120,13 +93,13 @@ export function PaidMediaSection() {
                           </h3>
                           <span
                             className={cn(
-                              "hidden h-1.5 w-1.5 shrink-0 rounded-full transition-colors duration-300 sm:block",
-                              isActive ? "bg-acid-lime" : "bg-soft-grey/40",
+                              "hidden h-1.5 w-1.5 shrink-0 rounded-full sm:block",
+                              isLast ? "bg-acid-lime" : "bg-soft-grey/40",
                             )}
                             aria-hidden="true"
                           />
                         </div>
-                      </motion.li>
+                      </li>
                     );
                   })}
                 </ol>

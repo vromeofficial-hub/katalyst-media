@@ -10,12 +10,14 @@ export function ProcessSection() {
     >
       <Container>
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
-          <Reveal className="lg:col-span-4 lg:sticky lg:top-10 lg:self-start">
-            <p className="label-caps text-lime-on-light">{processIntro.eyebrow}</p>
-            <h2 className="mt-3 max-w-sm font-display text-[length:var(--text-h2)] font-semibold tracking-[-0.03em] text-carbon">
-              {processIntro.headline}
-            </h2>
-          </Reveal>
+          <div className="lg:col-span-4 lg:sticky lg:top-10 lg:self-start">
+            <Reveal>
+              <p className="label-caps text-lime-on-light">{processIntro.eyebrow}</p>
+              <h2 className="mt-3 max-w-sm font-display text-[length:var(--text-h2)] font-semibold tracking-[-0.03em] text-carbon">
+                {processIntro.headline}
+              </h2>
+            </Reveal>
+          </div>
 
           <div className="relative lg:col-span-8">
             <div

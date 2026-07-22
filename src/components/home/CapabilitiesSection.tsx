@@ -21,8 +21,8 @@ export function CapabilitiesSection() {
 
         <ul className="mt-10 grid gap-x-10 gap-y-0 sm:grid-cols-2 lg:grid-cols-3">
           {capabilitiesCopy.items.map((item, index) => (
-            <Reveal key={item.title} delay={index * 0.04}>
-              <li className="border-t border-border-dark py-5">
+            <li key={item.title} className="border-t border-border-dark py-5">
+              <Reveal delay={index * 0.04}>
                 <p className="font-sans text-[0.65rem] tabular-nums tracking-[0.08em] text-acid-lime">
                   {item.number}
                 </p>
@@ -32,8 +32,8 @@ export function CapabilitiesSection() {
                 <p className="mt-2 text-sm leading-relaxed text-soft-grey">
                   {item.description}
                 </p>
-              </li>
-            </Reveal>
+              </Reveal>
+            </li>
           ))}
         </ul>
       </Container>
