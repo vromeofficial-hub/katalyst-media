@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import { Container } from "@/components/layout/Container";
+import { EqualizerWave } from "@/components/ui/EqualizerWave";
 import { Reveal } from "@/components/ui/Reveal";
 import { paidMediaCopy } from "@/content/services";
 import { cn } from "@/lib/utils";
@@ -14,27 +15,36 @@ export function PaidMediaSection() {
   return (
     <section
       id="paid-media"
-      className="scroll-mt-20 border-b border-border-dark bg-carbon section-pad grain lg:scroll-mt-0"
+      className="paid-media-section relative scroll-mt-20 overflow-hidden border-b border-border-dark bg-carbon section-pad grain lg:scroll-mt-0"
     >
-      <Container>
-        <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14">
-          <Reveal className="lg:col-span-5">
-            <p className="label-caps text-acid-lime">{paidMediaCopy.eyebrow}</p>
-            <h2 className="mt-3 max-w-md font-display text-[length:var(--text-h2)] font-semibold tracking-[-0.03em] text-off-white text-balance">
-              {paidMediaCopy.headline}
+      <div className="paid-media-section__backdrop" aria-hidden="true" />
+
+      <Container className="relative z-10">
+        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.44fr)_minmax(0,0.56fr)] lg:gap-12 xl:gap-16">
+          <Reveal className="paid-media-copy">
+            <p className="label-caps tracking-[0.14em] text-acid-lime">
+              {paidMediaCopy.eyebrow}
+            </p>
+
+            <h2 className="paid-media-copy__headline mt-6 font-display font-semibold tracking-[-0.035em] text-off-white">
+              We do more than
+              <br className="hidden sm:inline" />{" "}
+              make the ad. We
+              <br />
+              <span className="text-acid-lime">run the campaign.</span>
             </h2>
-            <p className="mt-5 max-w-md text-base leading-relaxed text-soft-grey">
+
+            <p className="paid-media-copy__body mt-7 max-w-[34rem] text-[0.95rem] leading-[1.7] text-soft-grey sm:text-base">
               {paidMediaCopy.description}
             </p>
-            <div className="mt-7 rounded-[14px] border border-border-dark bg-deep-black/80 px-4 py-4">
-              <p className="text-sm leading-relaxed text-muted-grey">
-                <span className="mr-2 inline-block h-2 w-2 rounded-full bg-acid-lime align-middle" aria-hidden="true" />
-                {paidMediaCopy.note}
-              </p>
+
+            <div className="paid-media-note mt-8 sm:mt-9">
+              <span className="paid-media-note__dot" aria-hidden="true" />
+              <p className="paid-media-note__text">{paidMediaCopy.note}</p>
             </div>
           </Reveal>
 
-          <Reveal className="lg:col-span-7" delay={0.06}>
+          <Reveal className="min-w-0" delay={0.06}>
             <div className="paid-media-panel">
               <div className="paid-media-panel__glow" aria-hidden="true">
                 <div className="paid-media-panel__neon" />
@@ -53,15 +63,7 @@ export function PaidMediaSection() {
                       From objective to reporting
                     </p>
                   </div>
-                  <div className="paid-media-wave" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                  </div>
+                  <EqualizerWave />
                 </div>
 
                 <ol className="relative space-y-2">
