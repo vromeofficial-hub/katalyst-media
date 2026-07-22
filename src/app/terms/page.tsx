@@ -31,7 +31,8 @@ export default function TermsPage() {
               <li>Music marketing</li>
               <li>Creator campaigns</li>
               <li>Paid advertising</li>
-              <li>Content and creative direction</li>
+              <li>Short-form content</li>
+              <li>Creative direction</li>
               <li>Release campaign strategy</li>
               <li>Campaign management</li>
               <li>Performance reporting</li>
@@ -46,17 +47,15 @@ export default function TermsPage() {
             <h2 className="font-display text-2xl font-semibold text-off-white">
               No performance guarantees
             </h2>
-            <p className="mt-3 leading-relaxed">
-              {company.name} does not guarantee:
-            </p>
+            <p className="mt-3 leading-relaxed">{company.name} does not guarantee:</p>
             <ul className="mt-3 list-disc space-y-2 pl-5 leading-relaxed">
+              <li>Viral performance</li>
               <li>A specific number of views</li>
               <li>A specific number of streams</li>
-              <li>Viral performance</li>
               <li>Follower growth</li>
               <li>Revenue</li>
-              <li>Record-label attention</li>
               <li>Playlist placement</li>
+              <li>Record-label attention</li>
             </ul>
             <p className="mt-3 leading-relaxed">
               Campaign outcomes depend on factors including the music, creative material,
@@ -101,7 +100,7 @@ export default function TermsPage() {
                   </a>
                 </>
               ) : (
-                " using the campaign enquiry form on this website"
+                " using the contact form on this website"
               )}
               .
             </p>

@@ -7,22 +7,15 @@ import { Reveal } from "@/components/ui/Reveal";
 import { company, hasPublicEmail } from "@/content/company";
 import {
   contactCopy,
-  releaseTypes,
-  serviceOptions,
-  submitCampaignEnquiry,
-  type CampaignEnquiry,
+  submitContactMessage,
+  type ContactMessage,
 } from "@/content/contact";
 import { cn } from "@/lib/utils";
 
-const emptyForm: CampaignEnquiry = {
-  artistName: "",
+const emptyForm: ContactMessage = {
+  name: "",
   email: "",
-  releaseLink: "",
-  releaseType: "",
-  releaseDate: "",
-  budget: "",
-  services: [],
-  additionalInfo: "",
+  message: "",
 };
 
 const fieldClass =
@@ -30,26 +23,17 @@ const fieldClass =
 
 export function ContactSection() {
   const formId = useId();
-  const [form, setForm] = useState<CampaignEnquiry>(emptyForm);
+  const [form, setForm] = useState<ContactMessage>(emptyForm);
   const [status, setStatus] = useState<"idle" | "submitting" | "error">("idle");
   const [message, setMessage] = useState("");
-
-  const toggleService = (service: string) => {
-    setForm((current) => ({
-      ...current,
-      services: current.services.includes(service)
-        ? current.services.filter((item) => item !== service)
-        : [...current.services, service],
-    }));
-  };
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setStatus("submitting");
     setMessage("");
 
-    // TODO: Connect form backend (email API / CRM / form service)
-    const result = await submitCampaignEnquiry(form);
+    // TODO: Connect form backend (email API / Formspree / Resend)
+    const result = await submitContactMessage(form);
 
     if (!result.ok) {
       setStatus("error");
@@ -59,7 +43,7 @@ export function ContactSection() {
 
     setStatus("idle");
     setForm(emptyForm);
-    setMessage("Enquiry received.");
+    setMessage("Message sent.");
   };
 
   return (
@@ -75,31 +59,33 @@ export function ContactSection() {
             </h2>
             <p className="mt-4 text-soft-grey">{contactCopy.description}</p>
 
-            {hasPublicEmail() ? (
-              <a
-                href={`mailto:${company.email}`}
-                className="mt-6 inline-block text-sm text-acid-lime underline-offset-4 hover:underline"
-              >
-                {company.email}
-              </a>
-            ) : null}
+            <div className="mt-6 space-y-3">
+              {hasPublicEmail() ? (
+                <a
+                  href={`mailto:${company.email}`}
+                  className="block text-sm text-acid-lime underline-offset-4 hover:underline"
+                >
+                  {company.email}
+                </a>
+              ) : null}
 
-            {company.socialLinks.length > 0 ? (
-              <ul className="mt-6 flex flex-wrap gap-4">
-                {company.socialLinks.map((link) => (
-                  <li key={link.href}>
-                    <a
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-soft-grey underline-offset-4 transition-colors hover:text-acid-lime hover:underline"
-                    >
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            ) : null}
+              {company.socialLinks.length > 0 ? (
+                <ul className="flex flex-wrap gap-4">
+                  {company.socialLinks.map((link) => (
+                    <li key={link.href}>
+                      <a
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sm text-soft-grey underline-offset-4 transition-colors hover:text-acid-lime hover:underline"
+                      >
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
           </Reveal>
 
           <Reveal className="lg:col-span-7" delay={0.05}>
@@ -108,29 +94,26 @@ export function ContactSection() {
               className="rounded-[20px] border border-border-dark bg-carbon p-5 md:p-7"
             >
               <div className="grid gap-5 sm:grid-cols-2">
-                <div className="sm:col-span-1">
-                  <label className="text-sm text-soft-grey" htmlFor={`${formId}-artist`}>
-                    Artist or project name
+                <div>
+                  <label className="text-sm text-soft-grey" htmlFor={`${formId}-name`}>
+                    Name
                   </label>
                   <input
-                    id={`${formId}-artist`}
-                    name="artistName"
+                    id={`${formId}-name`}
+                    name="name"
                     required
-                    autoComplete="organization"
-                    value={form.artistName}
+                    autoComplete="name"
+                    value={form.name}
                     onChange={(event) =>
-                      setForm((current) => ({
-                        ...current,
-                        artistName: event.target.value,
-                      }))
+                      setForm((current) => ({ ...current, name: event.target.value }))
                     }
                     className={fieldClass}
                   />
                 </div>
 
-                <div className="sm:col-span-1">
+                <div>
                   <label className="text-sm text-soft-grey" htmlFor={`${formId}-email`}>
-                    Email address
+                    Email
                   </label>
                   <input
                     id={`${formId}-email`}
@@ -147,133 +130,19 @@ export function ContactSection() {
                 </div>
 
                 <div className="sm:col-span-2">
-                  <label className="text-sm text-soft-grey" htmlFor={`${formId}-link`}>
-                    Song or release link
-                  </label>
-                  <input
-                    id={`${formId}-link`}
-                    name="releaseLink"
-                    type="url"
-                    inputMode="url"
-                    placeholder="https://"
-                    value={form.releaseLink}
-                    onChange={(event) =>
-                      setForm((current) => ({
-                        ...current,
-                        releaseLink: event.target.value,
-                      }))
-                    }
-                    className={fieldClass}
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm text-soft-grey" htmlFor={`${formId}-type`}>
-                    Release type
-                  </label>
-                  <select
-                    id={`${formId}-type`}
-                    name="releaseType"
-                    required
-                    value={form.releaseType}
-                    onChange={(event) =>
-                      setForm((current) => ({
-                        ...current,
-                        releaseType: event.target.value,
-                      }))
-                    }
-                    className={cn(fieldClass, "appearance-none")}
-                  >
-                    <option value="" disabled>
-                      Select release type
-                    </option>
-                    {releaseTypes.map((type) => (
-                      <option key={type} value={type}>
-                        {type}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="text-sm text-soft-grey" htmlFor={`${formId}-date`}>
-                    Release date
-                  </label>
-                  <input
-                    id={`${formId}-date`}
-                    name="releaseDate"
-                    type="date"
-                    value={form.releaseDate}
-                    onChange={(event) =>
-                      setForm((current) => ({
-                        ...current,
-                        releaseDate: event.target.value,
-                      }))
-                    }
-                    className={fieldClass}
-                  />
-                </div>
-
-                <div className="sm:col-span-2">
-                  <label className="text-sm text-soft-grey" htmlFor={`${formId}-budget`}>
-                    Estimated campaign budget
-                  </label>
-                  <input
-                    id={`${formId}-budget`}
-                    name="budget"
-                    value={form.budget}
-                    onChange={(event) =>
-                      setForm((current) => ({ ...current, budget: event.target.value }))
-                    }
-                    placeholder="e.g. £500–£2,000"
-                    className={fieldClass}
-                  />
-                </div>
-
-                <fieldset className="sm:col-span-2">
-                  <legend className="text-sm text-soft-grey">Services required</legend>
-                  <div className="mt-3 grid gap-2 sm:grid-cols-2">
-                    {serviceOptions.map((service) => {
-                      const checked = form.services.includes(service);
-                      const optionId = `${formId}-${service}`;
-                      return (
-                        <label
-                          key={service}
-                          htmlFor={optionId}
-                          className={cn(
-                            "flex cursor-pointer items-center gap-3 rounded-[8px] border px-3 py-3 text-sm transition-colors",
-                            checked
-                              ? "border-lime-border bg-lime-soft text-off-white"
-                              : "border-border-dark bg-graphite text-soft-grey hover:border-border-dark hover:text-off-white",
-                          )}
-                        >
-                          <input
-                            id={optionId}
-                            type="checkbox"
-                            checked={checked}
-                            onChange={() => toggleService(service)}
-                            className="size-4 accent-[#c6ff00]"
-                          />
-                          <span>{service}</span>
-                        </label>
-                      );
-                    })}
-                  </div>
-                </fieldset>
-
-                <div className="sm:col-span-2">
-                  <label className="text-sm text-soft-grey" htmlFor={`${formId}-info`}>
-                    Additional information
+                  <label className="text-sm text-soft-grey" htmlFor={`${formId}-message`}>
+                    Message
                   </label>
                   <textarea
-                    id={`${formId}-info`}
-                    name="additionalInfo"
-                    rows={4}
-                    value={form.additionalInfo}
+                    id={`${formId}-message`}
+                    name="message"
+                    required
+                    rows={5}
+                    value={form.message}
                     onChange={(event) =>
                       setForm((current) => ({
                         ...current,
-                        additionalInfo: event.target.value,
+                        message: event.target.value,
                       }))
                     }
                     className={cn(fieldClass, "resize-y")}
@@ -281,11 +150,9 @@ export function ContactSection() {
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="mt-6">
                 <PrimaryButton type="submit" disabled={status === "submitting"} showArrow>
-                  {status === "submitting"
-                    ? "Submitting…"
-                    : contactCopy.buttonLabel}
+                  {status === "submitting" ? "Sending…" : contactCopy.buttonLabel}
                 </PrimaryButton>
               </div>
 
@@ -302,8 +169,8 @@ export function ContactSection() {
               ) : (
                 <p className="mt-4 text-xs leading-relaxed text-muted-grey">
                   Form submissions are prepared on this page. Backend delivery is not
-                  connected yet — enquiries are not emailed or stored until the form
-                  service is wired up.
+                  connected yet — messages are not emailed or stored until the contact
+                  form service is wired up.
                 </p>
               )}
             </form>

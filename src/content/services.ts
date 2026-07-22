@@ -16,13 +16,13 @@ export const coreServices: ServiceItem[] = [
     number: "01",
     title: "Creator Campaigns",
     description:
-      "Coordinated placements across relevant creators, pages and music communities to help introduce your music to new audiences.",
+      "Coordinated creator and music-page placements designed to introduce your music to relevant new audiences.",
   },
   {
     number: "02",
     title: "Paid Ad Campaigns",
     description:
-      "We plan, launch and manage paid advertising campaigns for artists and music releases. This includes audience targeting, budget management, creative testing, campaign optimisation and performance reporting.",
+      "We plan, launch and manage paid advertising campaigns for artists and music releases, including audience targeting, budget management, creative testing, optimisation and reporting.",
   },
   {
     number: "03",
@@ -34,7 +34,19 @@ export const coreServices: ServiceItem[] = [
     number: "04",
     title: "Release Campaign Strategy",
     description:
-      "Structured campaign planning for the period before, during and after the release of a single, EP, album or music video.",
+      "Campaign planning for the period before, during and after the release of a single, EP, album or music video.",
+  },
+  {
+    number: "05",
+    title: "Social Media Marketing",
+    description:
+      "Support with promotional content, campaign messaging and consistent release-focused social media activity.",
+  },
+  {
+    number: "06",
+    title: "Campaign Management and Reporting",
+    description:
+      "We manage campaign activity, monitor performance and provide clear reporting on available results such as views, engagement, clicks, streams and audience growth.",
   },
 ];
 
@@ -44,14 +56,14 @@ export const heroStructureItems = [
   "Short-form content",
   "Creative direction",
   "Release strategy",
-  "Performance reporting",
+  "Campaign reporting",
 ] as const;
 
 export const aboutCopy = {
   eyebrow: "About",
   headline: "A music marketing and creative agency for independent artists.",
   paragraphs: [
-    "Katalyst Media is a music marketing and creative agency built to help independent artists promote their releases and reach new listeners.",
-    "We combine creator campaigns, paid advertising, short-form content and release strategy to build coordinated campaigns around each artist and release.",
+    "Katalyst Media is a music marketing and creative agency built to help independent and upcoming artists promote their releases and reach new listeners.",
+    "We combine creator campaigns, paid advertising, short-form content and release strategy to create coordinated music marketing campaigns.",
   ],
 };

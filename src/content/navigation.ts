@@ -18,6 +18,7 @@ export const footerNav = [
   { label: "Services", href: "/#services" },
   { label: "Process", href: "/#process" },
   { label: "Work", href: "/#work" },
+  { label: "About", href: "/#about" },
   { label: "Contact", href: "/#contact" },
 ] as const;
 
@@ -29,7 +30,7 @@ export const legalNav = [
 export const sectionIds = primaryNav.map((item) => item.id);
 
 export const primaryCta = {
-  label: "Start a Campaign",
+  label: "Contact Us",
   href: "/#contact",
   id: "contact",
 } as const;

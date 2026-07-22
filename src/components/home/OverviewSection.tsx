@@ -43,8 +43,8 @@ export function OverviewSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.12 }}
           >
-            Katalyst Media helps artists promote their releases through creator
-            campaigns, short-form content and paid advertising.
+            Katalyst Media helps independent artists promote their releases through
+            creator campaigns, short-form content and paid advertising.
           </motion.p>
           <motion.p
             className="mt-3 max-w-lg text-sm leading-relaxed text-muted-grey"
@@ -52,8 +52,8 @@ export function OverviewSection() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.18 }}
           >
-            We plan and manage campaigns from strategy and creative direction through
-            to targeting, launch, optimisation and reporting.
+            We plan and manage campaigns from strategy and creative direction through to
+            launch, optimisation and reporting.
           </motion.p>
           <motion.div
             className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center"
@@ -61,7 +61,7 @@ export function OverviewSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.22 }}
           >
-            <PrimaryButton href="/#contact">Start a Campaign</PrimaryButton>
+            <PrimaryButton href="/#contact">Contact Us</PrimaryButton>
             <SecondaryButton href="#services">Explore Our Services</SecondaryButton>
           </motion.div>
         </div>

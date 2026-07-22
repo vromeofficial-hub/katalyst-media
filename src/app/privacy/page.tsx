@@ -5,7 +5,7 @@ import { createMetadata } from "@/lib/metadata";
 
 export const metadata = createMetadata({
   title: "Privacy Policy",
-  description: "Privacy notice for Katalyst Media website visitors and campaign enquiries.",
+  description: "Privacy notice for Katalyst Media website visitors and contact enquiries.",
   path: "/privacy",
 });
 
@@ -15,7 +15,7 @@ export default function PrivacyPage() {
       <PageHero
         eyebrow="Legal"
         title="Privacy Policy"
-        description="How Katalyst Media handles information related to this website and campaign enquiries."
+        description="How Katalyst Media handles information related to this website and contact enquiries."
       />
       <section className="section-pad bg-carbon">
         <Container className="max-w-3xl space-y-8 text-soft-grey">
@@ -45,18 +45,14 @@ export default function PrivacyPage() {
               Information we collect
             </h2>
             <p className="mt-3 leading-relaxed">
-              This website may collect information through a campaign-enquiry form. The form
-              may collect:
+              This website may collect information through a basic contact form or when you
+              get in touch directly. That information may include:
             </p>
             <ul className="mt-3 list-disc space-y-2 pl-5 leading-relaxed">
-              <li>Name or artist name</li>
+              <li>Name</li>
               <li>Email address</li>
-              <li>Release links</li>
-              <li>Release type</li>
-              <li>Release dates</li>
-              <li>Campaign budgets</li>
-              <li>Service requirements</li>
-              <li>Information you voluntarily provide in the enquiry</li>
+              <li>Message content</li>
+              <li>Information you voluntarily provide</li>
             </ul>
             <p className="mt-3 leading-relaxed">
               Server logs may also record basic technical data required to operate the site
@@ -69,18 +65,13 @@ export default function PrivacyPage() {
             <h2 className="font-display text-2xl font-semibold text-off-white">
               How we use information
             </h2>
-            <p className="mt-3 leading-relaxed">
-              Enquiry information is used to:
-            </p>
+            <p className="mt-3 leading-relaxed">Enquiry information is used to:</p>
             <ul className="mt-3 list-disc space-y-2 pl-5 leading-relaxed">
               <li>Respond to enquiries</li>
-              <li>Assess campaign requirements</li>
-              <li>Prepare proposals or service recommendations</li>
-              <li>Communicate about potential work</li>
+              <li>Discuss potential services</li>
+              <li>Communicate about possible work</li>
             </ul>
-            <p className="mt-3 leading-relaxed">
-              We do not sell personal information.
-            </p>
+            <p className="mt-3 leading-relaxed">We do not sell personal information.</p>
           </div>
 
           <div>
@@ -109,7 +100,7 @@ export default function PrivacyPage() {
                   </a>
                 </>
               ) : (
-                <> using the campaign enquiry form on this website</>
+                <> using the contact form on this website</>
               )}{" "}
               to make a request.
             </p>

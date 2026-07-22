@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { SectionNavLink } from "@/components/ui/SectionNavLink";
@@ -75,12 +76,12 @@ export function Sidebar() {
               {company.email}
             </a>
           ) : (
-            <a
+            <Link
               href="/#contact"
               className="mt-2 block text-sm text-soft-grey underline-offset-4 transition-colors hover:text-acid-lime hover:underline"
             >
-              Start a campaign enquiry
-            </a>
+              Contact us
+            </Link>
           )}
         </div>
       </div>

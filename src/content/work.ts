@@ -2,11 +2,10 @@ export const workCopy = {
   eyebrow: "Work",
   headline: "Campaign Work",
   description:
-    "We are currently preparing our first published campaign examples. In the meantime, explore how a typical Katalyst Media campaign is structured.",
-  comingSoon: "Campaign examples coming soon",
+    "We are currently building our portfolio of campaign work and creative examples. Future case studies and selected campaign projects will be added here.",
   exampleTitle: "Example Campaign Structure",
   exampleNote:
-    "Illustrative framework only — not a client case study or performance report.",
+    "Illustrative example only — not a client case study or performance report.",
 };
 
 export const exampleCampaignFramework = [
@@ -32,8 +31,8 @@ export const exampleCampaignFramework = [
   },
   {
     number: "05",
-    title: "Campaign optimisation",
-    description: "Ongoing adjustments while the campaign is live.",
+    title: "Campaign management",
+    description: "Ongoing coordination and adjustments while live.",
   },
   {
     number: "06",

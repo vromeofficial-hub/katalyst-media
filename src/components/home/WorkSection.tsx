@@ -25,16 +25,12 @@ export function WorkSection() {
 
         {campaigns.length === 0 ? (
           <Reveal className="mt-10">
-            <p className="text-sm text-muted-grey">{workCopy.comingSoon}</p>
-
-            <div className="mt-8 rounded-[20px] border border-border-dark bg-deep-black p-6 md:p-8">
-              <div className="flex flex-wrap items-end justify-between gap-3 border-b border-border-dark pb-4">
-                <div>
-                  <p className="label-caps text-acid-lime">{workCopy.exampleTitle}</p>
-                  <p className="mt-2 max-w-xl text-sm text-muted-grey">
-                    {workCopy.exampleNote}
-                  </p>
-                </div>
+            <div className="rounded-[20px] border border-border-dark bg-deep-black p-6 md:p-8">
+              <div className="border-b border-border-dark pb-4">
+                <p className="label-caps text-acid-lime">{workCopy.exampleTitle}</p>
+                <p className="mt-2 max-w-xl text-sm text-muted-grey">
+                  {workCopy.exampleNote}
+                </p>
               </div>
 
               <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

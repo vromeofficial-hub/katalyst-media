@@ -8,14 +8,16 @@ export const company = {
   shortDescription:
     "Music marketing, creator campaigns and paid advertising for artists.",
   fullDescription:
-    "Katalyst Media is a music marketing and creative agency built to help independent artists promote their releases and reach new listeners. We combine creator campaigns, paid advertising, short-form content and release strategy to build coordinated campaigns around each artist and release.",
+    "Katalyst Media is a music marketing and creative agency built to help independent and upcoming artists promote their releases and reach new listeners. We combine creator campaigns, paid advertising, short-form content and release strategy to create coordinated music marketing campaigns.",
   focus: "Music marketing for independent artists",
   focusLabel: "What we do",
+  // TODO: Add the public business email when ready (e.g. "hello@katalystmedia.xyz")
   email: "",
   location: "United Kingdom",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.katalystmedia.xyz",
-  pageTitle: "Katalyst Media | Music Marketing & Advertising for Artists",
+  pageTitle: "Katalyst Media | Music Marketing for Artists",
   foundingYear: 2024,
+  // TODO: Add Instagram / other social URLs when ready
   socialLinks: [] as { label: string; href: string }[],
 } as const;
 
