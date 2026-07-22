@@ -1,6 +1,6 @@
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/ui/Reveal";
-import { processSteps } from "@/content/process";
+import { processIntro, processSteps } from "@/content/process";
 
 export function ProcessSection() {
   return (
@@ -10,9 +10,9 @@ export function ProcessSection() {
     >
       <Container>
         <Reveal>
-          <p className="label-caps text-lime-on-light">Campaign process</p>
+          <p className="label-caps text-lime-on-light">{processIntro.eyebrow}</p>
           <h2 className="mt-3 max-w-2xl font-display text-[length:var(--text-h2)] font-semibold tracking-[-0.03em] text-carbon">
-            How a Katalyst Media campaign works.
+            {processIntro.headline}
           </h2>
         </Reveal>
 

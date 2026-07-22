@@ -98,11 +98,7 @@ export function EmailKatalystButton({
   label?: string;
   onClick?: () => void;
 }) {
-  if (!hasPublicEmail()) {
-    return (
-      <p className={cn("label-caps text-acid-lime", className)}>In Progress</p>
-    );
-  }
+  if (!hasPublicEmail()) return null;
 
   return (
     <PrimaryButton href={getMailtoHref()} className={className} onClick={onClick}>
@@ -112,11 +108,7 @@ export function EmailKatalystButton({
 }
 
 export function EmailAddressLink({ className }: { className?: string }) {
-  if (!hasPublicEmail()) {
-    return (
-      <p className={cn("text-sm text-acid-lime", className)}>In Progress</p>
-    );
-  }
+  if (!hasPublicEmail()) return null;
 
   return (
     <a

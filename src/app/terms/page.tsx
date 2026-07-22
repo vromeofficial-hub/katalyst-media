@@ -4,7 +4,7 @@ import { company, hasPublicEmail } from "@/content/company";
 import { createMetadata } from "@/lib/metadata";
 
 export const metadata = createMetadata({
-  title: "Terms",
+  title: "Terms and Conditions",
   description: "Website terms of use for Katalyst Media.",
   path: "/terms",
 });
@@ -14,46 +14,77 @@ export default function TermsPage() {
     <>
       <PageHero
         eyebrow="Legal"
-        title="Terms of use"
-        description="Terms governing use of the Katalyst Media website."
+        title="Terms and Conditions"
+        description="Terms of use for the Katalyst Media website and service information."
       />
       <section className="section-pad bg-carbon">
         <Container className="max-w-3xl space-y-8 text-soft-grey">
           <div>
-            <h2 className="font-display text-2xl font-semibold text-off-white">Website purpose</h2>
+            <h2 className="font-display text-2xl font-semibold text-off-white">
+              Website purpose
+            </h2>
             <p className="mt-3 leading-relaxed">
-              This website provides information about {company.name} and a way to enquire about
-              music-promotion campaigns. Content is for general information and does not constitute
-              a binding offer.
+              This website describes music marketing services offered by {company.name}.
+              Those services may include:
+            </p>
+            <ul className="mt-3 list-disc space-y-2 pl-5 leading-relaxed">
+              <li>Music marketing</li>
+              <li>Creator campaigns</li>
+              <li>Paid advertising</li>
+              <li>Content and creative direction</li>
+              <li>Release campaign strategy</li>
+              <li>Campaign management</li>
+              <li>Performance reporting</li>
+            </ul>
+            <p className="mt-3 leading-relaxed">
+              Information on this website is provided for general guidance and does not form
+              a binding offer unless confirmed separately in writing.
             </p>
           </div>
+
           <div>
             <h2 className="font-display text-2xl font-semibold text-off-white">
               No performance guarantees
             </h2>
             <p className="mt-3 leading-relaxed">
-              Nothing on this website should be interpreted as a guarantee of virality, streams,
-              chart positions or other specific commercial results. Campaign outcomes depend on the
-              release, audience, content, timing and platform conditions.
+              {company.name} does not guarantee:
+            </p>
+            <ul className="mt-3 list-disc space-y-2 pl-5 leading-relaxed">
+              <li>A specific number of views</li>
+              <li>A specific number of streams</li>
+              <li>Viral performance</li>
+              <li>Follower growth</li>
+              <li>Revenue</li>
+              <li>Record-label attention</li>
+              <li>Playlist placement</li>
+            </ul>
+            <p className="mt-3 leading-relaxed">
+              Campaign outcomes depend on factors including the music, creative material,
+              audience response, budget, platform performance and market conditions.
             </p>
           </div>
+
           <div>
             <h2 className="font-display text-2xl font-semibold text-off-white">
               Intellectual property
             </h2>
             <p className="mt-3 leading-relaxed">
               Branding, copy, design and other materials on this site remain the property of{" "}
-              {company.name} unless otherwise stated. You may not copy or reuse site materials for
-              commercial purposes without permission.
+              {company.name} unless otherwise stated. You may not copy or reuse site materials
+              without permission.
             </p>
           </div>
+
           <div>
-            <h2 className="font-display text-2xl font-semibold text-off-white">Third-party links</h2>
+            <h2 className="font-display text-2xl font-semibold text-off-white">
+              Third-party links
+            </h2>
             <p className="mt-3 leading-relaxed">
-              Links to third-party sites are provided for convenience. We are not responsible for
-              the content or practices of those services.
+              This website may link to third-party platforms or resources. {company.name} is
+              not responsible for the content or practices of external sites.
             </p>
           </div>
+
           <div>
             <h2 className="font-display text-2xl font-semibold text-off-white">Contact</h2>
             <p className="mt-3 leading-relaxed">
@@ -69,7 +100,9 @@ export default function TermsPage() {
                     {company.email}
                   </a>
                 </>
-              ) : null}
+              ) : (
+                " using the campaign enquiry form on this website"
+              )}
               .
             </p>
           </div>

@@ -1,20 +1,22 @@
 export const company = {
   name: "Katalyst Media",
   legalName: "Katalyst Media",
-  tagline: "Put your music in front of the right audiences.",
+  tagline: "Put your music in front of the right listeners.",
+  positioning: "Music marketing, creator campaigns and paid advertising for artists.",
   description:
-    "Katalyst Media helps artists promote their releases through coordinated TikTok creator campaigns across relevant niche communities.",
+    "Katalyst Media helps independent artists promote their music through creator campaigns, short-form content, release strategy and paid advertising.",
   shortDescription:
-    "Music promotion for artists through coordinated TikTok creator campaigns.",
+    "Music marketing, creator campaigns and paid advertising for artists.",
   fullDescription:
-    "Katalyst Media helps artists promote their music through coordinated TikTok creator campaigns designed to place songs in front of relevant audiences. We work with the artist to understand the release, sound, target listener and campaign objective, then build a promotion plan around suitable content styles, communities and creator pages. The campaign is organised across multiple accounts so the song can appear naturally across different content environments that fit the track. Katalyst Media manages the campaign budget, creator communication, content direction, posting schedule and delivery process, giving the artist one organised point of contact instead of having to manage every page individually.",
-  focus: "TikTok creator campaigns for artists",
-  focusLabel: "Current focus",
+    "Katalyst Media is a music marketing and creative agency built to help independent artists promote their releases and reach new listeners. We combine creator campaigns, paid advertising, short-form content and release strategy to build coordinated campaigns around each artist and release.",
+  focus: "Music marketing for independent artists",
+  focusLabel: "What we do",
   email: "",
   location: "United Kingdom",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.katalystmedia.xyz",
-  pageTitle: "Katalyst Media | Music Promotion Through Creator Campaigns",
+  pageTitle: "Katalyst Media | Music Marketing & Advertising for Artists",
   foundingYear: 2024,
+  socialLinks: [] as { label: string; href: string }[],
 } as const;
 
 export function getMailtoHref() {

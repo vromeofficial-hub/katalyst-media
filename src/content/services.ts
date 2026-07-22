@@ -1,57 +1,57 @@
-export const whatWeDo = [
+export type ServiceItem = {
+  number: string;
+  title: string;
+  description: string;
+};
+
+export const servicesIntro = {
+  eyebrow: "Services",
+  headline: "Music marketing built around your release.",
+  description:
+    "Creator campaigns are one part of a wider offer. Katalyst Media plans and manages coordinated music marketing across creators, content and paid advertising.",
+};
+
+export const coreServices: ServiceItem[] = [
   {
-    title: "Campaign planning",
+    number: "01",
+    title: "Creator Campaigns",
     description:
-      "We understand the release, audience and campaign objective before deciding how the song should be promoted.",
+      "Coordinated placements across relevant creators, pages and music communities to help introduce your music to new audiences.",
   },
   {
-    title: "Creator coordination",
+    number: "02",
+    title: "Paid Ad Campaigns",
     description:
-      "We organise communication, requirements and timelines across multiple suitable creator pages.",
+      "We plan, launch and manage paid advertising campaigns for artists and music releases. This includes audience targeting, budget management, creative testing, campaign optimisation and performance reporting.",
   },
   {
-    title: "Content direction",
+    number: "03",
+    title: "Content and Creative Direction",
     description:
-      "We guide formats and creative approaches so the track appears naturally on each page.",
+      "Short-form content ideas, promotional visuals and creative guidance for TikTok, Instagram Reels and YouTube Shorts.",
   },
   {
-    title: "Campaign management",
+    number: "04",
+    title: "Release Campaign Strategy",
     description:
-      "We manage budget, posting activity and delivery through one organised point of contact.",
+      "Structured campaign planning for the period before, during and after the release of a single, EP, album or music video.",
   },
+];
+
+export const heroStructureItems = [
+  "Creator campaigns",
+  "Paid advertising",
+  "Short-form content",
+  "Creative direction",
+  "Release strategy",
+  "Performance reporting",
 ] as const;
 
-export const differentiators = [
-  {
-    title: "Relevant placements",
-    description:
-      "Pages and communities are chosen to fit the track — not a generic package for every release.",
-  },
-  {
-    title: "Creative variety",
-    description:
-      "The song can appear through different content formats and niche environments.",
-  },
-  {
-    title: "Distributed promotion",
-    description:
-      "Campaigns are spread across multiple creators instead of depending on one influencer or one post.",
-  },
-  {
-    title: "Organised management",
-    description:
-      "The artist works with one point of contact while Katalyst Media coordinates the wider campaign.",
-  },
-] as const;
-
-export const whyStatement =
-  "The aim is coordinated placement across relevant content environments — building momentum around the release, not chasing random views.";
-
-export const campaignFormats = [
-  "Audience communities",
-  "Lifestyle content",
-  "Entertainment content",
-  "Visual content",
-  "Culture-led content",
-  "Niche placements",
-] as const;
+export const aboutCopy = {
+  eyebrow: "About",
+  headline: "A music marketing and creative agency for independent artists.",
+  paragraphs: [
+    "Katalyst Media is a music marketing and creative agency built to help independent artists promote their releases and reach new listeners.",
+    "We combine creator campaigns, paid advertising, short-form content and release strategy to build coordinated campaigns around each artist and release.",
+  ],
+};

@@ -1,20 +1,18 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import { campaignFormats } from "@/content/services";
+import { heroStructureItems } from "@/content/services";
 import { cn } from "@/lib/utils";
 import "./campaign-structure.css";
 
 export function CampaignStructureVisual({ className }: { className?: string }) {
   const reduceMotion = useReducedMotion();
-  // Keep entrance reveals respectful of reduced motion, but the neon
-  // border line always runs — it's the requested visual.
   const animate = reduceMotion === false;
 
   return (
     <div
       className={cn("campaign-structure", className)}
-      aria-label="Illustrative campaign structure showing one track distributed across multiple content placements"
+      aria-label="Illustrative campaign structure for a music release"
     >
       <div className="campaign-structure__glow" aria-hidden="true">
         <div className="campaign-structure__neon" />
@@ -30,7 +28,7 @@ export function CampaignStructureVisual({ className }: { className?: string }) {
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-dark pb-3">
             <p className="label-caps text-acid-lime">Campaign structure</p>
             <span className="text-[0.65rem] uppercase tracking-[0.1em] text-muted-grey">
-              Illustrative campaign structure
+              Illustrative framework
             </span>
           </div>
 
@@ -42,14 +40,14 @@ export function CampaignStructureVisual({ className }: { className?: string }) {
           >
             <p className="text-xs uppercase tracking-[0.12em] text-muted-grey">Release</p>
             <p className="mt-1 font-display text-lg font-semibold tracking-[-0.02em] text-off-white">
-              One track · Multiple placements
+              One release · Coordinated marketing
             </p>
           </motion.div>
 
           <div className="grid gap-2.5 sm:grid-cols-2">
-            {campaignFormats.map((format, index) => (
+            {heroStructureItems.map((item, index) => (
               <motion.div
-                key={format}
+                key={item}
                 className="rounded-[10px] border border-border-dark bg-graphite px-3.5 py-3"
                 initial={animate ? { opacity: 0, y: 10 } : false}
                 animate={{ opacity: 1, y: 0 }}
@@ -59,9 +57,8 @@ export function CampaignStructureVisual({ className }: { className?: string }) {
                   <p className="font-mono text-[0.65rem] tracking-[0.08em] text-acid-lime">
                     {String(index + 1).padStart(2, "0")}
                   </p>
-                  <p className="text-sm font-medium text-off-white">{format}</p>
+                  <p className="text-sm font-medium text-off-white">{item}</p>
                 </div>
-                <p className="mt-1 text-xs text-muted-grey">Content placement</p>
               </motion.div>
             ))}
           </div>

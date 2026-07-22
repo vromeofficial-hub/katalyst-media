@@ -1,38 +1,49 @@
-export const processSteps = [
+export type ProcessStep = {
+  number: string;
+  title: string;
+  description: string;
+};
+
+export const processIntro = {
+  eyebrow: "Campaign process",
+  headline: "How a Katalyst Media campaign works.",
+};
+
+export const processSteps: ProcessStep[] = [
   {
     number: "01",
-    title: "Understand the release",
+    title: "Understand the Release",
     description:
-      "We review the song, artist, target listener, release stage and campaign objective.",
+      "We learn about the artist, the music, the release date and the overall goals of the campaign.",
   },
   {
     number: "02",
-    title: "Define the direction",
+    title: "Define the Audience and Objective",
     description:
-      "We decide which audiences, content styles and niche communities fit the track.",
+      "We identify the listeners the campaign should reach and establish the main campaign objective.",
   },
   {
     number: "03",
-    title: "Build the campaign",
+    title: "Choose the Campaign Mix",
     description:
-      "We organise the creator mix, campaign budget, content requirements and posting structure.",
+      "We decide how creator placements, paid advertising, content and promotional pages should work together.",
   },
   {
     number: "04",
-    title: "Coordinate content",
+    title: "Develop the Creative Direction",
     description:
-      "We manage communication, creative direction, approvals and delivery requirements.",
+      "We plan the campaign messaging, visual direction, content ideas and advertising creatives.",
   },
   {
     number: "05",
-    title: "Launch the campaign",
+    title: "Launch the Campaign",
     description:
-      "Content is posted across the agreed creator pages and campaign activity is tracked.",
+      "We coordinate creator placements, launch paid advertising and manage the campaign rollout.",
   },
   {
     number: "06",
-    title: "Review and learn",
+    title: "Optimise and Report",
     description:
-      "We review which placements and creative approaches generated the strongest response and use those findings to improve future campaigns.",
+      "We monitor performance, make campaign adjustments and report on views, engagement, clicks, streams, conversions and audience growth where the relevant data is available.",
   },
-] as const;
+];

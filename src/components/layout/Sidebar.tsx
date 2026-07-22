@@ -3,8 +3,9 @@
 import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { SectionNavLink } from "@/components/ui/SectionNavLink";
+import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { company, hasPublicEmail } from "@/content/company";
-import { primaryNav } from "@/content/navigation";
+import { primaryCta, primaryNav } from "@/content/navigation";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { cn } from "@/lib/utils";
 
@@ -20,7 +21,7 @@ export function Sidebar() {
 
         <div className="mt-8 border-t border-border-dark pt-6">
           <p className="label-caps text-muted-grey">{company.focusLabel}</p>
-          <p className="mt-2 text-sm leading-snug text-soft-grey">{company.focus}</p>
+          <p className="mt-2 text-sm leading-snug text-soft-grey">{company.positioning}</p>
         </div>
 
         <nav className="mt-10 flex flex-col gap-1" aria-label="Primary">
@@ -58,6 +59,12 @@ export function Sidebar() {
           })}
         </nav>
 
+        <div className="mt-8">
+          <PrimaryButton href={`#${primaryCta.id}`} className="w-full" showArrow>
+            {primaryCta.label}
+          </PrimaryButton>
+        </div>
+
         <div className="mt-auto border-t border-border-dark pt-6">
           <p className="label-caps text-muted-grey">Contact</p>
           {hasPublicEmail() ? (
@@ -68,7 +75,12 @@ export function Sidebar() {
               {company.email}
             </a>
           ) : (
-            <p className="mt-2 text-sm text-acid-lime">In Progress</p>
+            <a
+              href="#contact"
+              className="mt-2 block text-sm text-soft-grey underline-offset-4 transition-colors hover:text-acid-lime hover:underline"
+            >
+              Start a campaign enquiry
+            </a>
           )}
         </div>
       </div>

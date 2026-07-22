@@ -6,7 +6,7 @@ import { CampaignStructureVisual } from "@/components/brand/CampaignStructureVis
 import { Container } from "@/components/layout/Container";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
-import { getMailtoHref, hasPublicEmail } from "@/content/company";
+import { company } from "@/content/company";
 
 export function OverviewSection() {
   const reduceMotion = useReducedMotion();
@@ -26,7 +26,7 @@ export function OverviewSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
           >
-            Music promotion through creator campaigns
+            {company.positioning}
           </motion.p>
           <motion.h1
             className="mt-4 max-w-xl font-display text-[clamp(2.5rem,5vw,4.25rem)] font-semibold tracking-[-0.04em] text-off-white text-balance"
@@ -35,7 +35,7 @@ export function OverviewSection() {
             transition={{ duration: 0.5, delay: 0.06 }}
           >
             Put your music in front of the{" "}
-            <span className="text-acid-lime">right audiences.</span>
+            <span className="text-acid-lime">right listeners.</span>
           </motion.h1>
           <motion.p
             className="mt-5 max-w-lg text-base leading-relaxed text-soft-grey md:text-lg"
@@ -43,8 +43,8 @@ export function OverviewSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.12 }}
           >
-            Katalyst Media helps artists promote their releases through coordinated
-            TikTok creator campaigns across relevant niche communities.
+            Katalyst Media helps artists promote their releases through creator
+            campaigns, short-form content and paid advertising.
           </motion.p>
           <motion.p
             className="mt-3 max-w-lg text-sm leading-relaxed text-muted-grey"
@@ -52,8 +52,8 @@ export function OverviewSection() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.18 }}
           >
-            We manage the campaign from planning and creator communication through to
-            content direction, posting and delivery.
+            We plan and manage campaigns from strategy and creative direction through
+            to targeting, launch, optimisation and reporting.
           </motion.p>
           <motion.div
             className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center"
@@ -61,12 +61,8 @@ export function OverviewSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.22 }}
           >
-            <PrimaryButton href="#process">See how it works</PrimaryButton>
-            {hasPublicEmail() ? (
-              <SecondaryButton href={getMailtoHref()}>Email Katalyst Media</SecondaryButton>
-            ) : (
-              <SecondaryButton href="#contact">In Progress</SecondaryButton>
-            )}
+            <PrimaryButton href="#contact">Start a Campaign</PrimaryButton>
+            <SecondaryButton href="#services">Explore Our Services</SecondaryButton>
           </motion.div>
         </div>
 

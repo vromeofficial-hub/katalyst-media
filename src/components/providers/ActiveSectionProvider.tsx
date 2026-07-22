@@ -65,7 +65,6 @@ export function ActiveSectionProvider({
 
   useEffect(() => {
     if (pathname !== "/") {
-      setActiveIdState("overview");
       return;
     }
 
@@ -107,9 +106,11 @@ export function ActiveSectionProvider({
     };
   }, [pathname]);
 
+  const resolvedActiveId = pathname === "/" ? activeId : "overview";
+
   const value = useMemo(
-    () => ({ activeId, setActiveId }),
-    [activeId, setActiveId],
+    () => ({ activeId: resolvedActiveId, setActiveId }),
+    [resolvedActiveId, setActiveId],
   );
 
   return (

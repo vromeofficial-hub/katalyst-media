@@ -6,8 +6,9 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { SectionNavLink } from "@/components/ui/SectionNavLink";
+import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { company, hasPublicEmail } from "@/content/company";
-import { primaryNav } from "@/content/navigation";
+import { primaryCta, primaryNav } from "@/content/navigation";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { cn } from "@/lib/utils";
 
@@ -109,7 +110,7 @@ export function MobileHeader() {
 
             <div className="mt-8 border-t border-border-dark pt-5">
               <p className="label-caps text-muted-grey">{company.focusLabel}</p>
-              <p className="mt-2 text-sm text-soft-grey">{company.focus}</p>
+              <p className="mt-2 text-sm text-soft-grey">{company.positioning}</p>
             </div>
 
             <nav className="mt-8 flex flex-1 flex-col gap-1" aria-label="Mobile">
@@ -143,18 +144,22 @@ export function MobileHeader() {
               ) : null}
             </nav>
 
-            <div className="mt-6 border-t border-border-dark pt-6">
-              <p className="label-caps text-muted-grey">Contact</p>
+            <div className="mt-6 space-y-4 border-t border-border-dark pt-6">
+              <PrimaryButton
+                href={`#${primaryCta.id}`}
+                className="w-full"
+                onClick={() => setOpen(false)}
+              >
+                {primaryCta.label}
+              </PrimaryButton>
               {hasPublicEmail() ? (
                 <a
                   href={`mailto:${company.email}`}
-                  className="mt-2 block text-sm text-off-white underline-offset-4 hover:underline"
+                  className="block text-sm text-off-white underline-offset-4 hover:underline"
                 >
                   {company.email}
                 </a>
-              ) : (
-                <p className="mt-2 text-sm text-acid-lime">In Progress</p>
-              )}
+              ) : null}
             </div>
           </div>
         </div>

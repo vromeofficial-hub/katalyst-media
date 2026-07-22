@@ -1,9 +1,9 @@
+import { AboutSection } from "@/components/home/AboutSection";
 import { ContactSection } from "@/components/home/ContactSection";
 import { HashScroll } from "@/components/home/HashScroll";
 import { OverviewSection } from "@/components/home/OverviewSection";
 import { ProcessSection } from "@/components/home/ProcessSection";
-import { WhatWeDoSection } from "@/components/home/WhatWeDoSection";
-import { WhyKatalystSection } from "@/components/home/WhyKatalystSection";
+import { ServicesSection } from "@/components/home/ServicesSection";
 import { WorkSection } from "@/components/home/WorkSection";
 import { company } from "@/content/company";
 import { createMetadata } from "@/lib/metadata";
@@ -19,10 +19,10 @@ export default function HomePage() {
     <>
       <HashScroll />
       <OverviewSection />
-      <WhatWeDoSection />
-      <WhyKatalystSection />
+      <ServicesSection />
       <ProcessSection />
       <WorkSection />
+      <AboutSection />
       <ContactSection />
     </>
   );
