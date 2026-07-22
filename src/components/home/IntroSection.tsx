@@ -1,7 +1,6 @@
 "use client";
 
 import { AudioLines, Disc3, Radio } from "lucide-react";
-import { useReducedMotion } from "framer-motion";
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { introCopy } from "@/content/services";
@@ -10,16 +9,15 @@ import "./intro-section.css";
 
 const pointIcons = [Disc3, AudioLines, Radio] as const;
 
-/** Compact hub-and-spoke positions (percent of diagram box). */
+/** Compact static hub-and-spoke layout (percent of diagram box). */
 const spokeLayout = [
-  { id: "content", x: 50, y: 20 },
-  { id: "creators", x: 80, y: 50 },
-  { id: "paid", x: 50, y: 80 },
-  { id: "strategy", x: 20, y: 50 },
+  { id: "content", x: 50, y: 18, x1: 50, y1: 40, x2: 50, y2: 26 },
+  { id: "creators", x: 82, y: 50, x1: 60, y1: 50, x2: 74, y2: 50 },
+  { id: "paid", x: 50, y: 82, x1: 50, y1: 60, x2: 50, y2: 74 },
+  { id: "strategy", x: 18, y: 50, x1: 40, y1: 50, x2: 26, y2: 50 },
 ] as const;
 
 function CampaignMixDiagram() {
-  const reduceMotion = useReducedMotion();
   const nodes = introCopy.mixNodes.map((node) => {
     const layout = spokeLayout.find((item) => item.id === node.id)!;
     return { ...node, ...layout };
@@ -29,10 +27,10 @@ function CampaignMixDiagram() {
     <div className="intro-mix">
       <div className="intro-mix__glow" aria-hidden="true" />
 
-      <div className="intro-mix__panel relative z-10 flex h-auto flex-col overflow-hidden rounded-[20px] lg:h-[410px]">
+      <div className="intro-mix__panel relative z-10 flex h-auto flex-col overflow-hidden rounded-[20px] lg:h-[400px]">
         <div className="intro-mix__panel-surface absolute inset-0" aria-hidden="true" />
 
-        <div className="relative z-10 flex min-h-0 flex-1 flex-col p-5 sm:p-6">
+        <div className="relative z-10 flex min-h-0 flex-1 flex-col px-5 pb-5 pt-5 sm:px-6 sm:pb-6 sm:pt-5">
           <div className="intro-mix__header flex shrink-0 items-baseline justify-between gap-4 pb-3.5">
             <p className="label-caps text-acid-lime">Campaign mix</p>
             <p className="text-[0.7rem] font-medium uppercase tracking-[0.12em] text-[#b0b0b8]">
@@ -41,7 +39,7 @@ function CampaignMixDiagram() {
           </div>
 
           <div
-            className="intro-mix__diagram relative mx-auto mt-2 w-full flex-1 min-h-[250px] max-h-[300px] lg:min-h-0 lg:max-h-none"
+            className="intro-mix__diagram relative mx-auto mt-3 w-full flex-1 min-h-[240px] max-h-[290px] lg:min-h-0 lg:max-h-none"
             role="img"
             aria-label="Campaign mix diagram with the release at the centre, connected to content, creators, paid ads and strategy"
           >
@@ -54,23 +52,30 @@ function CampaignMixDiagram() {
               aria-hidden="true"
             >
               {nodes.map((node) => (
-                <line
-                  key={node.id}
-                  x1="50"
-                  y1="50"
-                  x2={node.x}
-                  y2={node.y}
-                  className="intro-mix__spoke"
-                  vectorEffect="non-scaling-stroke"
-                />
+                <g key={node.id}>
+                  <line
+                    x1={node.x1}
+                    y1={node.y1}
+                    x2={node.x2}
+                    y2={node.y2}
+                    className="intro-mix__spoke"
+                    vectorEffect="non-scaling-stroke"
+                  />
+                  <circle
+                    cx={node.x2}
+                    cy={node.y2}
+                    r="0.7"
+                    className="fill-acid-lime/50"
+                  />
+                </g>
               ))}
             </svg>
 
-            <div className="intro-mix__hub absolute left-1/2 top-1/2 z-20 flex w-[48%] max-w-[12.5rem] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-[16px] px-4 py-4 text-center sm:w-[44%] sm:px-5 sm:py-5">
+            <div className="intro-mix__hub absolute left-1/2 top-1/2 z-20 flex w-[50%] max-w-[13rem] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-[16px] px-4 py-4 text-center sm:w-[46%] sm:px-5 sm:py-5">
               <p className="text-[0.625rem] font-medium uppercase tracking-[0.14em] text-acid-lime">
                 The release
               </p>
-              <p className="mt-2 font-display text-base font-semibold leading-[1.25] tracking-[-0.025em] text-off-white sm:text-[1.0625rem]">
+              <p className="mt-2 font-display text-base font-semibold leading-[1.28] tracking-[-0.025em] text-off-white sm:text-[1.0625rem]">
                 One coordinated campaign
               </p>
             </div>
@@ -78,10 +83,7 @@ function CampaignMixDiagram() {
             {nodes.map((node) => (
               <div
                 key={node.id}
-                className={cn(
-                  "intro-mix__node absolute z-10 flex w-[36%] max-w-[8rem] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-[14px] px-3 py-3 text-center sm:w-[34%] sm:max-w-[8.5rem] sm:px-3.5 sm:py-3.5",
-                  reduceMotion ? "" : "intro-mix__node--interactive",
-                )}
+                className="intro-mix__node absolute z-10 flex w-[38%] max-w-[8.25rem] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-[14px] px-3 py-3 text-center sm:w-[35%] sm:max-w-[8.75rem] sm:px-3.5 sm:py-3.5"
                 style={{ left: `${node.x}%`, top: `${node.y}%` }}
               >
                 <p className="text-[0.8125rem] font-semibold leading-tight tracking-[-0.01em] text-off-white sm:text-[0.875rem]">
@@ -146,7 +148,8 @@ export function IntroSection() {
                   <li
                     className={cn(
                       "h-full",
-                      isLastOdd && "sm:col-span-2 sm:mx-auto sm:w-full sm:max-w-md lg:col-span-1 lg:mx-0 lg:max-w-none",
+                      isLastOdd &&
+                        "sm:col-span-2 sm:mx-auto sm:w-full sm:max-w-md lg:col-span-1 lg:mx-0 lg:max-w-none",
                     )}
                   >
                     <article className="group flex h-full flex-col rounded-[18px] border border-border-dark bg-carbon p-6 transition-colors duration-200 hover:border-lime-border hover:bg-lime-soft/25">
