@@ -59,7 +59,7 @@ export function PaidMediaSection() {
                 <div className="relative mb-6 flex items-end justify-between gap-4 border-b border-border-dark pb-4">
                   <div>
                     <p className="label-caps text-acid-lime">Campaign stages</p>
-                    <p className="mt-1 text-sm text-muted-grey">
+                    <p className="mt-1 text-sm text-soft-grey">
                       From objective to reporting
                     </p>
                   </div>
@@ -90,7 +90,7 @@ export function PaidMediaSection() {
                       >
                         <span
                           className={cn(
-                            "flex size-10 shrink-0 items-center justify-center rounded-[10px] font-mono text-xs tracking-[0.08em]",
+                            "flex size-10 shrink-0 items-center justify-center rounded-[10px] font-sans text-xs tabular-nums tracking-[0.08em]",
                             isLast
                               ? "bg-acid-lime text-carbon"
                               : "border border-lime-border/60 bg-deep-black text-acid-lime",
@@ -99,30 +99,17 @@ export function PaidMediaSection() {
                           {stage.number}
                         </span>
 
-                        <div className="min-w-0">
-                          <div className="flex items-center justify-between gap-3">
-                            <h3 className="font-display text-base font-semibold tracking-[-0.02em] text-off-white sm:text-lg">
-                              {stage.title}
-                            </h3>
-                            <span
-                              className={cn(
-                                "hidden h-1.5 w-1.5 shrink-0 rounded-full sm:block",
-                                isLast ? "bg-acid-lime" : "bg-muted-grey/50",
-                              )}
-                              aria-hidden="true"
-                            />
-                          </div>
-                          <div
-                            className="mt-2.5 h-px w-full overflow-hidden rounded-full bg-border-dark"
+                        <div className="flex min-w-0 items-center justify-between gap-3">
+                          <h3 className="font-display text-base font-semibold tracking-[-0.02em] text-off-white sm:text-lg">
+                            {stage.title}
+                          </h3>
+                          <span
+                            className={cn(
+                              "hidden h-1.5 w-1.5 shrink-0 rounded-full sm:block",
+                              isLast ? "bg-acid-lime" : "bg-soft-grey/40",
+                            )}
                             aria-hidden="true"
-                          >
-                            <span
-                              className="block h-full rounded-full bg-gradient-to-r from-acid-lime/80 to-acid-lime/20"
-                              style={{
-                                width: `${((index + 1) / paidMediaCopy.stages.length) * 100}%`,
-                              }}
-                            />
-                          </div>
+                          />
                         </div>
                       </motion.li>
                     );

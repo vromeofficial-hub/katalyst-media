@@ -63,3 +63,10 @@
     transform: rotate(360deg);
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .campaign-structure__neon {
+    animation: none;
+    transform: rotate(28deg);
+  }
+}

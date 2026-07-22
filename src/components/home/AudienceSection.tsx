@@ -23,7 +23,7 @@ export function AudienceSection() {
                 <h3 className="font-display text-xl font-semibold tracking-[-0.02em] text-off-white">
                   {group.title}
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed text-muted-grey md:text-base">
+                <p className="mt-3 text-sm leading-relaxed text-soft-grey md:text-base">
                   {group.description}
                 </p>
               </article>

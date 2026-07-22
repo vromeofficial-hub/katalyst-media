@@ -17,40 +17,44 @@ export function ProcessSection() {
             </h2>
           </Reveal>
 
-          <ol className="relative lg:col-span-8">
+          <div className="relative lg:col-span-8">
             <div
               className="pointer-events-none absolute bottom-4 left-[1.05rem] top-3 w-px bg-border-light"
               aria-hidden="true"
             />
 
-            {processSteps.map((step, index) => {
-              const isLast = index === processSteps.length - 1;
+            <ol className="relative">
+              {processSteps.map((step, index) => {
+                const isLast = index === processSteps.length - 1;
 
-              return (
-                <Reveal key={step.number} delay={index * 0.05}>
-                  <li className="relative flex gap-5 sm:gap-6">
-                    <span className="relative z-10 mt-0.5 flex size-[2.1rem] shrink-0 items-center justify-center rounded-full border border-border-light bg-off-white font-mono text-[0.68rem] tracking-[0.08em] text-lime-on-light shadow-[0_0_0_6px_var(--color-off-white)]">
-                      {step.number}
-                    </span>
-                    <div
-                      className={
-                        isLast
-                          ? "min-w-0 pb-0 sm:pt-0.5"
-                          : "min-w-0 border-b border-border-light pb-8 mb-8 sm:pt-0.5"
-                      }
-                    >
-                      <h3 className="font-display text-lg font-semibold tracking-[-0.02em] text-carbon sm:text-xl">
-                        {step.title}
-                      </h3>
-                      <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-grey sm:text-[0.95rem]">
-                        {step.description}
-                      </p>
-                    </div>
+                return (
+                  <li key={step.number} className="relative">
+                    <Reveal delay={index * 0.05}>
+                      <div className="flex gap-5 sm:gap-6">
+                        <span className="relative z-10 mt-0.5 flex size-[2.1rem] shrink-0 items-center justify-center rounded-full border border-border-light bg-off-white font-sans text-[0.68rem] tabular-nums tracking-[0.08em] text-lime-on-light shadow-[0_0_0_6px_var(--color-off-white)]">
+                          {step.number}
+                        </span>
+                        <div
+                          className={
+                            isLast
+                              ? "min-w-0 pb-0 sm:pt-0.5"
+                              : "mb-8 min-w-0 border-b border-border-light pb-8 sm:pt-0.5"
+                          }
+                        >
+                          <h3 className="font-display text-lg font-semibold tracking-[-0.02em] text-carbon sm:text-xl">
+                            {step.title}
+                          </h3>
+                          <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-grey sm:text-[0.95rem]">
+                            {step.description}
+                          </p>
+                        </div>
+                      </div>
+                    </Reveal>
                   </li>
-                </Reveal>
-              );
-            })}
-          </ol>
+                );
+              })}
+            </ol>
+          </div>
         </div>
       </Container>
     </section>

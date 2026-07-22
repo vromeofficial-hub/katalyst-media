@@ -13,7 +13,7 @@ export function IntroSection() {
   return (
     <section
       id="introduction"
-      className="intro-section relative scroll-mt-20 overflow-hidden border-b border-border-dark bg-deep-black py-12 md:py-14 lg:scroll-mt-0 lg:py-16"
+      className="intro-section relative scroll-mt-20 overflow-hidden border-b border-border-dark bg-deep-black section-pad lg:scroll-mt-0"
       aria-labelledby="intro-heading"
     >
       <div className="intro-section__texture pointer-events-none absolute inset-0" aria-hidden="true" />
@@ -59,12 +59,12 @@ export function IntroSection() {
                         <span className="flex size-12 items-center justify-center rounded-full border border-lime-border bg-deep-black text-acid-lime transition-colors duration-200 group-hover:border-acid-lime group-hover:bg-lime-soft">
                           <Icon className="size-5" strokeWidth={1.6} aria-hidden="true" />
                         </span>
-                        <p className="font-mono text-sm tracking-[0.1em] text-acid-lime">
+                        <p className="font-sans text-sm tabular-nums tracking-[0.1em] text-acid-lime">
                           {String(index + 1).padStart(2, "0")}
                         </p>
                       </div>
 
-                      <h3 className="mt-5 min-h-[3.25rem] font-display text-lg font-semibold tracking-[-0.02em] text-off-white sm:text-xl">
+                      <h3 className="mt-5 font-display text-lg font-semibold tracking-[-0.02em] text-off-white sm:text-xl">
                         {point.title}
                       </h3>
                       <p className="mt-2 text-sm leading-relaxed text-soft-grey">

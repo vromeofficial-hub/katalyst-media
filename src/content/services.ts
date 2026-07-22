@@ -244,7 +244,7 @@ export const faqCopy = {
     {
       question: "How can I contact Katalyst Media?",
       answer:
-        "Use the contact details provided on the website to discuss your music or marketing requirements.",
+        "Open the Contact section at the bottom of this page. When email or social links are listed there, you can reach Katalyst Media directly to discuss your music or marketing requirements.",
     },
   ],
 };
@@ -256,4 +256,6 @@ export const contactCopy = {
     "Get in touch to discuss your music, upcoming release or marketing requirements.",
   emailButton: "Email Katalyst Media",
   instagramButton: "Instagram",
+  emptyState:
+    "Direct email and social links will appear here once they are published. Until then, this page remains the home for Katalyst Media updates.",
 };

@@ -167,7 +167,7 @@ export function Sidebar() {
                   />
                   <span
                     className={cn(
-                      "w-5 shrink-0 font-mono text-[0.625rem] tracking-[0.1em] transition-colors duration-200",
+                      "w-5 shrink-0 font-sans text-[0.625rem] tabular-nums tracking-[0.1em] transition-colors duration-200",
                       active
                         ? "text-acid-lime"
                         : "text-[#5c5c66] group-hover:text-[#8a8a94]",

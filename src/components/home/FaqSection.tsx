@@ -61,7 +61,7 @@ export function FaqSection() {
                     hidden={!open}
                     className="pb-5"
                   >
-                    <p className="max-w-2xl text-sm leading-relaxed text-muted-grey md:text-base">
+                    <p className="max-w-2xl text-sm leading-relaxed text-soft-grey md:text-base">
                       {item.answer}
                     </p>
                   </div>

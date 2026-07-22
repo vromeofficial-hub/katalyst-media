@@ -54,7 +54,7 @@ export function CampaignStructureVisual({ className }: { className?: string }) {
                 transition={{ delay: animate ? 0.08 + index * 0.04 : 0, duration: 0.4 }}
               >
                 <div className="flex items-baseline gap-2">
-                  <p className="font-mono text-[0.65rem] tracking-[0.08em] text-acid-lime">
+                  <p className="font-sans text-[0.65rem] tabular-nums tracking-[0.08em] text-acid-lime">
                     {String(index + 1).padStart(2, "0")}
                   </p>
                   <p className="text-sm font-medium text-off-white">{item}</p>

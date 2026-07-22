@@ -41,7 +41,7 @@ export function ServicesSection() {
               <Reveal key={item.title} delay={index * 0.04}>
                 <article className="flex h-full flex-col border-t border-border-light pt-5">
                   <div className="flex items-start justify-between gap-3">
-                    <p className="font-mono text-xs tracking-[0.08em] text-lime-on-light">
+                    <p className="font-sans text-xs tabular-nums tracking-[0.08em] text-lime-on-light">
                       {item.number}
                     </p>
                     <Icon

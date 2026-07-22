@@ -20,7 +20,7 @@ export function WhySection() {
           {whyCopy.points.map((point, index) => (
             <Reveal key={point.title} delay={index * 0.04}>
               <article className="h-full">
-                <p className="font-mono text-xs tracking-[0.08em] text-lime-on-light">
+                <p className="font-sans text-xs tabular-nums tracking-[0.08em] text-lime-on-light">
                   {String(index + 1).padStart(2, "0")}
                 </p>
                 <h3 className="mt-2 font-display text-xl font-semibold tracking-[-0.02em] text-carbon">

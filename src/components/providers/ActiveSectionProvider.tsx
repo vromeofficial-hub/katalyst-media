@@ -20,10 +20,31 @@ const ActiveSectionContext = createContext<ActiveSectionContextValue | null>(
   null,
 );
 
+/**
+ * All homepage bands in document order, mapped to the nearest primary-nav id
+ * so orphan sections (introduction / audience / why) don't freeze the spy.
+ */
+const scrollSections: { id: string; navId: string }[] = [
+  { id: "overview", navId: "overview" },
+  { id: "introduction", navId: "overview" },
+  { id: "services", navId: "services" },
+  { id: "paid-media", navId: "paid-media" },
+  { id: "process", navId: "process" },
+  { id: "capabilities", navId: "capabilities" },
+  { id: "audience", navId: "about" },
+  { id: "why", navId: "about" },
+  { id: "about", navId: "about" },
+  { id: "faq", navId: "faq" },
+  { id: "contact", navId: "contact" },
+];
+
 function readActiveFromScroll(defaultId: string) {
-  const elements = sectionIds
-    .map((id) => document.getElementById(id))
-    .filter((el): el is HTMLElement => Boolean(el));
+  const elements = scrollSections
+    .map((section) => {
+      const el = document.getElementById(section.id);
+      return el ? { el, navId: section.navId } : null;
+    })
+    .filter((item): item is { el: HTMLElement; navId: string } => Boolean(item));
 
   if (elements.length === 0) return defaultId;
 
@@ -34,7 +55,6 @@ function readActiveFromScroll(defaultId: string) {
     document.body.scrollHeight,
   );
 
-  // Only force Contact when truly pinned to the end of the document
   if (scrollTop + viewport >= docHeight - 2) {
     return sectionIds[sectionIds.length - 1] ?? defaultId;
   }
@@ -42,9 +62,9 @@ function readActiveFromScroll(defaultId: string) {
   const probe = viewport * 0.25;
   let nextId = defaultId;
 
-  for (const el of elements) {
-    if (el.getBoundingClientRect().top <= probe) {
-      nextId = el.id;
+  for (const item of elements) {
+    if (item.el.getBoundingClientRect().top <= probe) {
+      nextId = item.navId;
     }
   }
 
@@ -82,8 +102,8 @@ export function ActiveSectionProvider({
     window.addEventListener("resize", update);
     document.addEventListener("scroll", update, { passive: true, capture: true });
 
-    const elements = sectionIds
-      .map((id) => document.getElementById(id))
+    const elements = scrollSections
+      .map((section) => document.getElementById(section.id))
       .filter((el): el is HTMLElement => Boolean(el));
 
     const observer =

@@ -102,7 +102,7 @@ export default function PrivacyPage() {
                   </a>
                 </>
               ) : (
-                <> using the contact details published on this website</>
+                <> through the Contact section on this website once contact details are published</>
               )}{" "}
               to make a request.
             </p>

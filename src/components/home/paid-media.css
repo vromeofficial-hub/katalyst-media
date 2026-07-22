@@ -156,10 +156,11 @@
   to { transform: rotate(360deg); }
 }
 
-/* Keep neon orbit even when OS reduce-motion is on — decorative only, low intensity */
+/* Disable decorative orbit when the user prefers reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .paid-media-panel__neon {
-    animation-duration: 14s;
+    animation: none;
+    transform: rotate(28deg);
   }
 
   .paid-media-note {
