@@ -26,12 +26,6 @@ export const introCopy = {
         "Planning, launch, optimisation and clear reporting in one coordinated process.",
     },
   ],
-  mixNodes: [
-    { id: "content", label: "Content", descriptor: "Creative assets" },
-    { id: "creators", label: "Creators", descriptor: "Relevant reach" },
-    { id: "paid", label: "Paid ads", descriptor: "Targeted media" },
-    { id: "strategy", label: "Strategy", descriptor: "Campaign direction" },
-  ] as const,
 };
 
 export type ServiceItem = {
