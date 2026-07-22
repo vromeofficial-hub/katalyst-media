@@ -13,7 +13,8 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { SectionNavLink } from "@/components/ui/SectionNavLink";
 import {
@@ -82,7 +83,6 @@ function InstagramIcon({ className }: { className?: string }) {
 
 export function Sidebar() {
   const pathname = usePathname();
-  const router = useRouter();
   const activeId = useActiveSection();
   const isHome = pathname === "/";
   const socialLinks = getSocialLinks();
@@ -90,13 +90,12 @@ export function Sidebar() {
   const otherSocials = socialLinks.filter((link) => link.label !== "Instagram");
 
   const handleContactClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
     if (isHome) {
+      event.preventDefault();
       scrollToSection(primaryCta.id);
       return;
     }
     queueSectionScroll(primaryCta.id);
-    router.push("/");
   };
 
   return (
@@ -206,15 +205,16 @@ export function Sidebar() {
               Ready to discuss your music or upcoming release?
             </p>
 
-            <a
+            <Link
               href="/"
+              scroll={false}
               onClick={handleContactClick}
               className="sidebar__cta relative mt-3.5 inline-flex w-full min-h-11 items-center justify-center gap-2 rounded-[9px] border border-lime-border bg-acid-lime px-3.5 text-[0.875rem] font-medium text-carbon transition-[filter,transform] duration-200 hover:-translate-y-px hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acid-lime"
             >
               <Mail className="size-3.5 shrink-0" strokeWidth={1.8} aria-hidden="true" />
               <span>{primaryCta.label}</span>
               <ArrowDownRight className="size-3.5 shrink-0" aria-hidden="true" />
-            </a>
+            </Link>
 
             {(hasPublicEmail() || hasInstagram() || otherSocials.length > 0) && (
               <ul className="relative mt-3 space-y-2">

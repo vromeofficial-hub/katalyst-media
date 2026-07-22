@@ -1,6 +1,7 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { NavItem } from "@/content/navigation";
 import { useSetActiveSection } from "@/components/providers/ActiveSectionProvider";
 import { queueSectionScroll, scrollToSection } from "@/lib/scroll";
@@ -22,32 +23,31 @@ export function SectionNavLink({
   "aria-current": ariaCurrent,
 }: SectionNavLinkProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const setActiveId = useSetActiveSection();
   const isHome = pathname === "/";
 
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-    event.preventDefault();
     onNavigate?.();
     setActiveId?.(item.id);
 
     if (isHome) {
+      event.preventDefault();
       scrollToSection(item.id);
       return;
     }
 
     queueSectionScroll(item.id);
-    router.push("/");
   };
 
   return (
-    <a
+    <Link
       href="/"
       onClick={handleClick}
       className={cn(className)}
       aria-current={ariaCurrent}
+      scroll={false}
     >
       {children}
-    </a>
+    </Link>
   );
 }

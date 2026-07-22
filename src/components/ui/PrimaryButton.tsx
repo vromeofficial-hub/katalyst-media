@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import {
   queueSectionScroll,
@@ -43,7 +43,6 @@ function isPageHash(href: string) {
 
 export function PrimaryButton(props: PrimaryButtonProps) {
   const pathname = usePathname();
-  const router = useRouter();
   const { children, className, showArrow = true } = props;
   const hashLink = "href" in props && !!props.href && isPageHash(props.href);
   const Arrow = hashLink ? ArrowDownRight : ArrowUpRight;
@@ -70,24 +69,32 @@ export function PrimaryButton(props: PrimaryButtonProps) {
     const external = props.external ?? (props.href.startsWith("http") && !isMail);
     const sectionId = sectionIdFromHref(props.href);
 
-    const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
-      props.onClick?.();
-      if (!sectionId) return;
+    if (sectionId) {
+      return (
+        <Link
+          href="/"
+          scroll={false}
+          className={cn(primaryClasses, className)}
+          onClick={(event) => {
+            props.onClick?.();
+            if (pathname === "/") {
+              event.preventDefault();
+              scrollToSection(sectionId);
+              return;
+            }
+            queueSectionScroll(sectionId);
+          }}
+        >
+          {content}
+        </Link>
+      );
+    }
 
-      event.preventDefault();
-      if (pathname === "/") {
-        scrollToSection(sectionId);
-        return;
-      }
-      queueSectionScroll(sectionId);
-      router.push("/");
-    };
-
-    if (external || isMail || props.href.startsWith("#") || sectionId) {
+    if (external || isMail || props.href.startsWith("#")) {
       return (
         <a
-          href={sectionId ? "/" : props.href}
-          onClick={sectionId ? handleClick : props.onClick}
+          href={props.href}
+          onClick={props.onClick}
           className={cn(primaryClasses, className)}
           {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
         >

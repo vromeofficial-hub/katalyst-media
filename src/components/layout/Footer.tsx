@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { company, getSocialLinks, hasPublicEmail } from "@/content/company";
@@ -12,7 +12,6 @@ export function Footer() {
   const year = new Date().getFullYear();
   const socialLinks = getSocialLinks();
   const pathname = usePathname();
-  const router = useRouter();
 
   const handleSectionClick = (
     event: React.MouseEvent<HTMLAnchorElement>,
@@ -20,13 +19,12 @@ export function Footer() {
   ) => {
     const id = sectionIdFromHref(href);
     if (!id) return;
-    event.preventDefault();
     if (pathname === "/") {
+      event.preventDefault();
       scrollToSection(id);
       return;
     }
     queueSectionScroll(id);
-    router.push("/");
   };
 
   return (
@@ -68,13 +66,14 @@ export function Footer() {
             <ul className="flex flex-wrap gap-x-5 gap-y-3 md:justify-end">
               {footerNav.map((item) => (
                 <li key={item.href}>
-                  <a
+                  <Link
                     href="/"
+                    scroll={false}
                     onClick={(event) => handleSectionClick(event, item.href)}
                     className="text-sm text-soft-grey transition-colors hover:text-off-white"
                   >
                     {item.label}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
