@@ -118,20 +118,25 @@
   pointer-events: none;
 }
 
+/* Soft acid-lime beam that travels around the outer frame */
 .paid-media-panel__neon {
   position: absolute;
-  inset: -50%;
+  inset: -60%;
+  transform-origin: center;
   background: conic-gradient(
     from 180deg,
     transparent 0deg,
-    transparent 290deg,
-    rgba(198, 255, 0, 0.08) 310deg,
-    rgba(198, 255, 0, 0.45) 330deg,
-    #c6ff00 345deg,
-    rgba(198, 255, 0, 0.35) 355deg,
+    transparent 338deg,
+    rgba(198, 255, 0, 0.08) 342deg,
+    rgba(198, 255, 0, 0.35) 348deg,
+    rgba(198, 255, 0, 0.75) 352deg,
+    #c6ff00 355deg,
+    #f3ffc2 357deg,
+    #c6ff00 358.5deg,
+    rgba(198, 255, 0, 0.3) 359.5deg,
     transparent 360deg
   );
-  animation: paid-media-orbit 8s linear infinite;
+  animation: paid-media-orbit 14s linear infinite;
   will-change: transform;
 }
 
@@ -152,15 +157,18 @@
 }
 
 @keyframes paid-media-orbit {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Soften orbit when reduced motion is preferred — keep a static highlight */
 @media (prefers-reduced-motion: reduce) {
   .paid-media-panel__neon {
     animation: none;
-    transform: rotate(28deg);
+    transform: rotate(180deg);
   }
 
   .paid-media-note {

@@ -15,23 +15,25 @@
   pointer-events: none;
 }
 
+/* Soft acid-lime beam that travels around the outer frame */
 .campaign-structure__neon {
   position: absolute;
-  inset: -50%;
+  inset: -60%;
+  transform-origin: center;
   background: conic-gradient(
     from 0deg,
     transparent 0deg,
-    transparent 300deg,
-    rgba(198, 255, 0, 0.05) 312deg,
-    rgba(198, 255, 0, 0.35) 328deg,
-    rgba(198, 255, 0, 0.85) 340deg,
-    #c6ff00 348deg,
-    #f3ffc2 352deg,
+    transparent 338deg,
+    rgba(198, 255, 0, 0.08) 342deg,
+    rgba(198, 255, 0, 0.35) 348deg,
+    rgba(198, 255, 0, 0.75) 352deg,
     #c6ff00 355deg,
-    rgba(198, 255, 0, 0.4) 358deg,
+    #f3ffc2 357deg,
+    #c6ff00 358.5deg,
+    rgba(198, 255, 0, 0.3) 359.5deg,
     transparent 360deg
   );
-  animation: campaign-neon-orbit 6s linear infinite;
+  animation: campaign-neon-orbit 12s linear infinite;
   will-change: transform;
 }
 
@@ -67,6 +69,6 @@
 @media (prefers-reduced-motion: reduce) {
   .campaign-structure__neon {
     animation: none;
-    transform: rotate(28deg);
+    transform: rotate(0deg);
   }
 }
