@@ -7,6 +7,7 @@ import { Container } from "@/components/layout/Container";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { company } from "@/content/company";
+import { heroCopy } from "@/content/services";
 
 export function OverviewSection() {
   const reduceMotion = useReducedMotion();
@@ -26,7 +27,7 @@ export function OverviewSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45 }}
           >
-            {company.positioning}
+            {company.heroEyebrow}
           </motion.p>
           <motion.h1
             className="mt-4 max-w-xl font-display text-[clamp(2.5rem,5vw,4.25rem)] font-semibold tracking-[-0.04em] text-off-white text-balance"
@@ -43,8 +44,7 @@ export function OverviewSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.12 }}
           >
-            Katalyst Media helps independent artists promote their releases through
-            creator campaigns, short-form content and paid advertising.
+            {heroCopy.description}
           </motion.p>
           <motion.p
             className="mt-3 max-w-lg text-sm leading-relaxed text-muted-grey"
@@ -52,8 +52,7 @@ export function OverviewSection() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.4, delay: 0.18 }}
           >
-            We plan and manage campaigns from strategy and creative direction through to
-            launch, optimisation and reporting.
+            {heroCopy.supporting}
           </motion.p>
           <motion.div
             className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center"

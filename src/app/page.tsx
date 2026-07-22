@@ -1,10 +1,15 @@
 import { AboutSection } from "@/components/home/AboutSection";
+import { AudienceSection } from "@/components/home/AudienceSection";
+import { CapabilitiesSection } from "@/components/home/CapabilitiesSection";
 import { ContactSection } from "@/components/home/ContactSection";
+import { FaqSection } from "@/components/home/FaqSection";
 import { HashScroll } from "@/components/home/HashScroll";
+import { IntroSection } from "@/components/home/IntroSection";
 import { OverviewSection } from "@/components/home/OverviewSection";
+import { PaidMediaSection } from "@/components/home/PaidMediaSection";
 import { ProcessSection } from "@/components/home/ProcessSection";
 import { ServicesSection } from "@/components/home/ServicesSection";
-import { WorkSection } from "@/components/home/WorkSection";
+import { WhySection } from "@/components/home/WhySection";
 import { company } from "@/content/company";
 import { createMetadata } from "@/lib/metadata";
 
@@ -19,10 +24,15 @@ export default function HomePage() {
     <>
       <HashScroll />
       <OverviewSection />
+      <IntroSection />
       <ServicesSection />
+      <PaidMediaSection />
       <ProcessSection />
-      <WorkSection />
+      <CapabilitiesSection />
+      <AudienceSection />
+      <WhySection />
       <AboutSection />
+      <FaqSection />
       <ContactSection />
     </>
   );

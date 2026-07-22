@@ -3,29 +3,43 @@ export const company = {
   legalName: "Katalyst Media",
   tagline: "Put your music in front of the right listeners.",
   positioning: "Music marketing, creator campaigns and paid advertising for artists.",
+  heroEyebrow: "Music marketing for artists",
   description:
-    "Katalyst Media helps independent artists promote their music through creator campaigns, short-form content, release strategy and paid advertising.",
-  shortDescription:
-    "Music marketing, creator campaigns and paid advertising for artists.",
-  fullDescription:
-    "Katalyst Media is a music marketing and creative agency built to help independent and upcoming artists promote their releases and reach new listeners. We combine creator campaigns, paid advertising, short-form content and release strategy to create coordinated music marketing campaigns.",
-  focus: "Music marketing for independent artists",
+    "Katalyst Media helps independent artists promote their music through creator campaigns, paid advertising, short-form content and release strategy.",
   focusLabel: "What we do",
-  // TODO: Add the public business email when ready (e.g. "hello@katalystmedia.xyz")
-  email: "",
   location: "United Kingdom",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.katalystmedia.xyz",
   pageTitle: "Katalyst Media | Music Marketing for Artists",
-  foundingYear: 2024,
-  // TODO: Add Instagram / other social URLs when ready
-  socialLinks: [] as { label: string; href: string }[],
+  email: (process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "").trim(),
+  instagramUrl: (process.env.NEXT_PUBLIC_INSTAGRAM_URL ?? "").trim(),
+  linkedinUrl: (process.env.NEXT_PUBLIC_LINKEDIN_URL ?? "").trim(),
 } as const;
+
+export type SocialLink = {
+  label: string;
+  href: string;
+};
+
+export function getSocialLinks(): SocialLink[] {
+  const links: SocialLink[] = [];
+  if (company.instagramUrl) {
+    links.push({ label: "Instagram", href: company.instagramUrl });
+  }
+  if (company.linkedinUrl) {
+    links.push({ label: "LinkedIn", href: company.linkedinUrl });
+  }
+  return links;
+}
+
+export function hasPublicEmail() {
+  return Boolean(company.email);
+}
+
+export function hasInstagram() {
+  return Boolean(company.instagramUrl);
+}
 
 export function getMailtoHref() {
   if (!company.email) return "/#contact";
   return `mailto:${company.email}`;
-}
-
-export function hasPublicEmail() {
-  return Boolean(company.email.trim());
 }

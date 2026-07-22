@@ -12,7 +12,7 @@ export function CampaignStructureVisual({ className }: { className?: string }) {
   return (
     <div
       className={cn("campaign-structure", className)}
-      aria-label="Illustrative campaign structure for a music release"
+      aria-label="Campaign structure for a music release"
     >
       <div className="campaign-structure__glow" aria-hidden="true">
         <div className="campaign-structure__neon" />
@@ -28,7 +28,7 @@ export function CampaignStructureVisual({ className }: { className?: string }) {
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border-dark pb-3">
             <p className="label-caps text-acid-lime">Campaign structure</p>
             <span className="text-[0.65rem] uppercase tracking-[0.1em] text-muted-grey">
-              Illustrative framework
+              Release framework
             </span>
           </div>
 

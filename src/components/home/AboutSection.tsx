@@ -15,7 +15,7 @@ export function AboutSection() {
 
         <div className="mt-8 max-w-2xl space-y-5">
           {aboutCopy.paragraphs.map((paragraph) => (
-            <Reveal key={paragraph}>
+            <Reveal key={paragraph.slice(0, 32)}>
               <p className="text-base leading-relaxed text-soft-grey md:text-lg">
                 {paragraph}
               </p>

@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Container } from "@/components/layout/Container";
 import { Wordmark } from "@/components/ui/Wordmark";
-import { company, hasPublicEmail } from "@/content/company";
+import { company, getSocialLinks, hasPublicEmail } from "@/content/company";
 import { footerNav, legalNav } from "@/content/navigation";
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const socialLinks = getSocialLinks();
 
   return (
     <footer className="border-t border-border-dark bg-deep-black">
@@ -23,6 +24,22 @@ export function Footer() {
               >
                 {company.email}
               </a>
+            ) : null}
+            {socialLinks.length > 0 ? (
+              <ul className="mt-4 flex flex-wrap gap-4">
+                {socialLinks.map((link) => (
+                  <li key={link.href}>
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-soft-grey underline-offset-4 transition-colors hover:text-acid-lime hover:underline"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
             ) : null}
           </div>
 

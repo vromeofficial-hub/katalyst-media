@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { company } from "@/content/company";
+import { company, getSocialLinks } from "@/content/company";
 
 const siteUrl = company.url;
 
@@ -42,6 +42,8 @@ export function createMetadata({
   };
 }
 
+const sameAs = getSocialLinks().map((link) => link.href);
+
 export const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -49,5 +51,5 @@ export const organizationJsonLd = {
   url: siteUrl,
   description: company.description,
   ...(company.email ? { email: company.email } : {}),
-  sameAs: [],
+  ...(sameAs.length > 0 ? { sameAs } : {}),
 };

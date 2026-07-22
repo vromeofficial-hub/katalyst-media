@@ -124,7 +124,7 @@ export function MobileHeader() {
                     onNavigate={() => setOpen(false)}
                     aria-current={active ? "true" : undefined}
                     className={cn(
-                      "flex items-center gap-4 border-b border-border-dark py-4 font-display text-2xl font-semibold tracking-[-0.03em]",
+                      "flex items-center gap-4 border-b border-border-dark py-3.5 font-display text-xl font-semibold tracking-[-0.03em]",
                       active ? "text-acid-lime" : "text-off-white",
                     )}
                   >

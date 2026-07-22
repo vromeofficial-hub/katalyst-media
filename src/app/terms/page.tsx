@@ -33,9 +33,10 @@ export default function TermsPage() {
               <li>Paid advertising</li>
               <li>Short-form content</li>
               <li>Creative direction</li>
-              <li>Release campaign strategy</li>
+              <li>Release strategy</li>
+              <li>Social media marketing</li>
               <li>Campaign management</li>
-              <li>Performance reporting</li>
+              <li>Reporting</li>
             </ul>
             <p className="mt-3 leading-relaxed">
               Information on this website is provided for general guidance and does not form
@@ -56,10 +57,12 @@ export default function TermsPage() {
               <li>Revenue</li>
               <li>Playlist placement</li>
               <li>Record-label attention</li>
+              <li>Specific advertising performance</li>
             </ul>
             <p className="mt-3 leading-relaxed">
-              Campaign outcomes depend on factors including the music, creative material,
-              audience response, budget, platform performance and market conditions.
+              Campaign outcomes can depend on factors including the music, creative material,
+              audience response, budget, platform performance, market conditions, timing and
+              campaign duration.
             </p>
           </div>
 
@@ -100,7 +103,7 @@ export default function TermsPage() {
                   </a>
                 </>
               ) : (
-                " using the contact form on this website"
+                " using the contact details published on this website"
               )}
               .
             </p>

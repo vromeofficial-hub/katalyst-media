@@ -16,23 +16,44 @@ export function ProcessSection() {
           </h2>
         </Reveal>
 
-        <div className="relative mt-12">
+        {/* Mobile / tablet: vertical timeline */}
+        <ol className="relative mt-10 space-y-0 border-l border-border-light pl-6 lg:hidden">
+          {processSteps.map((step) => (
+            <li key={step.number} className="relative pb-8 last:pb-0">
+              <span
+                className="absolute -left-[1.66rem] top-1 size-2.5 rounded-full bg-lime-on-light"
+                aria-hidden="true"
+              />
+              <p className="font-mono text-xs tracking-[0.08em] text-lime-on-light">
+                {step.number}
+              </p>
+              <h3 className="mt-2 font-display text-lg font-semibold tracking-[-0.02em] text-carbon">
+                {step.title}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-grey">
+                {step.description}
+              </p>
+            </li>
+          ))}
+        </ol>
+
+        {/* Desktop: balanced five-column process */}
+        <div className="relative mt-12 hidden lg:block">
           <div
-            className="pointer-events-none absolute left-0 right-0 top-3 hidden h-px bg-border-light lg:block"
+            className="pointer-events-none absolute left-0 right-0 top-3 h-px bg-border-light"
             aria-hidden="true"
           />
-
-          <ol className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 lg:gap-x-6 lg:gap-y-10">
+          <ol className="grid grid-cols-5 gap-5">
             {processSteps.map((step) => (
               <li key={step.number} className="relative">
                 <span
-                  className="mb-4 flex size-2 rounded-full bg-lime-on-light lg:mb-5"
+                  className="mb-5 flex size-2 rounded-full bg-lime-on-light"
                   aria-hidden="true"
                 />
                 <p className="font-mono text-xs tracking-[0.08em] text-lime-on-light">
                   {step.number}
                 </p>
-                <h3 className="mt-2 font-display text-lg font-semibold tracking-[-0.02em] text-carbon">
+                <h3 className="mt-2 font-display text-base font-semibold tracking-[-0.02em] text-carbon xl:text-lg">
                   {step.title}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted-grey">

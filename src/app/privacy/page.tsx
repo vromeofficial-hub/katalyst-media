@@ -42,22 +42,23 @@ export default function PrivacyPage() {
 
           <div>
             <h2 className="font-display text-2xl font-semibold text-off-white">
-              Information we collect
+              Information we may receive
             </h2>
             <p className="mt-3 leading-relaxed">
-              This website may collect information through a basic contact form or when you
-              get in touch directly. That information may include:
+              {company.name} may receive information when someone contacts the business through
+              email, social media or another published contact method. That information may
+              include:
             </p>
             <ul className="mt-3 list-disc space-y-2 pl-5 leading-relaxed">
               <li>Name</li>
               <li>Email address</li>
+              <li>Social-media information</li>
               <li>Message content</li>
-              <li>Information you voluntarily provide</li>
+              <li>Information voluntarily provided</li>
             </ul>
             <p className="mt-3 leading-relaxed">
               Server logs may also record basic technical data required to operate the site
-              securely. If you contact {company.name} directly by email, we process the
-              information you choose to include in that correspondence.
+              securely.
             </p>
           </div>
 
@@ -65,11 +66,12 @@ export default function PrivacyPage() {
             <h2 className="font-display text-2xl font-semibold text-off-white">
               How we use information
             </h2>
-            <p className="mt-3 leading-relaxed">Enquiry information is used to:</p>
+            <p className="mt-3 leading-relaxed">Information may be used to:</p>
             <ul className="mt-3 list-disc space-y-2 pl-5 leading-relaxed">
               <li>Respond to enquiries</li>
               <li>Discuss potential services</li>
               <li>Communicate about possible work</li>
+              <li>Maintain necessary business correspondence</li>
             </ul>
             <p className="mt-3 leading-relaxed">We do not sell personal information.</p>
           </div>
@@ -77,9 +79,9 @@ export default function PrivacyPage() {
           <div>
             <h2 className="font-display text-2xl font-semibold text-off-white">Retention</h2>
             <p className="mt-3 leading-relaxed">
-              Correspondence and enquiry details are retained only for as long as needed to
-              manage the conversation and maintain reasonable business records, unless a longer
-              period is required by law.
+              Correspondence is retained only for as long as needed to manage the conversation
+              and maintain reasonable business records, unless a longer period is required by
+              law.
             </p>
           </div>
 
@@ -100,7 +102,7 @@ export default function PrivacyPage() {
                   </a>
                 </>
               ) : (
-                <> using the contact form on this website</>
+                <> using the contact details published on this website</>
               )}{" "}
               to make a request.
             </p>
