@@ -7,7 +7,7 @@ import "./campaign-structure.css";
 
 export function CampaignStructureVisual({ className }: { className?: string }) {
   const reduceMotion = useReducedMotion();
-  const animate = reduceMotion === false;
+  const animate = reduceMotion !== true;
 
   return (
     <div

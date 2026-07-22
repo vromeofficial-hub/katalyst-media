@@ -10,13 +10,13 @@ type RevealProps = {
 };
 
 /**
- * Scroll reveal. Important: when reduced motion is preferred OR still
- * unresolved (`null`), render statically so content never stays at opacity 0.
+ * Scroll reveal. Only disables motion when reduced-motion is explicitly on.
+ * (Treating unresolved `null` as “allow motion” so animations actually run.)
  */
 export function Reveal({ children, className, delay = 0 }: RevealProps) {
   const reduceMotion = useReducedMotion();
 
-  if (reduceMotion !== false) {
+  if (reduceMotion === true) {
     return <div className={className}>{children}</div>;
   }
 

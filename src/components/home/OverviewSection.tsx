@@ -11,7 +11,7 @@ import { heroCopy } from "@/content/services";
 
 export function OverviewSection() {
   const reduceMotion = useReducedMotion();
-  const animate = reduceMotion === false;
+  const animate = reduceMotion !== true;
 
   return (
     <section

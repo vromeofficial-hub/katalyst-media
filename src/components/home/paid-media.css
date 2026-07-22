@@ -156,7 +156,7 @@
   to { transform: rotate(360deg); }
 }
 
-/* Disable decorative orbit when the user prefers reduced motion */
+/* Soften orbit when reduced motion is preferred — keep a static highlight */
 @media (prefers-reduced-motion: reduce) {
   .paid-media-panel__neon {
     animation: none;
