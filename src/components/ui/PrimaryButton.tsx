@@ -29,13 +29,14 @@ type PrimaryButtonProps = AnchorProps | NativeButtonProps;
 const primaryClasses =
   "group inline-flex min-h-11 items-center justify-center gap-2 rounded-[8px] border border-lime-border bg-acid-lime px-5 py-3.5 text-[0.9375rem] font-medium text-carbon transition-[transform,filter,background-color] duration-200 ease-out hover:-translate-y-px hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acid-lime disabled:cursor-not-allowed disabled:opacity-60";
 
+function isPageHash(href: string) {
+  return href.startsWith("#") || href.startsWith("/#");
+}
+
 export function PrimaryButton(props: PrimaryButtonProps) {
   const { children, className, showArrow = true } = props;
-  const isHash =
-    "href" in props &&
-    !!props.href &&
-    (props.href.startsWith("#") || props.href.startsWith("/#"));
-  const Arrow = isHash ? ArrowDownRight : ArrowUpRight;
+  const hashLink = "href" in props && !!props.href && isPageHash(props.href);
+  const Arrow = hashLink ? ArrowDownRight : ArrowUpRight;
 
   const content = (
     <>
@@ -44,7 +45,7 @@ export function PrimaryButton(props: PrimaryButtonProps) {
         <Arrow
           className={cn(
             "size-4 transition-transform duration-200 ease-out",
-            isHash
+            hashLink
               ? "group-hover:translate-y-[2px]"
               : "group-hover:translate-x-[3px] group-hover:-translate-y-px",
           )}
@@ -56,10 +57,10 @@ export function PrimaryButton(props: PrimaryButtonProps) {
 
   if ("href" in props && props.href) {
     const isMail = props.href.startsWith("mailto:");
-    const hash = props.href.startsWith("#");
     const external = props.external ?? (props.href.startsWith("http") && !isMail);
+    const useAnchor = external || isMail || props.href.startsWith("#");
 
-    if (external || isMail || hash) {
+    if (useAnchor) {
       return (
         <a
           href={props.href}
