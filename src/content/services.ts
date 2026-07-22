@@ -9,22 +9,24 @@ export const introCopy = {
   eyebrow: "Introduction",
   headline: "Music promotion needs more than one post.",
   description:
-    "Release campaigns need content, creator outreach, paid advertising and clear management. Katalyst Media brings these together into one coordinated strategy.",
+    "A release campaign needs more than isolated content. Katalyst Media brings strategy, creator outreach, paid advertising and campaign management together around one coordinated plan.",
+  approachLabel: "Our approach",
   points: [
     {
       title: "Built around the release",
       description: "Campaigns shaped by the music, timing and release goals.",
     },
     {
-      title: "Designed for relevant audiences",
-      description: "Reach listeners who are more likely to engage with the work.",
+      title: "Focused on relevant listeners",
+      description: "Reach audiences who are more likely to connect with the music.",
     },
     {
       title: "Managed from strategy to reporting",
-      description: "Planning, rollout and clear reporting in one process.",
+      description:
+        "Planning, launch, optimisation and clear reporting in one coordinated process.",
     },
   ],
-  mixLabels: ["Content", "Creators", "Paid ads", "Strategy"],
+  mixLabels: ["Content", "Creators", "Paid ads", "Strategy"] as const,
 };
 
 export type ServiceItem = {
