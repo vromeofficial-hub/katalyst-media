@@ -2,7 +2,6 @@
 
 import {
   ArrowDownRight,
-  ArrowUpRight,
   CircleHelp,
   Crosshair,
   Home,
@@ -11,9 +10,10 @@ import {
   Megaphone,
   User,
   Waypoints,
+  ArrowUpRight,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { SectionNavLink } from "@/components/ui/SectionNavLink";
 import {
@@ -24,6 +24,7 @@ import {
 } from "@/content/company";
 import { primaryCta, primaryNav } from "@/content/navigation";
 import { useActiveSection } from "@/hooks/useActiveSection";
+import { queueSectionScroll, scrollToSection } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 import "./sidebar.css";
 
@@ -81,14 +82,22 @@ function InstagramIcon({ className }: { className?: string }) {
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const activeId = useActiveSection();
   const isHome = pathname === "/";
   const socialLinks = getSocialLinks();
   const instagram = socialLinks.find((link) => link.label === "Instagram");
   const otherSocials = socialLinks.filter((link) => link.label !== "Instagram");
-  const ctaHref = isHome ? `#${primaryCta.id}` : primaryCta.href;
-  const ctaIsHash = ctaHref.startsWith("#") || ctaHref.startsWith("/#");
-  const CtaArrow = ctaIsHash ? ArrowDownRight : ArrowUpRight;
+
+  const handleContactClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    if (isHome) {
+      scrollToSection(primaryCta.id);
+      return;
+    }
+    queueSectionScroll(primaryCta.id);
+    router.push("/");
+  };
 
   return (
     <aside
@@ -198,12 +207,13 @@ export function Sidebar() {
             </p>
 
             <a
-              href={ctaHref}
+              href="/"
+              onClick={handleContactClick}
               className="sidebar__cta relative mt-3.5 inline-flex w-full min-h-11 items-center justify-center gap-2 rounded-[9px] border border-lime-border bg-acid-lime px-3.5 text-[0.875rem] font-medium text-carbon transition-[filter,transform] duration-200 hover:-translate-y-px hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acid-lime"
             >
               <Mail className="size-3.5 shrink-0" strokeWidth={1.8} aria-hidden="true" />
               <span>{primaryCta.label}</span>
-              <CtaArrow className="size-3.5 shrink-0" aria-hidden="true" />
+              <ArrowDownRight className="size-3.5 shrink-0" aria-hidden="true" />
             </a>
 
             {(hasPublicEmail() || hasInstagram() || otherSocials.length > 0) && (

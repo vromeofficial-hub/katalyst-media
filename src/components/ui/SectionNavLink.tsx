@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import type { NavItem } from "@/content/navigation";
 import { useSetActiveSection } from "@/components/providers/ActiveSectionProvider";
-import { scrollToSection } from "@/lib/scroll";
+import { queueSectionScroll, scrollToSection } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 
 type SectionNavLinkProps = {
@@ -25,7 +25,6 @@ export function SectionNavLink({
   const router = useRouter();
   const setActiveId = useSetActiveSection();
   const isHome = pathname === "/";
-  const href = isHome ? `#${item.id}` : `/#${item.id}`;
 
   const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
@@ -37,13 +36,13 @@ export function SectionNavLink({
       return;
     }
 
-    router.push(`/#${item.id}`);
-    window.setTimeout(() => scrollToSection(item.id), 100);
+    queueSectionScroll(item.id);
+    router.push("/");
   };
 
   return (
     <a
-      href={href}
+      href="/"
       onClick={handleClick}
       className={cn(className)}
       aria-current={ariaCurrent}

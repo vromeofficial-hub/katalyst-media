@@ -60,7 +60,7 @@ export function OverviewSection() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.45, delay: 0.22 }}
           >
-            <PrimaryButton href="/#contact">Contact Us</PrimaryButton>
+            <PrimaryButton href="#contact">Contact Us</PrimaryButton>
             <SecondaryButton href="#services">Explore Our Services</SecondaryButton>
           </motion.div>
         </div>

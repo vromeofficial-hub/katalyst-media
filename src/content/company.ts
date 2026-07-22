@@ -42,6 +42,6 @@ export function hasInstagram() {
 }
 
 export function getMailtoHref() {
-  if (!company.email) return "/#contact";
+  if (!company.email) return "/";
   return `mailto:${company.email}`;
 }

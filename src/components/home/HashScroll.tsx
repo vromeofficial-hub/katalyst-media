@@ -1,23 +1,25 @@
 "use client";
 
 import { useEffect } from "react";
-import { scrollToSection } from "@/lib/scroll";
+import {
+  consumeQueuedSectionScroll,
+  scrollToSection,
+} from "@/lib/scroll";
 
-/** On load / hash change, scroll to the matching homepage section. */
+/**
+ * On homepage load, scroll to a queued section (from nav on other pages)
+ * or clear a legacy hash from the URL after scrolling once.
+ */
 export function HashScroll() {
   useEffect(() => {
-    const scrollFromHash = () => {
-      const id = window.location.hash.replace(/^#/, "");
-      if (!id) return;
-      // Wait a frame so layout is ready after route changes
-      window.requestAnimationFrame(() => {
-        scrollToSection(id);
-      });
-    };
+    const queued = consumeQueuedSectionScroll();
+    const legacyHash = window.location.hash.replace(/^#/, "");
+    const id = queued || legacyHash;
+    if (!id) return;
 
-    scrollFromHash();
-    window.addEventListener("hashchange", scrollFromHash);
-    return () => window.removeEventListener("hashchange", scrollFromHash);
+    window.requestAnimationFrame(() => {
+      scrollToSection(id);
+    });
   }, []);
 
   return null;

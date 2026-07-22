@@ -1,5 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
+import {
+  queueSectionScroll,
+  scrollToSection,
+  sectionIdFromHref,
+} from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 
 type ButtonBaseProps = {
@@ -34,6 +42,8 @@ function isPageHash(href: string) {
 }
 
 export function PrimaryButton(props: PrimaryButtonProps) {
+  const pathname = usePathname();
+  const router = useRouter();
   const { children, className, showArrow = true } = props;
   const hashLink = "href" in props && !!props.href && isPageHash(props.href);
   const Arrow = hashLink ? ArrowDownRight : ArrowUpRight;
@@ -58,13 +68,26 @@ export function PrimaryButton(props: PrimaryButtonProps) {
   if ("href" in props && props.href) {
     const isMail = props.href.startsWith("mailto:");
     const external = props.external ?? (props.href.startsWith("http") && !isMail);
-    const useAnchor = external || isMail || props.href.startsWith("#");
+    const sectionId = sectionIdFromHref(props.href);
 
-    if (useAnchor) {
+    const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+      props.onClick?.();
+      if (!sectionId) return;
+
+      event.preventDefault();
+      if (pathname === "/") {
+        scrollToSection(sectionId);
+        return;
+      }
+      queueSectionScroll(sectionId);
+      router.push("/");
+    };
+
+    if (external || isMail || props.href.startsWith("#") || sectionId) {
       return (
         <a
-          href={props.href}
-          onClick={props.onClick}
+          href={sectionId ? "/" : props.href}
+          onClick={sectionId ? handleClick : props.onClick}
           className={cn(primaryClasses, className)}
           {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
         >

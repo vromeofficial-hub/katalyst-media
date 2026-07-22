@@ -1,4 +1,12 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  queueSectionScroll,
+  scrollToSection,
+  sectionIdFromHref,
+} from "@/lib/scroll";
 import { cn } from "@/lib/utils";
 
 type SecondaryButtonProps = {
@@ -16,6 +24,8 @@ export function SecondaryButton({
   onDark = true,
   onClick,
 }: SecondaryButtonProps) {
+  const pathname = usePathname();
+  const router = useRouter();
   const classes = cn(
     "inline-flex min-h-11 items-center justify-center rounded-[8px] border px-5 py-3.5 text-[0.9375rem] font-medium transition-colors duration-200 ease-out",
     onDark
@@ -26,6 +36,19 @@ export function SecondaryButton({
 
   const isExternal = href.startsWith("http");
   const isMail = href.startsWith("mailto:");
+  const sectionId = sectionIdFromHref(href);
+
+  const handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    onClick?.();
+    if (!sectionId) return;
+    event.preventDefault();
+    if (pathname === "/") {
+      scrollToSection(sectionId);
+      return;
+    }
+    queueSectionScroll(sectionId);
+    router.push("/");
+  };
 
   if (isExternal || isMail) {
     return (
@@ -35,6 +58,14 @@ export function SecondaryButton({
         onClick={onClick}
         {...(isExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       >
+        {children}
+      </a>
+    );
+  }
+
+  if (sectionId) {
+    return (
+      <a href="/" className={classes} onClick={handleClick}>
         {children}
       </a>
     );

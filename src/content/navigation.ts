@@ -35,6 +35,6 @@ export const sectionIds = primaryNav.map((item) => item.id);
 
 export const primaryCta = {
   label: "Contact Us",
-  href: "/#contact",
+  href: "/",
   id: "contact",
 } as const;

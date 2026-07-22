@@ -1,12 +1,33 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { company, getSocialLinks, hasPublicEmail } from "@/content/company";
 import { footerNav, legalNav } from "@/content/navigation";
+import { queueSectionScroll, scrollToSection, sectionIdFromHref } from "@/lib/scroll";
 
 export function Footer() {
   const year = new Date().getFullYear();
   const socialLinks = getSocialLinks();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const handleSectionClick = (
+    event: React.MouseEvent<HTMLAnchorElement>,
+    href: string,
+  ) => {
+    const id = sectionIdFromHref(href);
+    if (!id) return;
+    event.preventDefault();
+    if (pathname === "/") {
+      scrollToSection(id);
+      return;
+    }
+    queueSectionScroll(id);
+    router.push("/");
+  };
 
   return (
     <footer className="border-t border-border-dark bg-deep-black">
@@ -47,12 +68,13 @@ export function Footer() {
             <ul className="flex flex-wrap gap-x-5 gap-y-3 md:justify-end">
               {footerNav.map((item) => (
                 <li key={item.href}>
-                  <Link
-                    href={item.href}
+                  <a
+                    href="/"
+                    onClick={(event) => handleSectionClick(event, item.href)}
                     className="text-sm text-soft-grey transition-colors hover:text-off-white"
                   >
                     {item.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
