@@ -10,30 +10,35 @@ import "./intro-section.css";
 
 const pointIcons = [Disc3, AudioLines, Radio] as const;
 
-const spokeNodes = [
-  { id: "content", label: "Content", x: 50, y: 12 },
-  { id: "creators", label: "Creators", x: 88, y: 50 },
-  { id: "paid", label: "Paid ads", x: 50, y: 88 },
-  { id: "strategy", label: "Strategy", x: 12, y: 50 },
+/** Compact hub-and-spoke positions (percent of diagram box). */
+const spokeLayout = [
+  { id: "content", x: 50, y: 16 },
+  { id: "creators", x: 84, y: 50 },
+  { id: "paid", x: 50, y: 84 },
+  { id: "strategy", x: 16, y: 50 },
 ] as const;
 
 function CampaignMixDiagram() {
   const reduceMotion = useReducedMotion();
+  const nodes = introCopy.mixNodes.map((node) => {
+    const layout = spokeLayout.find((item) => item.id === node.id)!;
+    return { ...node, ...layout };
+  });
 
   return (
     <div className="intro-mix">
       <div className="intro-mix__glow" aria-hidden="true" />
 
-      <div className="relative z-10 rounded-[20px] border border-border-dark bg-carbon/95 p-4 sm:p-5">
-        <div className="flex items-center justify-between gap-3 border-b border-border-dark pb-3">
+      <div className="intro-mix__panel relative z-10 flex h-auto flex-col rounded-[18px] border border-border-dark bg-carbon/95 p-4 sm:p-5 lg:h-[410px]">
+        <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border-dark/80 pb-3">
           <p className="label-caps text-acid-lime">Campaign mix</p>
-          <p className="text-[0.7rem] font-medium uppercase tracking-[0.1em] text-soft-grey">
+          <p className="text-[0.72rem] font-medium uppercase tracking-[0.1em] text-soft-grey">
             One coordinated plan
           </p>
         </div>
 
         <div
-          className="intro-mix__diagram relative mx-auto mt-4 aspect-square w-full max-w-[340px] sm:max-w-none"
+          className="intro-mix__diagram relative mx-auto mt-3 w-full flex-1 min-h-[260px] max-h-[320px] lg:min-h-0 lg:max-h-none"
           role="img"
           aria-label="Campaign mix diagram with the release at the centre, connected to content, creators, paid ads and strategy"
         >
@@ -43,7 +48,7 @@ function CampaignMixDiagram() {
             preserveAspectRatio="none"
             aria-hidden="true"
           >
-            {spokeNodes.map((node) => (
+            {nodes.map((node) => (
               <line
                 key={node.id}
                 x1="50"
@@ -56,26 +61,29 @@ function CampaignMixDiagram() {
             ))}
           </svg>
 
-          <div className="intro-mix__hub absolute left-1/2 top-1/2 z-20 w-[42%] max-w-[9.5rem] -translate-x-1/2 -translate-y-1/2 rounded-[14px] border border-lime-border bg-lime-soft px-3 py-3 text-center shadow-[0_0_32px_rgba(198,255,0,0.12)] sm:w-[38%] sm:px-3.5 sm:py-3.5">
-            <p className="text-[0.6rem] uppercase tracking-[0.12em] text-muted-grey">
-              Centre
-            </p>
-            <p className="mt-1 font-display text-sm font-semibold tracking-[-0.02em] text-off-white sm:text-base">
+          <div className="intro-mix__hub absolute left-1/2 top-1/2 z-20 w-[46%] max-w-[11.5rem] -translate-x-1/2 -translate-y-1/2 rounded-[14px] border border-lime-border bg-lime-soft px-3.5 py-3.5 text-center sm:w-[42%]">
+            <p className="text-[0.65rem] font-medium uppercase tracking-[0.12em] text-acid-lime/90">
               The release
+            </p>
+            <p className="mt-1.5 font-display text-[0.9375rem] font-semibold leading-snug tracking-[-0.02em] text-off-white sm:text-base">
+              One coordinated campaign
             </p>
           </div>
 
-          {spokeNodes.map((node) => (
+          {nodes.map((node) => (
             <div
               key={node.id}
               className={cn(
-                "intro-mix__node absolute z-10 w-[30%] max-w-[6.75rem] -translate-x-1/2 -translate-y-1/2 rounded-[12px] border border-border-dark bg-deep-black px-2.5 py-2.5 text-center transition-colors duration-200",
+                "intro-mix__node absolute z-10 w-[34%] max-w-[7.75rem] -translate-x-1/2 -translate-y-1/2 rounded-[12px] border border-border-dark bg-deep-black px-2.5 py-2.5 text-center transition-colors duration-200 sm:w-[32%] sm:px-3 sm:py-3",
                 !reduceMotion && "hover:border-lime-border hover:bg-elevated",
               )}
               style={{ left: `${node.x}%`, top: `${node.y}%` }}
             >
-              <p className="text-[0.75rem] font-medium leading-tight text-soft-grey sm:text-sm">
+              <p className="text-[0.8125rem] font-semibold leading-tight text-off-white sm:text-sm">
                 {node.label}
+              </p>
+              <p className="mt-1 text-[0.65rem] leading-snug text-muted-grey sm:text-[0.7rem]">
+                {node.descriptor}
               </p>
             </div>
           ))}
@@ -89,58 +97,66 @@ export function IntroSection() {
   return (
     <section
       id="introduction"
-      className="intro-section relative scroll-mt-20 overflow-hidden border-b border-border-dark bg-deep-black section-pad lg:scroll-mt-0"
+      className="intro-section relative scroll-mt-20 overflow-hidden border-b border-border-dark bg-deep-black py-12 md:py-14 lg:scroll-mt-0 lg:py-16"
       aria-labelledby="intro-heading"
     >
       <div className="intro-section__texture pointer-events-none absolute inset-0" aria-hidden="true" />
 
       <Container className="relative">
-        <div className="grid items-start gap-8 lg:grid-cols-[52fr_48fr] lg:gap-10">
+        <div className="grid items-center gap-7 lg:grid-cols-[48fr_52fr] lg:gap-9">
           <Reveal>
             <p className="label-caps text-acid-lime">{introCopy.eyebrow}</p>
             <h2
               id="intro-heading"
-              className="mt-3 max-w-xl font-display text-[length:var(--text-h2)] font-semibold tracking-[-0.03em] text-off-white text-balance"
+              className="mt-3 max-w-xl font-display text-[length:var(--text-h2)] font-semibold leading-[1.12] tracking-[-0.03em] text-off-white text-balance"
             >
               Music promotion needs more than{" "}
               <span className="text-acid-lime">one post.</span>
             </h2>
-            <p className="mt-5 max-w-md text-sm leading-relaxed text-soft-grey md:text-[0.975rem]">
+            <p className="mt-4 max-w-[32.5rem] text-sm leading-relaxed text-[#c4c4ca] md:text-[0.975rem]">
               {introCopy.description}
             </p>
           </Reveal>
 
-          <Reveal delay={0.06}>
+          <Reveal delay={0.05}>
             <CampaignMixDiagram />
           </Reveal>
         </div>
 
-        <div className="mt-8 md:mt-9">
+        <div className="mt-16 lg:mt-20">
           <Reveal>
             <p className="label-caps text-acid-lime">{introCopy.approachLabel}</p>
           </Reveal>
 
-          <ul className="mt-4 grid gap-4 md:grid-cols-3 md:gap-5">
+          <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-5">
             {introCopy.points.map((point, index) => {
               const Icon = pointIcons[index] ?? Disc3;
+              const isLastOdd =
+                introCopy.points.length % 2 === 1 &&
+                index === introCopy.points.length - 1;
 
               return (
-                <Reveal key={point.title} delay={index * 0.05}>
-                  <li className="h-full">
-                    <article className="group flex h-full flex-col rounded-[18px] border border-border-dark bg-carbon p-5 transition-colors duration-200 hover:border-lime-border/70 hover:bg-elevated/35 sm:p-6">
+                <Reveal key={point.title} delay={index * 0.04}>
+                  <li
+                    className={cn(
+                      "h-full",
+                      isLastOdd && "sm:col-span-2 sm:mx-auto sm:w-full sm:max-w-md lg:col-span-1 lg:mx-0 lg:max-w-none",
+                    )}
+                  >
+                    <article className="group flex h-full flex-col rounded-[18px] border border-border-dark bg-carbon p-6 transition-colors duration-200 hover:border-lime-border hover:bg-lime-soft/25">
                       <div className="flex items-center justify-between gap-3">
-                        <span className="flex size-11 items-center justify-center rounded-full border border-lime-border bg-deep-black text-acid-lime transition-colors duration-200 group-hover:border-acid-lime group-hover:bg-lime-soft">
-                          <Icon className="size-4" strokeWidth={1.6} aria-hidden="true" />
+                        <span className="flex size-12 items-center justify-center rounded-full border border-lime-border bg-deep-black text-acid-lime transition-colors duration-200 group-hover:border-acid-lime group-hover:bg-lime-soft">
+                          <Icon className="size-5" strokeWidth={1.6} aria-hidden="true" />
                         </span>
                         <p className="font-mono text-sm tracking-[0.1em] text-acid-lime">
                           {String(index + 1).padStart(2, "0")}
                         </p>
                       </div>
 
-                      <h3 className="mt-5 font-display text-lg font-semibold tracking-[-0.02em] text-off-white sm:text-xl">
+                      <h3 className="mt-5 min-h-[3.25rem] font-display text-lg font-semibold tracking-[-0.02em] text-off-white sm:text-xl">
                         {point.title}
                       </h3>
-                      <p className="mt-3 text-sm leading-relaxed text-soft-grey">
+                      <p className="mt-2 text-sm leading-relaxed text-soft-grey">
                         {point.description}
                       </p>
                     </article>
