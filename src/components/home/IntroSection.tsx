@@ -1,6 +1,15 @@
 "use client";
 
-import { AudioLines, Disc3, Radio } from "lucide-react";
+import {
+  AudioLines,
+  Clapperboard,
+  Crosshair,
+  Disc3,
+  Megaphone,
+  Radio,
+  Users,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { Container } from "@/components/layout/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { introCopy } from "@/content/services";
@@ -9,37 +18,46 @@ import "./intro-section.css";
 
 const pointIcons = [Disc3, AudioLines, Radio] as const;
 
+const nodeIcons: Record<(typeof introCopy.mixNodes)[number]["id"], LucideIcon> = {
+  content: Clapperboard,
+  creators: Users,
+  paid: Megaphone,
+  strategy: Crosshair,
+};
+
 /** Compact static hub-and-spoke layout (percent of diagram box). */
 const spokeLayout = [
-  { id: "content", x: 50, y: 18, x1: 50, y1: 40, x2: 50, y2: 26 },
-  { id: "creators", x: 82, y: 50, x1: 60, y1: 50, x2: 74, y2: 50 },
-  { id: "paid", x: 50, y: 82, x1: 50, y1: 60, x2: 50, y2: 74 },
-  { id: "strategy", x: 18, y: 50, x1: 40, y1: 50, x2: 26, y2: 50 },
+  { id: "content", x: 50, y: 15, x1: 50, y1: 38, x2: 50, y2: 24 },
+  { id: "creators", x: 85, y: 50, x1: 62, y1: 50, x2: 76, y2: 50 },
+  { id: "paid", x: 50, y: 85, x1: 50, y1: 62, x2: 50, y2: 76 },
+  { id: "strategy", x: 15, y: 50, x1: 38, y1: 50, x2: 24, y2: 50 },
 ] as const;
 
 function CampaignMixDiagram() {
   const nodes = introCopy.mixNodes.map((node) => {
     const layout = spokeLayout.find((item) => item.id === node.id)!;
-    return { ...node, ...layout };
+    return { ...node, ...layout, Icon: nodeIcons[node.id] };
   });
 
   return (
     <div className="intro-mix">
       <div className="intro-mix__glow" aria-hidden="true" />
 
-      <div className="intro-mix__panel relative z-10 flex h-auto flex-col overflow-hidden rounded-[20px] lg:h-[400px]">
+      <div className="intro-mix__panel relative z-10 flex h-auto flex-col overflow-hidden rounded-[22px] lg:h-[420px]">
         <div className="intro-mix__panel-surface absolute inset-0" aria-hidden="true" />
+        <div className="intro-mix__grain absolute inset-0" aria-hidden="true" />
 
         <div className="relative z-10 flex min-h-0 flex-1 flex-col px-5 pb-5 pt-5 sm:px-6 sm:pb-6 sm:pt-5">
-          <div className="intro-mix__header flex shrink-0 items-baseline justify-between gap-4 pb-3.5">
+          <div className="intro-mix__header relative flex shrink-0 items-baseline justify-between gap-4 pb-4">
             <p className="label-caps text-acid-lime">Campaign mix</p>
-            <p className="text-[0.7rem] font-medium uppercase tracking-[0.12em] text-[#b0b0b8]">
+            <p className="text-[0.7rem] font-medium uppercase tracking-[0.12em] text-[#b8b8c0]">
               One coordinated plan
             </p>
+            <span className="intro-mix__header-dot" aria-hidden="true" />
           </div>
 
           <div
-            className="intro-mix__diagram relative mx-auto mt-3 w-full flex-1 min-h-[240px] max-h-[290px] lg:min-h-0 lg:max-h-none"
+            className="intro-mix__diagram relative mx-auto mt-2 w-full flex-1 min-h-[248px] max-h-[310px] lg:min-h-0 lg:max-h-none"
             role="img"
             aria-label="Campaign mix diagram with the release at the centre, connected to content, creators, paid ads and strategy"
           >
@@ -64,36 +82,43 @@ function CampaignMixDiagram() {
                   <circle
                     cx={node.x2}
                     cy={node.y2}
-                    r="0.7"
-                    className="fill-acid-lime/50"
+                    r="0.85"
+                    className="fill-acid-lime/55"
                   />
                 </g>
               ))}
             </svg>
 
-            <div className="intro-mix__hub absolute left-1/2 top-1/2 z-20 flex w-[50%] max-w-[13rem] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-[16px] px-4 py-4 text-center sm:w-[46%] sm:px-5 sm:py-5">
-              <p className="text-[0.625rem] font-medium uppercase tracking-[0.14em] text-acid-lime">
+            <div className="intro-mix__hub absolute left-1/2 top-1/2 z-20 flex w-[52%] max-w-[13.5rem] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-[18px] px-4 py-5 text-center sm:w-[48%] sm:px-5 sm:py-5">
+              <span className="intro-mix__crosshair" aria-hidden="true" />
+              <p className="relative z-[1] text-[0.625rem] font-medium uppercase tracking-[0.16em] text-acid-lime">
                 The release
               </p>
-              <p className="mt-2 font-display text-base font-semibold leading-[1.28] tracking-[-0.025em] text-off-white sm:text-[1.0625rem]">
+              <p className="relative z-[1] mt-2.5 font-display text-base font-semibold leading-[1.28] tracking-[-0.03em] text-off-white sm:text-[1.0625rem]">
                 One coordinated campaign
               </p>
             </div>
 
-            {nodes.map((node) => (
-              <div
-                key={node.id}
-                className="intro-mix__node absolute z-10 flex w-[38%] max-w-[8.25rem] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-[14px] px-3 py-3 text-center sm:w-[35%] sm:max-w-[8.75rem] sm:px-3.5 sm:py-3.5"
-                style={{ left: `${node.x}%`, top: `${node.y}%` }}
-              >
-                <p className="text-[0.8125rem] font-semibold leading-tight tracking-[-0.01em] text-off-white sm:text-[0.875rem]">
-                  {node.label}
-                </p>
-                <p className="mt-1.5 text-[0.6875rem] leading-snug text-[#8e8e96]">
-                  {node.descriptor}
-                </p>
-              </div>
-            ))}
+            {nodes.map((node) => {
+              const Icon = node.Icon;
+              return (
+                <div
+                  key={node.id}
+                  className="intro-mix__node absolute z-10 flex w-[40%] max-w-[8.75rem] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-[16px] px-3 py-3.5 text-center sm:w-[36%] sm:max-w-[9.25rem] sm:px-3.5 sm:py-4"
+                  style={{ left: `${node.x}%`, top: `${node.y}%` }}
+                >
+                  <span className="intro-mix__node-icon mb-2.5 flex size-8 items-center justify-center rounded-full sm:size-9">
+                    <Icon className="size-3.5 text-acid-lime sm:size-4" strokeWidth={1.5} aria-hidden="true" />
+                  </span>
+                  <p className="text-[0.8125rem] font-semibold leading-tight tracking-[-0.015em] text-off-white sm:text-[0.875rem]">
+                    {node.label}
+                  </p>
+                  <p className="mt-1 text-[0.6875rem] leading-snug text-[#8a8a92]">
+                    {node.descriptor}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
