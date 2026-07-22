@@ -12,10 +12,10 @@ const pointIcons = [Disc3, AudioLines, Radio] as const;
 
 /** Compact hub-and-spoke positions (percent of diagram box). */
 const spokeLayout = [
-  { id: "content", x: 50, y: 16 },
-  { id: "creators", x: 84, y: 50 },
-  { id: "paid", x: 50, y: 84 },
-  { id: "strategy", x: 16, y: 50 },
+  { id: "content", x: 50, y: 20 },
+  { id: "creators", x: 80, y: 50 },
+  { id: "paid", x: 50, y: 80 },
+  { id: "strategy", x: 20, y: 50 },
 ] as const;
 
 function CampaignMixDiagram() {
@@ -29,64 +29,70 @@ function CampaignMixDiagram() {
     <div className="intro-mix">
       <div className="intro-mix__glow" aria-hidden="true" />
 
-      <div className="intro-mix__panel relative z-10 flex h-auto flex-col rounded-[18px] border border-border-dark bg-carbon/95 p-4 sm:p-5 lg:h-[410px]">
-        <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border-dark/80 pb-3">
-          <p className="label-caps text-acid-lime">Campaign mix</p>
-          <p className="text-[0.72rem] font-medium uppercase tracking-[0.1em] text-soft-grey">
-            One coordinated plan
-          </p>
-        </div>
+      <div className="intro-mix__panel relative z-10 flex h-auto flex-col overflow-hidden rounded-[20px] lg:h-[410px]">
+        <div className="intro-mix__panel-surface absolute inset-0" aria-hidden="true" />
 
-        <div
-          className="intro-mix__diagram relative mx-auto mt-3 w-full flex-1 min-h-[260px] max-h-[320px] lg:min-h-0 lg:max-h-none"
-          role="img"
-          aria-label="Campaign mix diagram with the release at the centre, connected to content, creators, paid ads and strategy"
-        >
-          <svg
-            className="pointer-events-none absolute inset-0 size-full"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            {nodes.map((node) => (
-              <line
-                key={node.id}
-                x1="50"
-                y1="50"
-                x2={node.x}
-                y2={node.y}
-                className="intro-mix__spoke"
-                vectorEffect="non-scaling-stroke"
-              />
-            ))}
-          </svg>
-
-          <div className="intro-mix__hub absolute left-1/2 top-1/2 z-20 w-[46%] max-w-[11.5rem] -translate-x-1/2 -translate-y-1/2 rounded-[14px] border border-lime-border bg-lime-soft px-3.5 py-3.5 text-center sm:w-[42%]">
-            <p className="text-[0.65rem] font-medium uppercase tracking-[0.12em] text-acid-lime/90">
-              The release
-            </p>
-            <p className="mt-1.5 font-display text-[0.9375rem] font-semibold leading-snug tracking-[-0.02em] text-off-white sm:text-base">
-              One coordinated campaign
+        <div className="relative z-10 flex min-h-0 flex-1 flex-col p-5 sm:p-6">
+          <div className="intro-mix__header flex shrink-0 items-baseline justify-between gap-4 pb-3.5">
+            <p className="label-caps text-acid-lime">Campaign mix</p>
+            <p className="text-[0.7rem] font-medium uppercase tracking-[0.12em] text-[#b0b0b8]">
+              One coordinated plan
             </p>
           </div>
 
-          {nodes.map((node) => (
-            <div
-              key={node.id}
-              className={cn(
-                "intro-mix__node absolute z-10 w-[34%] max-w-[7.75rem] -translate-x-1/2 -translate-y-1/2 rounded-[12px] border border-border-dark bg-deep-black px-2.5 py-2.5 text-center transition-colors duration-200 sm:w-[32%] sm:px-3 sm:py-3",
-                !reduceMotion && "hover:border-lime-border hover:bg-elevated",
-              )}
-              style={{ left: `${node.x}%`, top: `${node.y}%` }}
+          <div
+            className="intro-mix__diagram relative mx-auto mt-2 w-full flex-1 min-h-[250px] max-h-[300px] lg:min-h-0 lg:max-h-none"
+            role="img"
+            aria-label="Campaign mix diagram with the release at the centre, connected to content, creators, paid ads and strategy"
+          >
+            <div className="intro-mix__hub-glow" aria-hidden="true" />
+
+            <svg
+              className="pointer-events-none absolute inset-0 size-full"
+              viewBox="0 0 100 100"
+              preserveAspectRatio="none"
+              aria-hidden="true"
             >
-              <p className="text-[0.8125rem] font-semibold leading-tight text-off-white sm:text-sm">
-                {node.label}
+              {nodes.map((node) => (
+                <line
+                  key={node.id}
+                  x1="50"
+                  y1="50"
+                  x2={node.x}
+                  y2={node.y}
+                  className="intro-mix__spoke"
+                  vectorEffect="non-scaling-stroke"
+                />
+              ))}
+            </svg>
+
+            <div className="intro-mix__hub absolute left-1/2 top-1/2 z-20 flex w-[48%] max-w-[12.5rem] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-[16px] px-4 py-4 text-center sm:w-[44%] sm:px-5 sm:py-5">
+              <p className="text-[0.625rem] font-medium uppercase tracking-[0.14em] text-acid-lime">
+                The release
               </p>
-              <p className="mt-1 text-[0.65rem] leading-snug text-muted-grey sm:text-[0.7rem]">
-                {node.descriptor}
+              <p className="mt-2 font-display text-base font-semibold leading-[1.25] tracking-[-0.025em] text-off-white sm:text-[1.0625rem]">
+                One coordinated campaign
               </p>
             </div>
-          ))}
+
+            {nodes.map((node) => (
+              <div
+                key={node.id}
+                className={cn(
+                  "intro-mix__node absolute z-10 flex w-[36%] max-w-[8rem] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-[14px] px-3 py-3 text-center sm:w-[34%] sm:max-w-[8.5rem] sm:px-3.5 sm:py-3.5",
+                  reduceMotion ? "" : "intro-mix__node--interactive",
+                )}
+                style={{ left: `${node.x}%`, top: `${node.y}%` }}
+              >
+                <p className="text-[0.8125rem] font-semibold leading-tight tracking-[-0.01em] text-off-white sm:text-[0.875rem]">
+                  {node.label}
+                </p>
+                <p className="mt-1.5 text-[0.6875rem] leading-snug text-[#8e8e96]">
+                  {node.descriptor}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>
