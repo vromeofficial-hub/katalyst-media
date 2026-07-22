@@ -32,7 +32,10 @@ const primaryClasses =
 
 export function PrimaryButton(props: PrimaryButtonProps) {
   const { children, className, showArrow = true } = props;
-  const isHash = "href" in props && !!props.href?.startsWith("#");
+  const isHash =
+    "href" in props &&
+    !!props.href &&
+    (props.href.startsWith("#") || props.href.startsWith("/#"));
   const Arrow = isHash ? ArrowDownRight : ArrowUpRight;
 
   const content = (

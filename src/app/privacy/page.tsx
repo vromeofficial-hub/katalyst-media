@@ -52,6 +52,7 @@ export default function PrivacyPage() {
               <li>Name or artist name</li>
               <li>Email address</li>
               <li>Release links</li>
+              <li>Release type</li>
               <li>Release dates</li>
               <li>Campaign budgets</li>
               <li>Service requirements</li>
@@ -95,8 +96,22 @@ export default function PrivacyPage() {
             <h2 className="font-display text-2xl font-semibold text-off-white">Your rights</h2>
             <p className="mt-3 leading-relaxed">
               Depending on applicable law, you may request access to, correction of, or
-              deletion of personal information we hold about you. Contact {company.name} to
-              make a request.
+              deletion of personal information we hold about you. Contact {company.name}
+              {hasPublicEmail() ? (
+                <>
+                  {" "}
+                  at{" "}
+                  <a
+                    href={`mailto:${company.email}`}
+                    className="text-off-white underline underline-offset-4"
+                  >
+                    {company.email}
+                  </a>
+                </>
+              ) : (
+                <> using the campaign enquiry form on this website</>
+              )}{" "}
+              to make a request.
             </p>
           </div>
 

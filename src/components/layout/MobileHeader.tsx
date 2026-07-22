@@ -146,7 +146,7 @@ export function MobileHeader() {
 
             <div className="mt-6 space-y-4 border-t border-border-dark pt-6">
               <PrimaryButton
-                href={`#${primaryCta.id}`}
+                href={primaryCta.href}
                 className="w-full"
                 onClick={() => setOpen(false)}
               >

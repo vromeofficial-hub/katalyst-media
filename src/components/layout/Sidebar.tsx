@@ -60,7 +60,7 @@ export function Sidebar() {
         </nav>
 
         <div className="mt-8">
-          <PrimaryButton href={`#${primaryCta.id}`} className="w-full" showArrow>
+          <PrimaryButton href={primaryCta.href} className="w-full" showArrow>
             {primaryCta.label}
           </PrimaryButton>
         </div>
@@ -76,7 +76,7 @@ export function Sidebar() {
             </a>
           ) : (
             <a
-              href="#contact"
+              href="/#contact"
               className="mt-2 block text-sm text-soft-grey underline-offset-4 transition-colors hover:text-acid-lime hover:underline"
             >
               Start a campaign enquiry

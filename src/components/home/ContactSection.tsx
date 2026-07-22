@@ -106,7 +106,6 @@ export function ContactSection() {
             <form
               onSubmit={onSubmit}
               className="rounded-[20px] border border-border-dark bg-carbon p-5 md:p-7"
-              noValidate
             >
               <div className="grid gap-5 sm:grid-cols-2">
                 <div className="sm:col-span-1">

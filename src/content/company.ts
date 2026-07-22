@@ -20,7 +20,7 @@ export const company = {
 } as const;
 
 export function getMailtoHref() {
-  if (!company.email) return "#contact";
+  if (!company.email) return "/#contact";
   return `mailto:${company.email}`;
 }
 
