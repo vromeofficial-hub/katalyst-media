@@ -1,0 +1,106 @@
+.paid-media-panel {
+  position: relative;
+  border-radius: 20px;
+  padding: 2px;
+  overflow: hidden;
+  background: rgba(198, 255, 0, 0.06);
+}
+
+.paid-media-panel__glow {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.paid-media-panel__neon {
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(
+    from 180deg,
+    transparent 0deg,
+    transparent 290deg,
+    rgba(198, 255, 0, 0.08) 310deg,
+    rgba(198, 255, 0, 0.45) 330deg,
+    #c6ff00 345deg,
+    rgba(198, 255, 0, 0.35) 355deg,
+    transparent 360deg
+  );
+  animation: paid-media-orbit 8s linear infinite;
+  will-change: transform;
+}
+
+.paid-media-panel__inner {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #080809;
+  padding: 1.25rem 1.15rem 1.35rem;
+}
+
+@media (min-width: 640px) {
+  .paid-media-panel__inner {
+    padding: 1.5rem;
+  }
+}
+
+.paid-media-wave {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 22px;
+}
+
+.paid-media-wave span {
+  width: 3px;
+  border-radius: 999px;
+  background: #c6ff00;
+  opacity: 0.55;
+  transform-origin: bottom;
+}
+
+.paid-media-wave span:nth-child(1) { height: 28%; }
+.paid-media-wave span:nth-child(2) { height: 55%; }
+.paid-media-wave span:nth-child(3) { height: 40%; }
+.paid-media-wave span:nth-child(4) { height: 85%; }
+.paid-media-wave span:nth-child(5) { height: 48%; }
+.paid-media-wave span:nth-child(6) { height: 70%; }
+.paid-media-wave span:nth-child(7) { height: 35%; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .paid-media-wave span {
+    animation: paid-media-wave 1.6s ease-in-out infinite;
+  }
+
+  .paid-media-wave span:nth-child(2) { animation-delay: 0.1s; }
+  .paid-media-wave span:nth-child(3) { animation-delay: 0.2s; }
+  .paid-media-wave span:nth-child(4) { animation-delay: 0.05s; }
+  .paid-media-wave span:nth-child(5) { animation-delay: 0.25s; }
+  .paid-media-wave span:nth-child(6) { animation-delay: 0.15s; }
+  .paid-media-wave span:nth-child(7) { animation-delay: 0.3s; }
+}
+
+@keyframes paid-media-orbit {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes paid-media-wave {
+  0%, 100% { transform: scaleY(0.7); opacity: 0.4; }
+  50% { transform: scaleY(1); opacity: 0.85; }
+}
+
+/* Keep neon orbit even when OS reduce-motion is on — decorative only, low intensity */
+@media (prefers-reduced-motion: reduce) {
+  .paid-media-panel__neon {
+    animation-duration: 14s;
+  }
+
+  .paid-media-wave span {
+    animation: none;
+  }
+}
