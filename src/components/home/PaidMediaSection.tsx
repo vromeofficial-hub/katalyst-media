@@ -70,7 +70,7 @@ export function PaidMediaSection() {
                       <li
                         key={stage.number}
                         className={cn(
-                          "group relative grid grid-cols-[auto_1fr] items-center gap-4 rounded-[12px] border px-3.5 py-3.5 transition-colors duration-200 sm:gap-5 sm:px-4 sm:py-4",
+                          "group relative grid grid-cols-[auto_1fr] items-center gap-3.5 rounded-[12px] border px-3.5 py-3.5 transition-colors duration-200 sm:gap-5 sm:px-4 sm:py-4",
                           isLast
                             ? "border-lime-border bg-lime-soft"
                             : "border-border-dark bg-graphite/70 hover:border-lime-border/50 hover:bg-elevated/60",
@@ -87,17 +87,22 @@ export function PaidMediaSection() {
                           {stage.number}
                         </span>
 
-                        <div className="flex min-w-0 items-center justify-between gap-3">
-                          <h3 className="font-display text-base font-semibold tracking-[-0.02em] text-off-white sm:text-lg">
-                            {stage.title}
-                          </h3>
-                          <span
-                            className={cn(
-                              "hidden h-1.5 w-1.5 shrink-0 rounded-full sm:block",
-                              isLast ? "bg-acid-lime" : "bg-soft-grey/40",
-                            )}
-                            aria-hidden="true"
-                          />
+                        <div className="min-w-0">
+                          <div className="flex items-center justify-between gap-3">
+                            <h3 className="font-display text-base font-semibold tracking-[-0.02em] text-off-white sm:text-lg">
+                              {stage.title}
+                            </h3>
+                            <span
+                              className={cn(
+                                "hidden h-1.5 w-1.5 shrink-0 rounded-full sm:block",
+                                isLast ? "bg-acid-lime" : "bg-soft-grey/40",
+                              )}
+                              aria-hidden="true"
+                            />
+                          </div>
+                          <p className="mt-1.5 text-sm leading-relaxed text-soft-grey">
+                            {stage.description}
+                          </p>
                         </div>
                       </li>
                     );

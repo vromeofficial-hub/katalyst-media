@@ -46,14 +46,6 @@ export function OverviewSection() {
           >
             {heroCopy.description}
           </motion.p>
-          <motion.p
-            className="mt-3 max-w-lg text-sm leading-relaxed text-soft-grey/80"
-            initial={animate ? { opacity: 0 } : false}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.4, delay: 0.18 }}
-          >
-            {heroCopy.supporting}
-          </motion.p>
           <motion.div
             className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center"
             initial={animate ? { opacity: 0, y: 12 } : false}

@@ -22,7 +22,7 @@ const ActiveSectionContext = createContext<ActiveSectionContextValue | null>(
 
 /**
  * All homepage bands in document order, mapped to the nearest primary-nav id
- * so orphan sections (introduction / audience / why) don't freeze the spy.
+ * so orphan sections (introduction / audience) don't freeze the spy.
  */
 const scrollSections: { id: string; navId: string }[] = [
   { id: "overview", navId: "overview" },
@@ -30,9 +30,8 @@ const scrollSections: { id: string; navId: string }[] = [
   { id: "services", navId: "services" },
   { id: "paid-media", navId: "paid-media" },
   { id: "process", navId: "process" },
-  { id: "capabilities", navId: "capabilities" },
   { id: "audience", navId: "about" },
-  { id: "why", navId: "about" },
+  { id: "work", navId: "work" },
   { id: "about", navId: "about" },
   { id: "faq", navId: "faq" },
   { id: "contact", navId: "contact" },

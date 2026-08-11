@@ -6,7 +6,7 @@ export type ProcessStep = {
 
 export const processIntro = {
   eyebrow: "How we work",
-  headline: "A clear process for every campaign.",
+  headline: "What happens when you work with Katalyst.",
 };
 
 export const processSteps: ProcessStep[] = [
@@ -14,30 +14,30 @@ export const processSteps: ProcessStep[] = [
     number: "01",
     title: "Understand the Release",
     description:
-      "We learn about the artist, music, release date, audience and campaign goals.",
+      "Artist, music, timing, audience and what the campaign needs to achieve.",
   },
   {
     number: "02",
     title: "Build the Strategy",
     description:
-      "We choose the right combination of content, creator activity, paid advertising and release promotion.",
+      "Choose the right mix of creators, content, paid media and rollout for the release.",
   },
   {
     number: "03",
-    title: "Develop the Creative Direction",
+    title: "Develop Creative Direction",
     description:
-      "We plan the campaign messaging, visual direction, promotional content and advertising material.",
+      "Shape messaging, visuals and promotional creative before anything goes live.",
   },
   {
     number: "04",
-    title: "Launch and Manage",
+    title: "Launch & Manage",
     description:
-      "We coordinate the campaign rollout, creator activity and paid advertising where required.",
+      "Coordinate the rollout and keep creator and paid activity moving as planned.",
   },
   {
     number: "05",
-    title: "Review and Report",
+    title: "Review & Report",
     description:
-      "We monitor available performance data, make campaign adjustments and provide a clear summary of the results.",
+      "Track available performance data, adjust where useful and summarise the outcome.",
   },
 ];

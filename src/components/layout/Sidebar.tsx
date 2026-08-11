@@ -2,8 +2,8 @@
 
 import {
   ArrowDownRight,
+  Briefcase,
   CircleHelp,
-  Crosshair,
   Home,
   Layers,
   Mail,
@@ -34,7 +34,7 @@ const navIcons: Record<(typeof primaryNav)[number]["id"], LucideIcon> = {
   services: Layers,
   "paid-media": Megaphone,
   process: Waypoints,
-  capabilities: Crosshair,
+  work: Briefcase,
   about: User,
   faq: CircleHelp,
   contact: Mail,
@@ -207,7 +207,7 @@ export function Sidebar() {
             </div>
 
             <p className="relative mt-2.5 text-[0.8rem] leading-snug text-off-white/90">
-              Ready to discuss your music or upcoming release?
+              Ready to discuss your music or next release?
             </p>
 
             <Link

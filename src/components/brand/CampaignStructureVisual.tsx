@@ -40,7 +40,7 @@ export function CampaignStructureVisual({ className }: { className?: string }) {
           >
             <p className="text-xs uppercase tracking-[0.12em] text-muted-grey">Release</p>
             <p className="mt-1 font-display text-lg font-semibold tracking-[-0.02em] text-off-white">
-              One release · Coordinated marketing
+              One Release. Coordinated Marketing.
             </p>
           </motion.div>
 

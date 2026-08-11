@@ -3,7 +3,6 @@ import {
   ChartNoAxesCombined,
   Clapperboard,
   Megaphone,
-  Share2,
   Users,
 } from "lucide-react";
 import { Container } from "@/components/layout/Container";
@@ -15,7 +14,6 @@ const icons: Record<ServiceItem["icon"], typeof Users> = {
   megaphone: Megaphone,
   clapperboard: Clapperboard,
   calendar: CalendarRange,
-  share: Share2,
   chart: ChartNoAxesCombined,
 };
 

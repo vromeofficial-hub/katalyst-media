@@ -1,29 +1,29 @@
 export const heroCopy = {
   description:
-    "Katalyst Media helps independent and upcoming artists promote their releases through creator campaigns, paid advertising, short-form content and release strategy.",
-  supporting:
-    "We plan and manage coordinated campaigns designed around the artist, the music and the goals of each release.",
+    "Katalyst Media builds and manages release campaigns for independent and emerging artists, combining creator marketing, short-form content and paid media around one coordinated strategy.",
 };
 
 export const introCopy = {
   eyebrow: "Introduction",
   headline: "Music promotion needs more than one post.",
   description:
-    "A release campaign needs more than isolated content. Katalyst Media brings strategy, creator outreach, paid advertising and campaign management together around one coordinated plan.",
-  approachLabel: "Our approach",
+    "Isolated posts and one-off promotion rarely move a release. Stronger campaigns connect strategy, creative and distribution around the same release objective.",
+  approachLabel: "Why Katalyst",
   points: [
     {
-      title: "Built around the release",
-      description: "Campaigns shaped by the music, timing and release goals.",
-    },
-    {
-      title: "Focused on relevant listeners",
-      description: "Reach audiences who are more likely to connect with the music.",
-    },
-    {
-      title: "Managed from strategy to reporting",
+      title: "Release-led strategy",
       description:
-        "Planning, launch, optimisation and clear reporting in one coordinated process.",
+        "Everything starts with the music, release timing and campaign objective.",
+    },
+    {
+      title: "Relevant audience reach",
+      description:
+        "Creators, content and advertising are selected around the listeners most likely to connect.",
+    },
+    {
+      title: "One managed campaign",
+      description:
+        "Strategy, creative, launch, optimisation and reporting stay coordinated in one place.",
     },
   ],
 };
@@ -32,14 +32,14 @@ export type ServiceItem = {
   number: string;
   title: string;
   description: string;
-  icon: "users" | "megaphone" | "clapperboard" | "calendar" | "share" | "chart";
+  icon: "users" | "megaphone" | "clapperboard" | "calendar" | "chart";
 };
 
 export const servicesIntro = {
   eyebrow: "Services",
   headline: "Music marketing built around your release.",
   description:
-    "Creator campaigns are one part of a wider offer. Katalyst Media plans and manages coordinated music marketing across creators, content and paid advertising.",
+    "Five focused services that can run alone or together as one release campaign.",
 };
 
 export const coreServices: ServiceItem[] = [
@@ -48,104 +48,79 @@ export const coreServices: ServiceItem[] = [
     title: "Creator Campaigns",
     icon: "users",
     description:
-      "Coordinated placements across relevant creators, music pages and online communities to introduce releases to suitable new audiences.",
+      "Creator research, shortlisting, outreach, briefs and placement coordination — so the right creators introduce the release to relevant audiences.",
   },
   {
     number: "02",
-    title: "Paid Ad Campaigns",
+    title: "Paid Advertising",
     icon: "megaphone",
     description:
-      "We plan, launch and manage paid advertising campaigns for artists and music releases, including targeting, budget management, creative testing, optimisation and reporting.",
+      "Objectives, audience targeting, budget allocation, creative testing, launch, optimisation and reporting for paid campaigns around the release.",
   },
   {
     number: "03",
-    title: "Content and Creative Direction",
+    title: "Content & Creative Direction",
     icon: "clapperboard",
     description:
-      "Short-form content ideas, promotional visuals and creative guidance for TikTok, Instagram Reels, YouTube Shorts and other suitable platforms.",
+      "Short-form concepts for TikTok, Reels and Shorts, plus promotional visuals, campaign messaging and ad creative direction.",
   },
   {
     number: "04",
     title: "Release Campaign Strategy",
     icon: "calendar",
     description:
-      "Structured planning for the period before, during and after the release of a single, EP, album or music video.",
+      "Pre-release, release-week and post-release planning — timeline, channel selection, content rollout and budget shape.",
   },
   {
     number: "05",
-    title: "Social Media Marketing",
-    icon: "share",
-    description:
-      "Release-focused content planning, campaign messaging and promotional support designed to create consistent attention around the music.",
-  },
-  {
-    number: "06",
-    title: "Campaign Management and Reporting",
+    title: "Campaign Management & Reporting",
     icon: "chart",
     description:
-      "We coordinate campaign activity, monitor performance, make adjustments and report on the available results.",
+      "Day-to-day coordination across creators and paid media, performance monitoring, live adjustments and a clear performance review.",
   },
 ];
 
 export const heroStructureItems = [
   "Creator campaigns",
   "Paid advertising",
-  "Short-form content",
-  "Creative direction",
+  "Content & creative",
   "Release strategy",
-  "Campaign reporting",
+  "Campaign management",
 ] as const;
 
 export const paidMediaCopy = {
   eyebrow: "Paid media",
   headline: "We do more than make the ad. We run the campaign.",
   description:
-    "Katalyst Media can manage the paid advertising process from campaign planning and audience targeting through to launch, optimisation and reporting.",
-  note: "Advertising platforms and campaign formats are selected based on the release, audience, content and available budget.",
+    "From objective and targeting through creative testing, launch and reporting — Katalyst can manage the paid side of a release campaign end to end.",
+  note: "Platforms and formats are chosen for the release, audience, creative and budget — not as a fixed package.",
   stages: [
-    { number: "01", title: "Campaign objective" },
-    { number: "02", title: "Audience targeting" },
-    { number: "03", title: "Creative selection" },
-    { number: "04", title: "Launch and optimisation" },
-    { number: "05", title: "Performance reporting" },
-  ],
-};
-
-export const capabilitiesCopy = {
-  eyebrow: "Campaign capabilities",
-  headline: "What a Katalyst Media campaign can include.",
-  description:
-    "Every release requires a different approach. Depending on the artist, goals and campaign requirements, a campaign may combine several of the following services.",
-  items: [
     {
       number: "01",
-      title: "Release strategy",
-      description: "Timing, objectives and campaign shape around the release.",
+      title: "Campaign objective",
+      description: "Define what the campaign needs to achieve around the release.",
     },
     {
       number: "02",
-      title: "Creator outreach",
-      description: "Relevant creators, pages and communities for placement.",
+      title: "Audience targeting",
+      description:
+        "Build audiences around genre, listener behaviour and campaign goals.",
     },
     {
       number: "03",
-      title: "Short-form content",
-      description: "Content ideas and formats for promotional clips.",
+      title: "Creative selection",
+      description: "Select and test promotional content suited to the campaign.",
     },
     {
       number: "04",
-      title: "Paid advertising",
-      description: "Audience targeting, budget and creative testing.",
+      title: "Launch & optimisation",
+      description:
+        "Monitor performance and adjust audiences, budget and creative.",
     },
     {
       number: "05",
-      title: "Campaign optimisation",
-      description: "Ongoing adjustments while the campaign is live.",
-    },
-    {
-      number: "06",
       title: "Performance reporting",
-      description: "Clear reporting on available campaign metrics.",
+      description: "Review campaign data and identify what performed best.",
     },
   ],
 };
@@ -156,59 +131,53 @@ export const audienceCopy = {
   groups: [
     {
       title: "Independent Artists",
-      description: "Artists independently releasing and promoting their own music.",
+      description: "Artists releasing and promoting their own music independently.",
     },
     {
-      title: "Upcoming Artists",
+      title: "Emerging Artists",
       description:
-        "Developing artists who want to reach new listeners and build stronger release campaigns.",
+        "Artists building an audience and looking for clearer, more structured release campaigns.",
     },
     {
       title: "Producers",
       description:
-        "Producers promoting tracks, collaborations, instrumental releases or creative projects.",
+        "Producers promoting tracks, collaborations, instrumentals or creative projects.",
     },
     {
-      title: "Music Teams and Labels",
+      title: "Artist Teams & Independent Labels",
       description:
-        "Small teams and independent labels that need additional campaign, content or advertising support.",
+        "Small teams and labels that need extra campaign, content or paid-media support.",
     },
   ],
 };
 
-export const whyCopy = {
-  eyebrow: "Approach",
-  headline: "A coordinated approach to music marketing.",
-  points: [
-    {
-      title: "Release-Focused",
-      description:
-        "Each campaign is built around the music, the release schedule and the artist’s goals.",
-    },
-    {
-      title: "Creative and Strategic",
-      description: "We combine campaign planning with content and creative direction.",
-    },
-    {
-      title: "Multi-Channel",
-      description:
-        "Creator activity, short-form content and paid advertising can work together instead of operating separately.",
-    },
-    {
-      title: "Clear Campaign Management",
-      description:
-        "We organise campaign activity and provide transparent reporting based on the data available.",
-    },
-  ],
+export const workCopy = {
+  eyebrow: "Work",
+  headline: "Selected release campaigns.",
+  description:
+    "Case studies will appear here as campaigns are documented — covering objective, strategy, creator and paid activity, creative examples and results.",
+  emptyLabel: "Case studies coming soon",
+  emptyNote:
+    "This section is reserved for real campaign write-ups. Katalyst does not invent clients, results or testimonials.",
+  cardFields: [
+    "Artist / release",
+    "Campaign objective",
+    "Katalyst strategy",
+    "Creator activity",
+    "Paid media activity",
+    "Creative examples",
+    "Results",
+    "Key takeaway",
+  ] as const,
 };
 
 export const aboutCopy = {
   eyebrow: "About",
   headline: "About Katalyst Media",
   paragraphs: [
-    "Katalyst Media is a music marketing and creative agency built to help independent and upcoming artists promote their releases and reach new listeners.",
-    "We combine creator campaigns, paid advertising, short-form content, creative direction and release strategy to build coordinated campaigns around each artist and release.",
-    "Our role is to help artists present their music clearly, reach relevant audiences and manage the promotional process more effectively.",
+    "Katalyst Media was built around a simple idea: music marketing works better when the different parts of a release campaign work together.",
+    "Instead of treating creator promotion, content and paid media as separate activities, Katalyst brings them into one release-focused strategy for independent and emerging artists.",
+    "The aim is a clearer alternative to disconnected promotion — structured around the music, the timing and the goal of each release.",
   ],
 };
 
@@ -217,34 +186,59 @@ export const faqCopy = {
   headline: "Common questions.",
   items: [
     {
-      question: "What services does Katalyst Media provide?",
+      question: "How early should a campaign start before release?",
       answer:
-        "Katalyst Media provides creator campaigns, paid advertising, short-form content support, creative direction, release strategy, social media marketing, campaign management and reporting.",
+        "Earlier planning usually helps. Many campaigns begin in the weeks before release so strategy, creative and outreach can be set before launch week.",
     },
     {
-      question: "Do you run paid advertising campaigns?",
+      question: "Can you promote music that is already released?",
       answer:
-        "Yes. Katalyst Media can plan, launch, manage and optimise paid advertising campaigns for artists and music releases.",
+        "Yes. Live or catalogue releases can still be supported with a clear objective, audience plan and suitable creative.",
     },
     {
-      question: "Do you only work with TikTok creators?",
+      question: "Can an artist use only one Katalyst service?",
       answer:
-        "No. Creator campaigns are one part of the wider service. Campaigns may also include paid advertising, short-form content, release strategy and other promotional activity.",
+        "Yes. Services can run individually or as a combined release campaign, depending on what the project needs.",
+    },
+    {
+      question: "What does an artist need before starting a campaign?",
+      answer:
+        "Typically the release (or a clear release plan), usable audio/visual assets, and an idea of goals and budget. Exact requirements depend on the services involved.",
+    },
+    {
+      question: "What budget is needed for paid advertising?",
+      answer:
+        "There is no single figure. Budget depends on objectives, platforms, creative and how long the campaign needs to run. Katalyst can help shape a realistic plan.",
+    },
+    {
+      question: "How long does a typical campaign run?",
+      answer:
+        "Timelines vary. Some focus on release week; others span pre-release, launch and a short post-release window.",
+    },
+    {
+      question: "How are creators selected?",
+      answer:
+        "Through research and shortlisting based on relevance to the music, audience fit and campaign goals — not random outreach.",
+    },
+    {
+      question: "How are campaign results measured?",
+      answer:
+        "Against the agreed objective, using the performance data available from creators, platforms and paid media. Metrics depend on the campaign setup.",
+    },
+    {
+      question: "Do you work with singles, EPs and albums?",
+      answer:
+        "Yes. Campaigns can support singles, EPs, albums and other release formats where promotion is needed.",
+    },
+    {
+      question: "Can Katalyst work alongside an artist’s existing team?",
+      answer:
+        "Yes. Katalyst can plug into existing management, label or creative workflows when a release needs additional campaign support.",
     },
     {
       question: "Do you guarantee streams or views?",
       answer:
-        "No. Music marketing results depend on the release, creative material, audience response, budget, platform performance and market conditions.",
-    },
-    {
-      question: "Who does Katalyst Media work with?",
-      answer:
-        "Katalyst Media is primarily built for independent artists, upcoming artists, producers, music teams and independent labels.",
-    },
-    {
-      question: "How can I contact Katalyst Media?",
-      answer:
-        "Open the Contact section at the bottom of this page. When email or social links are listed there, you can reach Katalyst Media directly to discuss your music or marketing requirements.",
+        "No. Results depend on the release, creative, audience response, budget, platform performance and market conditions.",
     },
   ],
 };
@@ -253,7 +247,7 @@ export const contactCopy = {
   eyebrow: "Contact",
   headline: "Contact Katalyst Media",
   description:
-    "Get in touch to discuss your music, upcoming release or marketing requirements.",
+    "Get in touch to discuss your music, release or marketing requirements.",
   emailButton: "Email Katalyst Media",
   instagramButton: "Instagram",
   emptyState:

@@ -5,9 +5,9 @@ export const company = {
   positioning: "Music marketing, creator campaigns and paid advertising for artists.",
   heroEyebrow: "Music marketing for artists",
   sidebarDescription:
-    "Creator campaigns, paid advertising and release-focused promotion for independent and upcoming artists.",
+    "Creator campaigns, paid advertising and release-focused promotion for independent and emerging artists.",
   description:
-    "Katalyst Media helps independent artists promote their music through creator campaigns, paid advertising, short-form content and release strategy.",
+    "Katalyst Media builds and manages release campaigns for independent and emerging artists through creator marketing, short-form content and paid media.",
   focusLabel: "What we do",
   location: "United Kingdom",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.katalystmedia.xyz",
