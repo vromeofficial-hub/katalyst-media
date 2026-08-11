@@ -33,6 +33,7 @@ export type ServiceItem = {
   title: string;
   description: string;
   icon: "users" | "megaphone" | "clapperboard" | "calendar" | "chart";
+  capabilities: readonly string[];
 };
 
 export const servicesIntro = {
@@ -49,6 +50,13 @@ export const coreServices: ServiceItem[] = [
     icon: "users",
     description:
       "Creator research, shortlisting, outreach, briefs and placement coordination — so the right creators introduce the release to relevant audiences.",
+    capabilities: [
+      "Creator research",
+      "Shortlisting",
+      "Outreach",
+      "Campaign briefs",
+      "Placement",
+    ],
   },
   {
     number: "02",
@@ -56,6 +64,13 @@ export const coreServices: ServiceItem[] = [
     icon: "megaphone",
     description:
       "Objectives, audience targeting, budget allocation, creative testing, launch, optimisation and reporting for paid campaigns around the release.",
+    capabilities: [
+      "Targeting",
+      "Budget",
+      "Creative testing",
+      "Optimisation",
+      "Reporting",
+    ],
   },
   {
     number: "03",
@@ -63,6 +78,13 @@ export const coreServices: ServiceItem[] = [
     icon: "clapperboard",
     description:
       "Short-form concepts for TikTok, Reels and Shorts, plus promotional visuals, campaign messaging and ad creative direction.",
+    capabilities: [
+      "TikTok",
+      "Reels",
+      "Shorts",
+      "Visual direction",
+      "Ad creative",
+    ],
   },
   {
     number: "04",
@@ -70,6 +92,13 @@ export const coreServices: ServiceItem[] = [
     icon: "calendar",
     description:
       "Pre-release, release-week and post-release planning — timeline, channel selection, content rollout and budget shape.",
+    capabilities: [
+      "Pre-release",
+      "Release week",
+      "Post-release",
+      "Timeline",
+      "Rollout",
+    ],
   },
   {
     number: "05",
@@ -77,6 +106,13 @@ export const coreServices: ServiceItem[] = [
     icon: "chart",
     description:
       "Day-to-day coordination across creators and paid media, performance monitoring, live adjustments and a clear performance review.",
+    capabilities: [
+      "Coordination",
+      "Monitoring",
+      "Adjustments",
+      "Paid media",
+      "Reporting",
+    ],
   },
 ];
 
@@ -155,20 +191,19 @@ export const workCopy = {
   eyebrow: "Work",
   headline: "Selected release campaigns.",
   description:
-    "Case studies will appear here as campaigns are documented — covering objective, strategy, creator and paid activity, creative examples and results.",
-  emptyLabel: "Case studies coming soon",
+    "Genuine campaign breakdowns will be published here as they are documented.",
+  archiveLabel: "Campaign archive",
   emptyNote:
-    "This section is reserved for real campaign write-ups. Katalyst does not invent clients, results or testimonials.",
-  cardFields: [
-    "Artist / release",
-    "Campaign objective",
-    "Katalyst strategy",
+    "Real campaign write-ups will appear here once campaigns have been properly documented. Katalyst does not invent clients, results or testimonials.",
+  focusAreas: [
+    "Strategy",
     "Creator activity",
-    "Paid media activity",
-    "Creative examples",
-    "Results",
-    "Key takeaway",
+    "Paid media",
+    "Creative",
+    "Performance",
   ] as const,
+  /** Reserved for future case-study entries. */
+  caseStudies: [] as const,
 };
 
 export const aboutCopy = {

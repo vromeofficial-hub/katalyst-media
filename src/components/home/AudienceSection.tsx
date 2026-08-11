@@ -16,14 +16,23 @@ export function AudienceSection() {
           </h2>
         </Reveal>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 sm:gap-5">
           {audienceCopy.groups.map((group, index) => (
             <Reveal key={group.title} delay={index * 0.04}>
-              <article className="border-t border-border-dark pt-5">
-                <h3 className="font-display text-xl font-semibold tracking-[-0.02em] text-off-white">
+              <article className="group h-full rounded-[14px] border border-border-dark bg-carbon/40 px-5 py-5 transition-colors duration-200 hover:border-lime-border/50 hover:bg-carbon/70">
+                <div className="flex items-center gap-3">
+                  <span
+                    className="h-4 w-0.5 rounded-full bg-acid-lime/80 transition-shadow duration-200 group-hover:shadow-[0_0_10px_rgba(198,255,0,0.45)]"
+                    aria-hidden="true"
+                  />
+                  <p className="font-sans text-[0.65rem] tabular-nums tracking-[0.08em] text-acid-lime">
+                    {String(index + 1).padStart(2, "0")}
+                  </p>
+                </div>
+                <h3 className="mt-3 font-display text-xl font-semibold tracking-[-0.02em] text-off-white">
                   {group.title}
                 </h3>
-                <p className="mt-3 text-sm leading-relaxed text-soft-grey md:text-base">
+                <p className="mt-2.5 text-sm leading-relaxed text-soft-grey md:text-[0.975rem]">
                   {group.description}
                 </p>
               </article>
