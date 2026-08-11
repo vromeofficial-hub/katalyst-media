@@ -1,10 +1,8 @@
 "use client";
 
 import { Container } from "@/components/layout/Container";
-import { EqualizerWave } from "@/components/ui/EqualizerWave";
 import { Reveal } from "@/components/ui/Reveal";
 import { paidMediaCopy } from "@/content/services";
-import { cn } from "@/lib/utils";
 import "./paid-media.css";
 
 export function PaidMediaSection() {
@@ -47,66 +45,33 @@ export function PaidMediaSection() {
               </div>
 
               <div className="paid-media-panel__inner">
-                <div
-                  className="pointer-events-none absolute inset-0 grid-overlay opacity-30"
-                  aria-hidden="true"
-                />
-
-                <div className="relative mb-6 flex items-end justify-between gap-4 border-b border-border-dark pb-4">
-                  <div>
-                    <p className="label-caps text-acid-lime">Campaign stages</p>
-                    <p className="mt-1 text-sm text-soft-grey">
-                      From objective to reporting
-                    </p>
-                  </div>
-                  <EqualizerWave />
+                <div className="relative mb-5 border-b border-border-dark pb-4">
+                  <p className="label-caps text-acid-lime">Campaign stages</p>
+                  <p className="mt-1 text-sm text-soft-grey">
+                    From objective to reporting
+                  </p>
                 </div>
 
                 <ol className="relative space-y-2">
-                  {paidMediaCopy.stages.map((stage, index) => {
-                    const isLast = index === paidMediaCopy.stages.length - 1;
+                  {paidMediaCopy.stages.map((stage) => (
+                    <li
+                      key={stage.number}
+                      className="relative grid grid-cols-[auto_1fr] items-start gap-3.5 rounded-[12px] border border-border-dark bg-graphite/50 px-3.5 py-3.5 transition-colors duration-200 hover:border-white/15 sm:gap-4 sm:px-4 sm:py-4"
+                    >
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-[9px] border border-white/10 bg-deep-black font-sans text-xs tabular-nums tracking-[0.08em] text-acid-lime sm:size-10 sm:rounded-[10px]">
+                        {stage.number}
+                      </span>
 
-                    return (
-                      <li
-                        key={stage.number}
-                        className={cn(
-                          "group relative grid grid-cols-[auto_1fr] items-center gap-3.5 rounded-[12px] border px-3.5 py-3.5 transition-colors duration-200 sm:gap-5 sm:px-4 sm:py-4",
-                          isLast
-                            ? "border-lime-border bg-lime-soft"
-                            : "border-border-dark bg-graphite/70 hover:border-lime-border/50 hover:bg-elevated/60",
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            "flex size-10 shrink-0 items-center justify-center rounded-[10px] font-sans text-xs tabular-nums tracking-[0.08em]",
-                            isLast
-                              ? "bg-acid-lime text-carbon"
-                              : "border border-lime-border/60 bg-deep-black text-acid-lime",
-                          )}
-                        >
-                          {stage.number}
-                        </span>
-
-                        <div className="min-w-0">
-                          <div className="flex items-center justify-between gap-3">
-                            <h3 className="font-display text-base font-semibold tracking-[-0.02em] text-off-white sm:text-lg">
-                              {stage.title}
-                            </h3>
-                            <span
-                              className={cn(
-                                "hidden h-1.5 w-1.5 shrink-0 rounded-full sm:block",
-                                isLast ? "bg-acid-lime" : "bg-soft-grey/40",
-                              )}
-                              aria-hidden="true"
-                            />
-                          </div>
-                          <p className="mt-1.5 text-sm leading-relaxed text-soft-grey">
-                            {stage.description}
-                          </p>
-                        </div>
-                      </li>
-                    );
-                  })}
+                      <div className="min-w-0 pt-0.5">
+                        <h3 className="font-display text-base font-semibold tracking-[-0.02em] text-off-white sm:text-lg">
+                          {stage.title}
+                        </h3>
+                        <p className="mt-1.5 text-sm leading-relaxed text-soft-grey">
+                          {stage.description}
+                        </p>
+                      </div>
+                    </li>
+                  ))}
                 </ol>
               </div>
             </div>

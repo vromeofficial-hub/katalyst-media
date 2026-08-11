@@ -2,7 +2,6 @@
 
 import {
   ArrowDownRight,
-  Briefcase,
   CircleHelp,
   Home,
   Layers,
@@ -34,7 +33,6 @@ const navIcons: Record<(typeof primaryNav)[number]["id"], LucideIcon> = {
   services: Layers,
   "paid-media": Megaphone,
   process: Waypoints,
-  work: Briefcase,
   about: User,
   faq: CircleHelp,
   contact: Mail,

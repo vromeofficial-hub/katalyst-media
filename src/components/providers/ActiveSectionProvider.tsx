@@ -31,7 +31,6 @@ const scrollSections: { id: string; navId: string }[] = [
   { id: "paid-media", navId: "paid-media" },
   { id: "process", navId: "process" },
   { id: "audience", navId: "about" },
-  { id: "work", navId: "work" },
   { id: "about", navId: "about" },
   { id: "faq", navId: "faq" },
   { id: "contact", navId: "contact" },

@@ -8,7 +8,6 @@ import { OverviewSection } from "@/components/home/OverviewSection";
 import { PaidMediaSection } from "@/components/home/PaidMediaSection";
 import { ProcessSection } from "@/components/home/ProcessSection";
 import { ServicesSection } from "@/components/home/ServicesSection";
-import { WorkSection } from "@/components/home/WorkSection";
 import { company } from "@/content/company";
 import { createMetadata } from "@/lib/metadata";
 
@@ -28,7 +27,6 @@ export default function HomePage() {
       <PaidMediaSection />
       <ProcessSection />
       <AudienceSection />
-      <WorkSection />
       <AboutSection />
       <FaqSection />
       <ContactSection />

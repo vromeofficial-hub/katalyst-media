@@ -10,17 +10,15 @@ export const primaryNav: NavItem[] = [
   { number: "02", label: "Services", href: "/#services", id: "services" },
   { number: "03", label: "Paid Media", href: "/#paid-media", id: "paid-media" },
   { number: "04", label: "Process", href: "/#process", id: "process" },
-  { number: "05", label: "Work", href: "/#work", id: "work" },
-  { number: "06", label: "About", href: "/#about", id: "about" },
-  { number: "07", label: "FAQ", href: "/#faq", id: "faq" },
-  { number: "08", label: "Contact", href: "/#contact", id: "contact" },
+  { number: "05", label: "About", href: "/#about", id: "about" },
+  { number: "06", label: "FAQ", href: "/#faq", id: "faq" },
+  { number: "07", label: "Contact", href: "/#contact", id: "contact" },
 ];
 
 export const footerNav = [
   { label: "Services", href: "/#services" },
   { label: "Paid Media", href: "/#paid-media" },
   { label: "Process", href: "/#process" },
-  { label: "Work", href: "/#work" },
   { label: "About", href: "/#about" },
   { label: "FAQ", href: "/#faq" },
   { label: "Contact", href: "/#contact" },

@@ -187,25 +187,6 @@ export const audienceCopy = {
   ],
 };
 
-export const workCopy = {
-  eyebrow: "Work",
-  headline: "Selected release campaigns.",
-  description:
-    "Genuine campaign breakdowns will be published here as they are documented.",
-  archiveLabel: "Campaign archive",
-  emptyNote:
-    "Real campaign write-ups will appear here once campaigns have been properly documented. Katalyst does not invent clients, results or testimonials.",
-  focusAreas: [
-    "Strategy",
-    "Creator activity",
-    "Paid media",
-    "Creative",
-    "Performance",
-  ] as const,
-  /** Reserved for future case-study entries. */
-  caseStudies: [] as const,
-};
-
 export const aboutCopy = {
   eyebrow: "About",
   headline: "About Katalyst Media",
