@@ -40,21 +40,26 @@ const navIcons: Record<(typeof primaryNav)[number]["id"], LucideIcon> = {
   contact: Mail,
 };
 
-function WaveformMark({ className }: { className?: string }) {
+function WaveformMark({
+  className,
+  variant = "brand",
+}: {
+  className?: string;
+  variant?: "brand" | "contact";
+}) {
   return (
-    <svg
-      viewBox="0 0 36 12"
-      fill="none"
+    <span
+      className={cn(
+        "sidebar-waveform text-acid-lime",
+        variant === "contact" && "sidebar-waveform--contact",
+        className,
+      )}
       aria-hidden="true"
-      className={cn("text-acid-lime", className)}
     >
-      <path
-        d="M1 6h2.5M6 3.5v5M10.5 1.5v9M15 4v4M19.5 2v8M24 4.5v3M28.5 3v6M33 5.5v1"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-      />
-    </svg>
+      {Array.from({ length: 8 }, (_, index) => (
+        <span key={index} />
+      ))}
+    </span>
   );
 }
 
@@ -110,7 +115,7 @@ export function Sidebar() {
         <div className="relative shrink-0">
           <div className="sidebar__glow" aria-hidden="true" />
           <Wordmark className="relative text-[0.8rem]" />
-          <WaveformMark className="relative mt-3 h-3 w-9" />
+          <WaveformMark variant="brand" className="relative mt-3 h-3 w-9" />
           <p className="relative mt-4 label-caps text-[0.65rem] text-acid-lime">
             Music marketing for artists
           </p>
@@ -198,7 +203,7 @@ export function Sidebar() {
               <p className="label-caps text-[0.65rem] text-acid-lime">
                 Let&apos;s talk
               </p>
-              <WaveformMark className="h-2.5 w-7 opacity-80" />
+              <WaveformMark variant="contact" className="h-2.5 w-7 opacity-80" />
             </div>
 
             <p className="relative mt-2.5 text-[0.8rem] leading-snug text-off-white/90">
