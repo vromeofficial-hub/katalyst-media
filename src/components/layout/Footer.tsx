@@ -28,7 +28,7 @@ export function Footer() {
   };
 
   return (
-    <footer className="border-t border-border-dark bg-deep-black">
+    <footer className="border-t border-border-dark bg-deep-black lg:pl-[288px]">
       <Container className="py-10 md:py-12">
         <div className="grid gap-8 md:grid-cols-[1.2fr_1fr]">
           <div>

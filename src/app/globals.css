@@ -103,6 +103,9 @@
   @media (min-width: 1024px) {
     .section-pad {
       padding-block: var(--section-desktop);
+      /* Extend section backgrounds under the fixed sidebar so rounded
+         sidebar corners reveal page/section color, not body carbon. */
+      padding-left: 288px;
     }
   }
 

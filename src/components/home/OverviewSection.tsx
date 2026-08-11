@@ -16,7 +16,7 @@ export function OverviewSection() {
   return (
     <section
       id="overview"
-      className="relative scroll-mt-20 overflow-hidden border-b border-border-dark bg-carbon grain lg:scroll-mt-0"
+      className="relative scroll-mt-20 overflow-hidden border-b border-border-dark bg-carbon grain lg:scroll-mt-0 lg:pl-[288px]"
     >
       <DirectionalLineBackground />
       <Container className="relative grid items-center gap-10 py-12 md:py-16 lg:grid-cols-12 lg:gap-10 lg:py-20">

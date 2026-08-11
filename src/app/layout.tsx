@@ -48,7 +48,7 @@ export default function RootLayout({
         <ActiveSectionProvider>
           <SkipToContent />
           <Sidebar />
-          <div className="flex min-h-full flex-col lg:pl-[288px]">
+          <div className="flex min-h-full flex-col">
             <MobileHeader />
             <main id="main-content" className="flex-1">
               {children}
