@@ -116,11 +116,15 @@
 
 /* Live audio waveform marks (brand + Let’s talk) */
 .sidebar-waveform {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 2px;
   flex-shrink: 0;
+}
+
+.sidebar-waveform--contact {
+  display: inline-flex;
 }
 
 .sidebar-waveform > span {
