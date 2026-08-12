@@ -1,8 +1,3 @@
-export const heroCopy = {
-  description:
-    "Katalyst Media builds and manages release campaigns for independent and emerging artists, combining creator marketing, short-form content and paid media around one coordinated strategy.",
-};
-
 export const introCopy = {
   eyebrow: "Introduction",
   headline: "Music promotion needs more than one post.",
