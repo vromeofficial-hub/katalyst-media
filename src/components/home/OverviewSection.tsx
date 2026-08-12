@@ -7,7 +7,6 @@ import { Container } from "@/components/layout/Container";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
 import { SecondaryButton } from "@/components/ui/SecondaryButton";
 import { company } from "@/content/company";
-import { heroCopy } from "@/content/services";
 
 export function OverviewSection() {
   const reduceMotion = useReducedMotion();
@@ -38,19 +37,11 @@ export function OverviewSection() {
             Put your music in front of the{" "}
             <span className="text-acid-lime">right listeners.</span>
           </motion.h1>
-          <motion.p
-            className="mt-5 max-w-lg text-base leading-relaxed text-soft-grey md:text-lg"
-            initial={animate ? { opacity: 0, y: 14 } : false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.12 }}
-          >
-            {heroCopy.description}
-          </motion.p>
           <motion.div
             className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center"
             initial={animate ? { opacity: 0, y: 12 } : false}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: 0.22 }}
+            transition={{ duration: 0.45, delay: 0.12 }}
           >
             <PrimaryButton href="#contact">Contact Us</PrimaryButton>
             <SecondaryButton href="#services">Explore Our Services</SecondaryButton>
