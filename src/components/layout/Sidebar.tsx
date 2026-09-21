@@ -1,98 +1,59 @@
 "use client";
 
-import {
-  ArrowDownRight,
-  CircleHelp,
-  Home,
-  Layers,
-  Mail,
-  Megaphone,
-  User,
-  Waypoints,
-  ArrowUpRight,
-} from "lucide-react";
-import type { LucideIcon } from "lucide-react";
+import { useRef } from "react";
+import { ArrowDownRight } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { SectionNavLink } from "@/components/ui/SectionNavLink";
-import {
-  company,
-  getSocialLinks,
-  hasInstagram,
-  hasPublicEmail,
-} from "@/content/company";
+import { company, getPrimaryContactHref } from "@/content/company";
 import { primaryCta, primaryNav } from "@/content/navigation";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { queueSectionScroll, scrollToSection } from "@/lib/scroll";
 import { cn } from "@/lib/utils";
+import { gsap, motionDuration, motionEase, useGSAP } from "@/lib/motion";
+import { useMotionEnabled } from "@/hooks/useMotionEnabled";
 import "./sidebar.css";
-
-const navIcons: Record<(typeof primaryNav)[number]["id"], LucideIcon> = {
-  overview: Home,
-  services: Layers,
-  "paid-media": Megaphone,
-  process: Waypoints,
-  about: User,
-  faq: CircleHelp,
-  contact: Mail,
-};
-
-function WaveformMark({
-  className,
-  variant = "brand",
-}: {
-  className?: string;
-  variant?: "brand" | "contact";
-}) {
-  return (
-    <span
-      className={cn(
-        "sidebar-waveform text-acid-lime",
-        variant === "contact" && "sidebar-waveform--contact",
-        className,
-      )}
-      aria-hidden="true"
-    >
-      {Array.from({ length: 8 }, (_, index) => (
-        <span key={index} />
-      ))}
-    </span>
-  );
-}
-
-function InstagramIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      aria-hidden="true"
-      className={className}
-    >
-      <rect
-        x="3"
-        y="3"
-        width="18"
-        height="18"
-        rx="5"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" />
-    </svg>
-  );
-}
 
 export function Sidebar() {
   const pathname = usePathname();
   const activeId = useActiveSection();
   const isHome = pathname === "/";
-  const socialLinks = getSocialLinks();
-  const instagram = socialLinks.find((link) => link.label === "Instagram");
-  const otherSocials = socialLinks.filter((link) => link.label !== "Instagram");
+  const motionOk = useMotionEnabled();
+  const navRef = useRef<HTMLElement>(null);
+  const markRef = useRef<HTMLSpanElement>(null);
+
+  useGSAP(
+    () => {
+      const nav = navRef.current;
+      const mark = markRef.current;
+      if (!nav || !mark) return;
+      const active = nav.querySelector<HTMLElement>(".sidebar__nav-link--active");
+      if (!active) {
+        gsap.set(mark, { autoAlpha: 0 });
+        return;
+      }
+      gsap.set(mark, { autoAlpha: 1, transformOrigin: "left top" });
+      const base = mark.offsetHeight || 41.6;
+      gsap.to(mark, {
+        y: active.offsetTop + 2,
+        scaleY: Math.max((active.offsetHeight - 4) / base, 0.35),
+        duration: motionOk ? motionDuration.ui : 0,
+        ease: motionEase.ui,
+        overwrite: true,
+      });
+    },
+    { dependencies: [activeId, isHome, motionOk] },
+  );
+
+  // Shares the same destination helper as every other contact CTA. When an
+  // email is published the link becomes a mailto and must open normally;
+  // otherwise it keeps the existing smooth scroll to the Contact section.
+  const contactHref = getPrimaryContactHref();
+  const contactIsMailto = contactHref.startsWith("mailto:");
 
   const handleContactClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (contactIsMailto) return;
     if (isHome) {
       event.preventDefault();
       scrollToSection(primaryCta.id);
@@ -103,177 +64,63 @@ export function Sidebar() {
 
   return (
     <aside
-      className="sidebar fixed inset-y-0 left-0 z-40 hidden w-[288px] flex-col lg:flex"
+      className="sidebar fixed inset-y-0 left-0 z-40 hidden flex-col lg:flex"
       aria-label="Site sidebar"
     >
-      <div className="sidebar__edge" aria-hidden="true" />
+      <div className="sidebar__inner">
+        <div className="sidebar__brand">
+          <Wordmark className="sidebar__wordmark text-[1.12rem] tracking-[0.13em]" />
 
-      <div className="relative flex min-h-0 flex-1 flex-col px-5 pb-5 pt-6">
-        {/* Brand */}
-        <div className="relative shrink-0">
-          <div className="sidebar__glow" aria-hidden="true" />
-          <Wordmark className="relative text-[0.8rem]" />
-          <WaveformMark variant="brand" className="relative mt-3 h-3 w-9" />
-          <p className="relative mt-4 label-caps text-[0.65rem] text-acid-lime">
-            Music marketing for artists
+          <p className="sidebar__positioning max-w-[12.8rem] label-caps text-[0.56rem] leading-[1.55] tracking-[0.12em] text-acid-lime">
+            {company.sidebarEyebrow}
           </p>
-          <p className="relative mt-2.5 max-w-[15rem] text-[0.75rem] leading-[1.55] text-[#9a9aa3]">
+
+          <p className="sidebar__description max-w-[12.6rem] text-[0.7rem] leading-[1.55] text-[#8a8a92]">
             {company.sidebarDescription}
           </p>
-          <div className="sidebar__divider mt-5" aria-hidden="true" />
         </div>
 
-        {/* Navigation */}
-        <div className="mt-5 flex min-h-0 flex-1 flex-col">
-          <p className="label-caps shrink-0 text-[0.62rem] tracking-[0.14em] text-[#6f6f78]">
-            Navigation
-          </p>
+        <nav ref={navRef} className="sidebar__nav" aria-label="Primary">
+          <span ref={markRef} className="sidebar__nav-active" aria-hidden="true" />
+          {primaryNav.map((item) => {
+            const active = isHome && activeId === item.id;
 
-          <nav
-            className="mt-3 flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto overscroll-contain pr-0.5"
-            aria-label="Primary"
+            return (
+              <SectionNavLink
+                key={item.id}
+                item={item}
+                aria-current={active ? "true" : undefined}
+                className={cn(
+                  "sidebar__nav-link",
+                  active && "sidebar__nav-link--active",
+                )}
+              >
+                <span className="sidebar__nav-index">{item.number}</span>
+                <span className="sidebar__nav-label">{item.label}</span>
+              </SectionNavLink>
+            );
+          })}
+        </nav>
+
+        <div className="sidebar__cta-wrap">
+          <Link
+            href={contactIsMailto ? contactHref : "/"}
+            scroll={false}
+            onClick={handleContactClick}
+            className="sidebar__cta"
           >
-            {primaryNav.map((item) => {
-              const active = isHome && activeId === item.id;
-              const Icon = navIcons[item.id];
+            <span>{primaryCta.label}</span>
+            <ArrowDownRight
+              className="sidebar__cta-arrow size-3.5 shrink-0"
+              aria-hidden="true"
+            />
+          </Link>
 
-              return (
-                <SectionNavLink
-                  key={item.id}
-                  item={item}
-                  aria-current={active ? "true" : undefined}
-                  className={cn(
-                    "sidebar__nav-link group relative flex items-center gap-2.5 rounded-[10px] px-2.5 py-2 text-[0.8125rem] transition-[color,background-color,border-color,box-shadow] duration-200",
-                    active
-                      ? "sidebar__nav-link--active text-off-white"
-                      : "border border-transparent text-[#c8c8d0] hover:border-white/5 hover:bg-white/[0.03] hover:text-off-white",
-                  )}
-                >
-                  <span
-                    className={cn(
-                      "absolute left-0 top-1/2 h-4 w-[2px] -translate-y-1/2 rounded-full transition-colors duration-200",
-                      active
-                        ? "sidebar__nav-accent bg-acid-lime"
-                        : "bg-transparent group-hover:bg-[#55555e]",
-                    )}
-                    aria-hidden="true"
-                  />
-                  <Icon
-                    className={cn(
-                      "size-3.5 shrink-0 transition-colors duration-200",
-                      active
-                        ? "text-acid-lime"
-                        : "text-[#6a6a74] group-hover:text-[#9a9aa3]",
-                    )}
-                    strokeWidth={1.6}
-                    aria-hidden="true"
-                  />
-                  <span
-                    className={cn(
-                      "w-5 shrink-0 font-sans text-[0.625rem] tabular-nums tracking-[0.1em] transition-colors duration-200",
-                      active
-                        ? "text-acid-lime"
-                        : "text-[#5c5c66] group-hover:text-[#8a8a94]",
-                    )}
-                  >
-                    {item.number}
-                  </span>
-                  <span
-                    className={cn(
-                      "min-w-0 truncate transition-colors duration-200",
-                      active ? "font-medium text-off-white" : "font-normal",
-                    )}
-                  >
-                    {item.label}
-                  </span>
-                </SectionNavLink>
-              );
-            })}
-          </nav>
-        </div>
-
-        {/* Contact panel */}
-        <div className="mt-4 shrink-0">
-          <div className="sidebar__contact relative overflow-hidden rounded-[14px] border border-white/[0.08] p-3.5">
-            <div className="sidebar__contact-glow" aria-hidden="true" />
-
-            <div className="relative flex items-center justify-between gap-3">
-              <p className="label-caps text-[0.65rem] text-acid-lime">
-                Let&apos;s talk
-              </p>
-              <WaveformMark variant="contact" className="h-2.5 w-7 opacity-80" />
-            </div>
-
-            <p className="relative mt-2.5 text-[0.8rem] leading-snug text-off-white/90">
-              Ready to discuss your music or next release?
-            </p>
-
-            <Link
-              href="/"
-              scroll={false}
-              onClick={handleContactClick}
-              className="sidebar__cta relative mt-3.5 inline-flex w-full min-h-11 items-center justify-center gap-2 rounded-[9px] border border-lime-border bg-acid-lime px-3.5 text-[0.875rem] font-medium text-carbon transition-[filter,transform] duration-200 hover:-translate-y-px hover:brightness-110 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-acid-lime"
-            >
-              <Mail className="size-3.5 shrink-0" strokeWidth={1.8} aria-hidden="true" />
-              <span>{primaryCta.label}</span>
-              <ArrowDownRight className="size-3.5 shrink-0" aria-hidden="true" />
-            </Link>
-
-            {(hasPublicEmail() || hasInstagram() || otherSocials.length > 0) && (
-              <ul className="relative mt-3 space-y-2">
-                {instagram ? (
-                  <li>
-                    <a
-                      href={instagram.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-[0.72rem] text-[#9a9aa3] transition-colors hover:text-acid-lime focus-visible:outline-offset-2"
-                    >
-                      <InstagramIcon className="size-3.5 shrink-0" />
-                      <span>Instagram</span>
-                      <ArrowUpRight className="size-3 opacity-70" aria-hidden="true" />
-                    </a>
-                  </li>
-                ) : null}
-
-                {hasPublicEmail() ? (
-                  <li>
-                    <a
-                      href={`mailto:${company.email}`}
-                      className="inline-flex max-w-full items-center gap-2 text-[0.72rem] text-[#9a9aa3] transition-colors hover:text-acid-lime focus-visible:outline-offset-2"
-                    >
-                      <Mail className="size-3.5 shrink-0" strokeWidth={1.6} aria-hidden="true" />
-                      <span className="truncate">{company.email}</span>
-                    </a>
-                  </li>
-                ) : null}
-
-                {otherSocials.map((link) => (
-                  <li key={link.href}>
-                    <a
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-[0.72rem] text-[#9a9aa3] transition-colors hover:text-acid-lime focus-visible:outline-offset-2"
-                    >
-                      <span>{link.label}</span>
-                      <ArrowUpRight className="size-3 opacity-70" aria-hidden="true" />
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            <div className="relative mt-3.5 border-t border-white/[0.07] pt-3">
-              <p className="inline-flex items-center gap-2 text-[0.68rem] text-[#8a8a94]">
-                <span
-                  className="sidebar__status-dot size-1.5 shrink-0 rounded-full bg-acid-lime"
-                  aria-hidden="true"
-                />
-                Available for enquiries
-              </p>
-            </div>
-          </div>
+          <p className="sidebar__status">
+            <span className="sidebar__status-dot" aria-hidden="true" />
+            Available for enquiries
+          </p>
+          <p className="sidebar__location">{company.sidebarLocation}</p>
         </div>
       </div>
     </aside>

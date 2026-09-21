@@ -1,21 +1,26 @@
 export const company = {
   name: "Katalyst Media",
   legalName: "Katalyst Media",
-  tagline: "Put your music in front of the right listeners.",
-  positioning: "Music marketing, creator campaigns and paid advertising for artists.",
-  heroEyebrow: "Music marketing for artists",
-  sidebarDescription:
-    "Creator campaigns, paid advertising and release-focused promotion for independent and emerging artists.",
+  tagline: "Put your music in front of the right people.",
+  positioning: "Creator campaigns, paid media and release strategy.",
+  heroEyebrow: "For artists, producers, managers and labels",
+  /** Kept deliberately short: the hero carries the full proposition. */
+  sidebarEyebrow: "Music marketing",
+  sidebarDescription: "For artists, producers & labels.",
   description:
-    "Katalyst Media builds and manages release campaigns for independent and emerging artists through creator marketing, short-form content and paid media.",
+    "Katalyst Media builds and manages release campaigns through creator marketing, paid media, content and release strategy.",
   focusLabel: "What we do",
   location: "United Kingdom",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.katalystmedia.xyz",
-  pageTitle: "Katalyst Media | Music Marketing for Artists",
+  sidebarLocation: "London · Worldwide campaigns",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.katalystmedia.co.uk",
+  pageTitle: "Katalyst Media | Music Marketing for Artists & Labels",
   email: (process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "").trim(),
   instagramUrl: (process.env.NEXT_PUBLIC_INSTAGRAM_URL ?? "").trim(),
   linkedinUrl: (process.env.NEXT_PUBLIC_LINKEDIN_URL ?? "").trim(),
 } as const;
+
+/** The site's host, for prose that names the website rather than links to it. */
+export const siteDomain = company.url.replace(/^https?:\/\/(?:www\.)?/, "");
 
 export type SocialLink = {
   label: string;
@@ -44,4 +49,13 @@ export function hasInstagram() {
 export function getMailtoHref() {
   if (!company.email) return "/";
   return `mailto:${company.email}`;
+}
+
+/**
+ * Primary conversion destination for contact CTAs.
+ * Prefers mailto when NEXT_PUBLIC_CONTACT_EMAIL is set; otherwise Contact section.
+ */
+export function getPrimaryContactHref() {
+  if (company.email) return `mailto:${company.email}`;
+  return "#contact";
 }

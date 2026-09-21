@@ -1,71 +1,126 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
 import { DirectionalLineBackground } from "@/components/brand/DirectionalLineBackground";
-import { CampaignStructureVisual } from "@/components/brand/CampaignStructureVisual";
-import { Container } from "@/components/layout/Container";
+import { HeroCreatorCarousel } from "@/components/home/HeroCreatorCarousel";
 import { PrimaryButton } from "@/components/ui/PrimaryButton";
-import { SecondaryButton } from "@/components/ui/SecondaryButton";
-import { company } from "@/content/company";
-import { heroCopy } from "@/content/services";
+import { company, getPrimaryContactHref } from "@/content/company";
+import { creatorVideos } from "@/content/creator-videos";
+import { primaryCta } from "@/content/navigation";
+import { gsap, motionDuration, motionEase, useGSAP } from "@/lib/motion";
+import { useMotionEnabled } from "@/hooks/useMotionEnabled";
 
 export function OverviewSection() {
-  const reduceMotion = useReducedMotion();
-  const animate = reduceMotion === false;
+  const animate = useMotionEnabled();
+  const rootRef = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      const root = rootRef.current;
+      if (!root || !animate) return;
+
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 1024px)", () => {
+        const accent = root.querySelector(".hero-bg-accent");
+        if (!accent) return;
+        gsap.fromTo(
+          accent,
+          { y: 0, opacity: 1 },
+          {
+            y: 14,
+            opacity: 0.72,
+            ease: motionEase.scrub,
+            scrollTrigger: {
+              trigger: root,
+              start: "top top",
+              end: "bottom top",
+              scrub: 0.7,
+            },
+          },
+        );
+      });
+
+      const timeline = gsap.timeline({
+        defaults: { ease: motionEase.enter, overwrite: "auto" },
+      });
+      timeline
+        .fromTo(
+          ".hero-copy__eyebrow",
+          { autoAlpha: 0, y: 16 },
+          { autoAlpha: 1, y: 0, duration: motionDuration.ui },
+        )
+        .fromTo(
+          ".hero-copy__heading",
+          { autoAlpha: 0, y: 22 },
+          { autoAlpha: 1, y: 0, duration: motionDuration.large },
+          "-=0.28",
+        )
+        .fromTo(
+          ".hero-copy__cta",
+          { autoAlpha: 0, y: 14 },
+          { autoAlpha: 1, y: 0, duration: motionDuration.ui },
+          "-=0.48",
+        )
+        .fromTo(
+          ".hero-copy__carousel",
+          { autoAlpha: 0, y: 18 },
+          { autoAlpha: 1, y: 0, duration: motionDuration.large },
+          "-=0.42",
+        );
+
+      return () => mm.revert();
+    },
+    { dependencies: [animate], scope: rootRef },
+  );
 
   return (
     <section
+      ref={rootRef}
       id="overview"
-      className="relative scroll-mt-20 overflow-hidden border-b border-border-dark bg-carbon grain lg:scroll-mt-0 lg:pl-[288px]"
+      className="relative flex min-h-[calc(100svh-4.5rem)] scroll-mt-20 flex-col justify-center overflow-x-clip bg-carbon grain md:min-h-[90svh] lg:min-h-[100svh] lg:scroll-mt-0 main-offset"
+      aria-labelledby="hero-heading"
     >
-      <DirectionalLineBackground />
-      <Container className="relative grid items-center gap-10 py-12 md:py-16 lg:grid-cols-12 lg:gap-10 lg:py-20">
-        <div className="lg:col-span-6">
-          <motion.p
-            className="label-caps text-acid-lime"
-            initial={animate ? { opacity: 0, y: 12 } : false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45 }}
-          >
+      <DirectionalLineBackground className="opacity-[0.48]" />
+
+      <div className="relative mx-auto grid w-full max-w-[1680px] items-center gap-8 px-5 py-12 md:gap-9 md:px-8 md:py-14 lg:grid-cols-[minmax(26rem,28rem)_minmax(0,1fr)] lg:gap-x-5 lg:gap-y-0 lg:py-8 lg:pl-8 lg:pr-8 xl:grid-cols-[34rem_minmax(0,1fr)] xl:gap-x-6">
+        <div className="min-w-0">
+          <p className="hero-copy__eyebrow label-caps text-[0.68rem] tracking-[0.14em] text-acid-lime xl:whitespace-nowrap">
             {company.heroEyebrow}
-          </motion.p>
-          <motion.h1
-            className="mt-4 max-w-xl font-display text-[clamp(2.5rem,5vw,4.25rem)] font-semibold tracking-[-0.04em] text-off-white text-balance"
-            initial={animate ? { opacity: 0, y: 16 } : false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.06 }}
+          </p>
+
+          <h1
+            id="hero-heading"
+            className="hero-copy__heading mt-4 font-display text-[clamp(2.5rem,2.05rem+1.85vw,3.75rem)] font-semibold leading-[1.05] tracking-[-0.045em] text-off-white"
           >
-            Put your music in front of the{" "}
-            <span className="text-acid-lime">right listeners.</span>
-          </motion.h1>
-          <motion.p
-            className="mt-5 max-w-lg text-base leading-relaxed text-soft-grey md:text-lg"
-            initial={animate ? { opacity: 0, y: 14 } : false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.12 }}
-          >
-            {heroCopy.description}
-          </motion.p>
-          <motion.div
-            className="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center"
-            initial={animate ? { opacity: 0, y: 12 } : false}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, delay: 0.22 }}
-          >
-            <PrimaryButton href="#contact">Contact Us</PrimaryButton>
-            <SecondaryButton href="#services">Explore Our Services</SecondaryButton>
-          </motion.div>
+            <span className="block xl:whitespace-nowrap">Put your music in</span>
+            <span className="block xl:whitespace-nowrap">
+              front of the <span className="text-acid-lime">right</span>
+            </span>
+            <span className="block text-acid-lime">people.</span>
+          </h1>
+
+          <div className="hero-copy__cta mt-7 md:mt-8">
+            <PrimaryButton
+              href={getPrimaryContactHref()}
+              className="shadow-[0_0_28px_rgba(198,255,0,0.16)] transition-[transform,filter,box-shadow] duration-200 hover:-translate-y-px hover:shadow-[0_0_34px_rgba(198,255,0,0.24)]"
+            >
+              {primaryCta.label}
+            </PrimaryButton>
+          </div>
         </div>
 
-        <motion.div
-          className="lg:col-span-6"
-          initial={animate ? { opacity: 0, y: 18 } : false}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.16 }}
-        >
-          <CampaignStructureVisual />
-        </motion.div>
-      </Container>
+        {/* The negative inline-start margin widens only the reel's viewport into
+            the empty space beside the copy; the grid tracks and the text column
+            are untouched. */}
+        <div className="hero-copy__carousel min-w-0 overflow-x-clip overflow-y-visible py-8 -my-8 lg:-ml-20">
+          <HeroCreatorCarousel videos={creatorVideos} />
+        </div>
+      </div>
+
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-b from-transparent to-deep-black/70 md:h-12"
+        aria-hidden="true"
+      />
     </section>
   );
 }

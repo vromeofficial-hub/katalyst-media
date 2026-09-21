@@ -7,20 +7,12 @@ export type NavItem = {
 
 export const primaryNav: NavItem[] = [
   { number: "01", label: "Home", href: "/#overview", id: "overview" },
-  { number: "02", label: "Services", href: "/#services", id: "services" },
-  { number: "03", label: "Paid Media", href: "/#paid-media", id: "paid-media" },
-  { number: "04", label: "Process", href: "/#process", id: "process" },
-  { number: "05", label: "About", href: "/#about", id: "about" },
-  { number: "06", label: "FAQ", href: "/#faq", id: "faq" },
-  { number: "07", label: "Contact", href: "/#contact", id: "contact" },
+  { number: "02", label: "Process", href: "/#process", id: "process" },
+  { number: "03", label: "Contact", href: "/#contact", id: "contact" },
 ];
 
 export const footerNav = [
-  { label: "Services", href: "/#services" },
-  { label: "Paid Media", href: "/#paid-media" },
   { label: "Process", href: "/#process" },
-  { label: "About", href: "/#about" },
-  { label: "FAQ", href: "/#faq" },
   { label: "Contact", href: "/#contact" },
 ] as const;
 
@@ -32,7 +24,7 @@ export const legalNav = [
 export const sectionIds = primaryNav.map((item) => item.id);
 
 export const primaryCta = {
-  label: "Contact Us",
+  label: "Get In Touch",
   href: "/",
   id: "contact",
 } as const;

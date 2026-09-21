@@ -1,17 +1,48 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { company, getSocialLinks, hasPublicEmail } from "@/content/company";
 import { footerNav, legalNav } from "@/content/navigation";
+import { gsap, motionDuration, motionEase, useGSAP } from "@/lib/motion";
 import { queueSectionScroll, scrollToSection, sectionIdFromHref } from "@/lib/scroll";
+import { cn } from "@/lib/utils";
+import { useMotionEnabled } from "@/hooks/useMotionEnabled";
 
-export function Footer() {
+export function Footer({
+  className,
+  variant = "default",
+}: {
+  className?: string;
+  variant?: "default" | "ending";
+}) {
   const year = new Date().getFullYear();
   const socialLinks = getSocialLinks();
   const pathname = usePathname();
+  const footerRef = useRef<HTMLElement>(null);
+  const motionEnabled = useMotionEnabled();
+  const ending = variant === "ending";
+
+  useGSAP(
+    () => {
+      const footer = footerRef.current;
+      if (!ending || !footer || !motionEnabled) return;
+      gsap.from(footer, {
+        y: 6,
+        duration: motionDuration.ui,
+        ease: motionEase.enter,
+        scrollTrigger: {
+          trigger: footer,
+          start: "top 94%",
+          once: true,
+        },
+      });
+    },
+    { dependencies: [ending, motionEnabled] },
+  );
 
   const handleSectionClick = (
     event: React.MouseEvent<HTMLAnchorElement>,
@@ -27,15 +58,52 @@ export function Footer() {
     queueSectionScroll(id);
   };
 
+  if (ending) {
+    return (
+      <footer
+        ref={footerRef}
+        className={cn("site-footer--ending", className)}
+      >
+        <div className="site-footer__inner">
+          <div className="site-footer__brand">
+            <Wordmark className="site-footer__mark" />
+          </div>
+          <div className="site-footer__meta">
+            <ul className="site-footer__links">
+              {footerNav.map((item) => (
+                <li key={item.href}>
+                  <Link
+                    href="/"
+                    scroll={false}
+                    onClick={(event) => handleSectionClick(event, item.href)}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <ul className="site-footer__links site-footer__legal">
+              {legalNav.map((item) => (
+                <li key={item.href}>
+                  <Link href={item.href}>{item.label}</Link>
+                </li>
+              ))}
+            </ul>
+            <p className="site-footer__copy">
+              © {year} {company.legalName}
+            </p>
+          </div>
+        </div>
+      </footer>
+    );
+  }
+
   return (
-    <footer className="border-t border-border-dark bg-deep-black lg:pl-[288px]">
-      <Container className="py-10 md:py-12">
+    <footer ref={footerRef} className={cn("border-t border-border-dark bg-deep-black main-offset", className)}>
+      <Container className="py-8 md:py-9">
         <div className="grid gap-8 md:grid-cols-[1.2fr_1fr]">
           <div>
             <Wordmark />
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-soft-grey">
-              {company.positioning}
-            </p>
             {hasPublicEmail() ? (
               <a
                 href={`mailto:${company.email}`}

@@ -1,84 +1,152 @@
-import { Container } from "@/components/layout/Container";
-import { PrimaryButton } from "@/components/ui/PrimaryButton";
-import { Reveal } from "@/components/ui/Reveal";
-import { SecondaryButton } from "@/components/ui/SecondaryButton";
-import {
-  company,
-  getSocialLinks,
-  hasInstagram,
-  hasPublicEmail,
-} from "@/content/company";
-import { contactCopy } from "@/content/services";
+"use client";
 
-export function ContactSection() {
-  const socialLinks = getSocialLinks().filter((link) => link.label !== "Instagram");
-  const showEmail = hasPublicEmail();
-  const showInstagram = hasInstagram();
-  const hasDirectContact = showEmail || showInstagram || socialLinks.length > 0;
+import { useEffect, useRef } from "react";
+import { PrimaryButton } from "@/components/ui/PrimaryButton";
+import { ContactHud } from "@/components/home/ContactHud";
+import { getPrimaryContactHref } from "@/content/company";
+import { contactCopy } from "@/content/homepage";
+import { gsap, motionDuration, motionEase, ScrollTrigger, useGSAP } from "@/lib/motion";
+import { cn } from "@/lib/utils";
+import { useMotionEnabled } from "@/hooks/useMotionEnabled";
+import "./contact-stage.css";
+
+export function ContactSection({ className }: { className?: string }) {
+  const sectionRef = useRef<HTMLElement>(null);
+  const motionEnabled = useMotionEnabled();
+  const primaryHref = getPrimaryContactHref();
+
+  useGSAP(
+    () => {
+      const section = sectionRef.current;
+      if (!section || !motionEnabled) return;
+
+      const items = section.querySelectorAll(".contact-copy__item");
+      const glow = section.querySelector(".contact-stage__glow");
+      const hud = section.querySelector(".contact-hud-slot");
+      let played = false;
+
+      const play = () => {
+        if (played) return;
+        played = true;
+        section.classList.add("contact-stage--in");
+        gsap
+          .timeline({ defaults: { ease: motionEase.enter } })
+          .to(glow, { autoAlpha: 1, duration: motionDuration.large }, 0)
+          .to(
+            items,
+            {
+              autoAlpha: 1,
+              y: 0,
+              duration: motionDuration.ui,
+              stagger: 0.08,
+            },
+            0.06,
+          )
+          .to(hud, { autoAlpha: 1, duration: motionDuration.large }, 0.22);
+      };
+
+      gsap.set(glow, { autoAlpha: 0.4 });
+      gsap.set(hud, { autoAlpha: 0 });
+      gsap.set(items, { autoAlpha: 0, y: 10 });
+      section.classList.add("contact-stage--ready");
+
+      const trigger = ScrollTrigger.create({
+        trigger: section,
+        start: "top 86%",
+        once: true,
+        onEnter: play,
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            play();
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -6% 0px" },
+      );
+      observer.observe(section);
+
+      if (section.getBoundingClientRect().top < window.innerHeight * 0.9) {
+        play();
+      }
+
+      return () => {
+        trigger.kill();
+        observer.disconnect();
+      };
+    },
+    { dependencies: [motionEnabled] },
+  );
+
+  // Keeps the ambient rotation and glow breathing paused while Contact is out
+  // of view. Class is toggled on the DOM directly to avoid re-rendering.
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || !motionEnabled) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        section.classList.toggle("contact-stage--idle", !entry.isIntersecting);
+      },
+      { rootMargin: "150px 0px", threshold: 0 },
+    );
+    observer.observe(section);
+
+    return () => {
+      observer.disconnect();
+      section.classList.remove("contact-stage--idle");
+    };
+  }, [motionEnabled]);
 
   return (
     <section
+      ref={sectionRef}
       id="contact"
-      className="scroll-mt-24 border-t border-border-dark bg-carbon section-pad pb-28 lg:scroll-mt-8"
+      className={cn(
+        "contact-stage scroll-mt-24 lg:scroll-mt-8",
+        !motionEnabled && "contact-stage--reduced",
+        className,
+      )}
+      aria-labelledby="contact-heading"
     >
-      <Container>
-        <Reveal className="max-w-2xl">
-          <p className="label-caps text-acid-lime">{contactCopy.eyebrow}</p>
-          <h2 className="mt-3 font-display text-[length:var(--text-h2)] font-semibold tracking-[-0.03em] text-off-white">
-            {contactCopy.headline}
-          </h2>
-          <p className="mt-4 text-soft-grey">{contactCopy.description}</p>
+      <div className="contact-stage__atmosphere" aria-hidden="true">
+        <div className="contact-stage__grid" />
+        <svg
+          className="contact-stage__diagonals"
+          viewBox="0 0 1440 900"
+          preserveAspectRatio="none"
+        >
+          <line x1="520" y1="0" x2="70" y2="900" />
+          <line x1="1320" y1="40" x2="780" y2="900" />
+        </svg>
+        <div className="contact-stage__vignette" />
+        <div className="contact-stage__glow" />
+        <div className="contact-hud-slot">
+          <ContactHud />
+        </div>
+      </div>
 
-          {hasDirectContact ? (
-            <>
-              {(showEmail || showInstagram) && (
-                <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-                  {showEmail ? (
-                    <PrimaryButton href={`mailto:${company.email}`}>
-                      {contactCopy.emailButton}
-                    </PrimaryButton>
-                  ) : null}
-                  {showInstagram ? (
-                    <SecondaryButton href={company.instagramUrl} onDark>
-                      {contactCopy.instagramButton}
-                    </SecondaryButton>
-                  ) : null}
-                </div>
-              )}
-
-              {showEmail ? (
-                <a
-                  href={`mailto:${company.email}`}
-                  className="mt-6 inline-block text-sm text-acid-lime underline-offset-4 hover:underline"
-                >
-                  {company.email}
-                </a>
-              ) : null}
-
-              {socialLinks.length > 0 ? (
-                <ul className="mt-6 flex flex-wrap gap-4">
-                  {socialLinks.map((link) => (
-                    <li key={link.href}>
-                      <a
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-soft-grey underline-offset-4 transition-colors hover:text-acid-lime hover:underline"
-                      >
-                        {link.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              ) : null}
-            </>
-          ) : (
-            <p className="mt-8 max-w-md rounded-[14px] border border-border-dark bg-deep-black px-5 py-4 text-sm leading-relaxed text-soft-grey">
-              {contactCopy.emptyState}
-            </p>
-          )}
-        </Reveal>
-      </Container>
+      <div className="contact-stage__copy">
+        <p className="contact-stage__label contact-copy__item label-caps">
+          {contactCopy.eyebrow}
+        </p>
+        <h2 id="contact-heading" className="contact-stage__headline contact-copy__item">
+          Let&apos;s talk about your{" "}
+          <span>next release.</span>
+        </h2>
+        <p className="contact-stage__description contact-copy__item">
+          {contactCopy.description}
+        </p>
+        <PrimaryButton href={primaryHref} className="contact-stage__cta contact-copy__item">
+          {contactCopy.primaryCta}
+        </PrimaryButton>
+        <p className="contact-stage__status contact-copy__item">
+          <span className="contact-stage__dot" aria-hidden="true" />
+          {contactCopy.availability}
+        </p>
+      </div>
     </section>
   );
 }

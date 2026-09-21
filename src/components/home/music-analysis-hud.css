@@ -1,0 +1,640 @@
+.process-hud {
+  --hud-amp: 1;
+  --hud-speed: 1;
+  --hud-shift: 0deg;
+  position: absolute;
+  z-index: 4;
+  width: min(34rem, 46%);
+  pointer-events: none;
+}
+
+.process-hud--after {
+  top: 0;
+  left: calc(var(--node-x) + var(--path-clearance));
+  width: min(36rem, calc(100% - var(--node-x) - var(--process-pad) - var(--path-clearance)));
+  transform: translateY(-42%);
+}
+
+.process-hud--before {
+  top: 0;
+  left: var(--process-pad);
+  width: min(32rem, calc(var(--node-x) - var(--process-pad) - var(--path-clearance)));
+  transform: translateY(-42%);
+}
+
+.process-hud--compact {
+  top: 9.75rem;
+  left: 50%;
+  /* Keep the full label ring inside the viewport (~16–24px safe inset). */
+  width: min(24.5rem, calc(100% - clamp(2.25rem, 6.5vw, 3rem)));
+  max-width: none;
+  transform: translateX(-50%);
+}
+
+.process-hud--compact .process-hud__stage {
+  position: relative;
+  aspect-ratio: 1.02;
+}
+
+.process-hud--compact .process-hud__svg {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  width: 96%;
+  max-width: none;
+  height: auto;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+}
+
+.process-hud--compact .process-hud__glow {
+  inset: 6% 4%;
+}
+
+.process-hud--compact .process-hud__guides {
+  display: none;
+}
+
+.process-hud--compact .process-hud__watermark {
+  top: 16%;
+  right: 6%;
+  font-size: clamp(6rem, 32vw, 10rem);
+}
+
+.process-hud--compact .process-hud__callout {
+  z-index: 3;
+  max-width: 7.6rem;
+  filter: drop-shadow(0 0 10px rgba(8, 8, 9, 0.88));
+}
+
+.process-hud--compact .process-hud__callout--tempo {
+  top: 0.15rem;
+}
+
+.process-hud--compact .process-hud__callout--energy {
+  top: 24%;
+  left: 5%;
+}
+
+.process-hud--compact .process-hud__callout--mood {
+  top: 20%;
+  right: 5%;
+  left: auto;
+}
+
+.process-hud--compact .process-hud__callout--audience {
+  left: 5%;
+  bottom: 3%;
+}
+
+.process-hud--compact .process-hud__callout--genre {
+  right: 5%;
+  bottom: 3%;
+  left: auto;
+  max-width: 8.2rem;
+}
+
+.process-hud--compact .process-hud__label {
+  font-size: 0.52rem;
+}
+
+.process-hud--compact .process-hud__value,
+.process-hud--compact .process-hud__value span,
+.process-hud--compact .process-hud__value strong {
+  font-size: 0.84rem;
+}
+
+.process-hud--compact .process-hud__sub,
+.process-hud--compact .process-hud__sub em,
+.process-hud--compact .process-hud__sub span {
+  font-size: 0.66rem;
+}
+
+.process-hud__motion {
+  position: relative;
+  width: 100%;
+}
+
+.process-hud__watermark {
+  position: absolute;
+  top: -2%;
+  right: -4%;
+  z-index: 0;
+  color: rgba(245, 245, 245, 0.045);
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(6.5rem, 18vw, 11.5rem);
+  font-weight: 600;
+  letter-spacing: -0.08em;
+  line-height: 0.7;
+  user-select: none;
+}
+
+.process-hud__glow {
+  position: absolute;
+  inset: 18% 16%;
+  z-index: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(198, 255, 0, 0.1) 0%,
+    rgba(198, 255, 0, 0.03) 42%,
+    transparent 72%
+  );
+}
+
+.process-hud__stage {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.process-hud__svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.process-hud__ring {
+  fill: none;
+  stroke: rgba(198, 255, 0, 0.12);
+  stroke-width: 0.6px;
+}
+
+.process-hud__ring--ghost {
+  stroke: rgba(198, 255, 0, 0.06);
+}
+
+.process-hud__ring--soft {
+  stroke: rgba(198, 255, 0, 0.1);
+}
+
+.process-hud__ring--dotted {
+  stroke: rgba(198, 255, 0, 0.22);
+  stroke-dasharray: 1.2 5.8;
+  stroke-linecap: round;
+}
+
+.process-hud__ring--broken,
+.process-hud__ring--hair {
+  stroke: rgba(198, 255, 0, 0.16);
+  stroke-linecap: round;
+}
+
+.process-hud__ring--hair {
+  stroke-width: 0.45px;
+  stroke: rgba(198, 255, 0, 0.1);
+}
+
+.process-hud__arc {
+  fill: none;
+  stroke: #c6ff00;
+  stroke-width: 1.05px;
+  stroke-linecap: round;
+}
+
+.process-hud__arc--mid {
+  stroke-width: 0.85px;
+  stroke: rgba(198, 255, 0, 0.55);
+}
+
+.process-hud__arc--dim {
+  stroke-width: 0.7px;
+  stroke: rgba(198, 255, 0, 0.28);
+}
+
+.process-hud__arc--faint {
+  stroke-width: 0.55px;
+  stroke: rgba(198, 255, 0, 0.12);
+}
+
+.process-hud__marker {
+  fill: #c6ff00;
+}
+
+.process-hud__ticks line {
+  stroke: rgba(198, 255, 0, 0.16);
+  stroke-width: 0.55px;
+}
+
+.process-hud__ticks line.is-major {
+  stroke: rgba(198, 255, 0, 0.32);
+}
+
+.process-hud__guides line {
+  stroke: rgba(198, 255, 0, 0.16);
+  stroke-width: 0.55px;
+}
+
+.process-hud__guides circle {
+  fill: rgba(198, 255, 0, 0.55);
+}
+
+.process-hud__spike {
+  stroke: #c6ff00;
+  stroke-linecap: round;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+}
+
+.process-hud__spike--micro {
+  stroke: rgba(198, 255, 0, 0.28);
+}
+
+.process-hud__wave--micro {
+  transform-origin: 200px 200px;
+  transform-box: view-box;
+  transform: rotate(var(--hud-shift, 0deg));
+  transition: transform 1.4s ease;
+}
+
+.process-hud__core-fill {
+  fill: rgba(8, 8, 9, 0.94);
+}
+
+.process-hud__core-dotted {
+  fill: none;
+  stroke: rgba(198, 255, 0, 0.28);
+  stroke-width: 0.7px;
+  stroke-dasharray: 1.1 3.4;
+}
+
+.process-hud__core-ring {
+  fill: none;
+  stroke: rgba(198, 255, 0, 0.5);
+  stroke-width: 0.85px;
+}
+
+.process-hud__core {
+  fill: #c6ff00;
+}
+
+.process-hud__scan {
+  stroke: rgba(198, 255, 0, 0.28);
+  stroke-width: 0.55px;
+  transform-origin: 200px 200px;
+  transform-box: view-box;
+}
+
+.process-hud__callout {
+  position: absolute;
+  display: grid;
+  gap: 0.1rem;
+  color: var(--color-off-white);
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  white-space: nowrap;
+}
+
+.process-hud__label {
+  display: inline-flex;
+  gap: 0.35rem;
+  align-items: center;
+  color: var(--color-acid-lime);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.58rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.process-hud__label::before {
+  display: block;
+  width: 0.28rem;
+  height: 0.28rem;
+  flex: none;
+  border-radius: 50%;
+  background: #c6ff00;
+  content: "";
+}
+
+.process-hud__value,
+.process-hud__value span,
+.process-hud__value strong {
+  color: var(--color-off-white);
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  text-transform: none;
+}
+
+.process-hud__value::before,
+.process-hud__value span::before,
+.process-hud__sub::before,
+.process-hud__sub span::before {
+  content: none;
+}
+
+.process-hud__sub,
+.process-hud__sub em,
+.process-hud__sub span {
+  color: var(--color-muted-grey);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  text-transform: none;
+}
+
+.process-hud__callout--tempo {
+  top: 0.4%;
+  left: 50%;
+  justify-items: center;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.process-hud__callout--mood {
+  top: 24%;
+  right: 1.5%;
+  justify-items: end;
+  text-align: right;
+}
+
+.process-hud__callout--mood .process-hud__label,
+.process-hud__callout--genre .process-hud__label {
+  flex-direction: row-reverse;
+}
+
+.process-hud__callout--genre {
+  right: 1.5%;
+  bottom: 8%;
+  justify-items: end;
+  text-align: right;
+}
+
+.process-hud__callout--audience {
+  bottom: 8%;
+  left: 16%;
+}
+
+.process-hud__callout--energy {
+  top: 38%;
+  left: 16%;
+}
+
+.process-hud__mini-wave {
+  display: block;
+  width: 3.4rem;
+  margin-top: 0.18rem;
+  margin-left: auto;
+}
+
+.process-hud__mini-wave path {
+  fill: none;
+  stroke: rgba(198, 255, 0, 0.78);
+  stroke-width: 1.05px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.process-hud__globe {
+  display: block;
+  width: 1.15rem;
+  margin-top: 0.28rem;
+  opacity: 0.45;
+}
+
+.process-hud__globe circle,
+.process-hud__globe ellipse,
+.process-hud__globe path {
+  fill: none;
+  stroke: rgba(198, 255, 0, 0.42);
+  stroke-width: 0.7px;
+}
+
+.process-hud__energy {
+  display: flex;
+  gap: 0.14rem;
+  align-items: end;
+  height: 0.82rem;
+  margin: 0.22rem 0 0.1rem;
+}
+
+.process-hud__energy i {
+  display: block;
+  width: 0.16rem;
+  height: 38%;
+  background: rgba(198, 255, 0, 0.22);
+  transition: height 0.4s ease, background-color 0.4s ease, opacity 0.4s ease;
+}
+
+.process-hud__energy i.is-on {
+  height: 100%;
+  background: #c6ff00;
+  opacity: 0.95;
+}
+
+.process-hud__energy i.is-on:nth-child(odd) {
+  height: 76%;
+}
+
+.process-hud__energy i.is-on:nth-child(3n) {
+  height: 90%;
+}
+
+.process-journey:not(.process-journey--reduced) .process-hud__glow {
+  animation: process-hud-breathe 7.2s ease-in-out infinite;
+}
+
+.process-journey:not(.process-journey--reduced) .process-hud__spike {
+  animation: process-hud-spike calc(var(--hud-duration, 2.4s) / var(--hud-speed, 1))
+    ease-in-out var(--hud-delay, 0s) infinite;
+}
+
+.process-journey:not(.process-journey--reduced) .process-hud__spike--micro {
+  animation-name: process-hud-spike-micro;
+}
+
+.process-journey:not(.process-journey--reduced) .process-hud__orbit--cw {
+  animation: process-hud-spin 18s linear infinite;
+  transform-origin: 200px 200px;
+  transform-box: view-box;
+}
+
+.process-journey:not(.process-journey--reduced) .process-hud__orbit--ccw {
+  animation: process-hud-spin-reverse 25s linear infinite;
+  transform-origin: 200px 200px;
+  transform-box: view-box;
+}
+
+.process-journey:not(.process-journey--reduced) .process-hud__core {
+  animation: process-hud-core 6.8s ease-in-out infinite;
+}
+
+.process-journey:not(.process-journey--reduced) .process-hud__core-ring {
+  animation: process-hud-core 6.8s ease-in-out infinite;
+}
+
+.process-journey:not(.process-journey--reduced) .process-hud__marker--pulse {
+  animation: process-hud-blink 4.2s ease-in-out infinite;
+}
+
+.process-journey:not(.process-journey--reduced) .process-hud__mini-wave path {
+  animation: process-hud-sine 2.8s ease-in-out infinite;
+}
+
+.process-journey:not(.process-journey--reduced) .process-hud__scan {
+  animation: process-hud-sweep 6.6s linear infinite;
+}
+
+@keyframes process-hud-breathe {
+  0%,
+  100% {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes process-hud-spike {
+  0%,
+  100% {
+    transform: scaleY(calc(0.74 * var(--hud-amp, 1)));
+  }
+  50% {
+    transform: scaleY(calc(1.16 * var(--hud-amp, 1)));
+  }
+}
+
+@keyframes process-hud-spike-micro {
+  0%,
+  100% {
+    transform: scaleY(calc(0.82 * var(--hud-amp, 1)));
+  }
+  50% {
+    transform: scaleY(calc(1.08 * var(--hud-amp, 1)));
+  }
+}
+
+@keyframes process-hud-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes process-hud-spin-reverse {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes process-hud-core {
+  0%,
+  100% {
+    opacity: 0.62;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes process-hud-blink {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes process-hud-sine {
+  0%,
+  100% {
+    stroke-opacity: 0.5;
+  }
+  50% {
+    stroke-opacity: 1;
+  }
+}
+
+@keyframes process-hud-sweep {
+  0%,
+  8% {
+    opacity: 0;
+    transform: rotate(0deg);
+  }
+  12% {
+    opacity: 0.32;
+  }
+  24% {
+    opacity: 0.08;
+    transform: rotate(300deg);
+  }
+  30%,
+  100% {
+    opacity: 0;
+    transform: rotate(360deg);
+  }
+}
+
+.process-hud--quiet .process-hud__glow,
+.process-hud--quiet .process-hud__spike,
+.process-hud--quiet .process-hud__orbit--cw,
+.process-hud--quiet .process-hud__orbit--ccw,
+.process-hud--quiet .process-hud__core,
+.process-hud--quiet .process-hud__core-ring,
+.process-hud--quiet .process-hud__marker--pulse,
+.process-hud--quiet .process-hud__mini-wave path,
+.process-hud--quiet .process-hud__scan {
+  animation-play-state: paused;
+}
+
+.process-journey--reduced .process-hud__glow,
+.process-journey--reduced .process-hud__spike,
+.process-journey--reduced .process-hud__orbit--cw,
+.process-journey--reduced .process-hud__orbit--ccw,
+.process-journey--reduced .process-hud__core,
+.process-journey--reduced .process-hud__core-ring,
+.process-journey--reduced .process-hud__marker--pulse,
+.process-journey--reduced .process-hud__mini-wave path,
+.process-journey--reduced .process-hud__scan {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .process-hud__glow,
+  .process-hud__spike,
+  .process-hud__orbit--cw,
+  .process-hud__orbit--ccw,
+  .process-hud__core,
+  .process-hud__core-ring,
+  .process-hud__marker--pulse,
+  .process-hud__mini-wave path,
+  .process-hud__scan {
+    animation: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .process-hud--after {
+    width: min(38rem, calc(100% - var(--node-x) - var(--process-pad) - var(--path-clearance)));
+  }
+
+  .process-hud__value,
+  .process-hud__value strong {
+    font-size: 1.02rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .process-hud__label {
+    font-size: 0.68rem;
+  }
+
+  .process-hud__value,
+  .process-hud__value strong {
+    font-size: 0.88rem;
+  }
+}

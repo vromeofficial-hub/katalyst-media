@@ -1,9 +1,0 @@
-.intro-section__texture {
-  background-image:
-    radial-gradient(ellipse 50% 40% at 70% 20%, rgba(198, 255, 0, 0.03), transparent 68%),
-    linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
-  background-size: auto, 56px 56px, 56px 56px;
-  mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, black 20%, transparent 78%);
-  opacity: 0.4;
-}
