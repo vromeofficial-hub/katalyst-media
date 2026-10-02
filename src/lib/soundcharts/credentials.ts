@@ -23,9 +23,14 @@ type CachedToken = {
 let cached: CachedToken | null = null;
 let inflight: Promise<string> | null = null;
 
-function readCredentials(): { clientId: string; clientSecret: string } {
+function readCredentials(): {
+  clientId: string;
+  clientSecret: string;
+  teamId: string | null;
+} {
   const clientId = process.env.SOUNDCHARTS_CLIENT_ID;
   const clientSecret = process.env.SOUNDCHARTS_CLIENT_SECRET;
+  const teamId = process.env.SOUNDCHARTS_TEAM_ID?.trim() || null;
 
   const missing = [
     clientId ? null : "SOUNDCHARTS_CLIENT_ID",
@@ -36,7 +41,11 @@ function readCredentials(): { clientId: string; clientSecret: string } {
     throw new Error(`Missing ${missing.join(" and ")}`);
   }
 
-  return { clientId: clientId as string, clientSecret: clientSecret as string };
+  return {
+    clientId: clientId as string,
+    clientSecret: clientSecret as string,
+    teamId,
+  };
 }
 
 type TokenResponse = {
@@ -48,10 +57,12 @@ type TokenResponse = {
 };
 
 async function requestAccessToken(): Promise<CachedToken> {
-  const { clientId, clientSecret } = readCredentials();
+  const { clientId, clientSecret, teamId } = readCredentials();
   const basic = Buffer.from(`${clientId}:${clientSecret}`, "utf8").toString(
     "base64",
   );
+  const body = new URLSearchParams({ grant_type: "client_credentials" });
+  if (teamId) body.set("team_id", teamId);
 
   const response = await fetch(SOUNDCHARTS_TOKEN_URL, {
     method: "POST",
@@ -60,7 +71,7 @@ async function requestAccessToken(): Promise<CachedToken> {
       "Content-Type": "application/x-www-form-urlencoded",
       Accept: "application/json",
     },
-    body: "grant_type=client_credentials",
+    body,
     cache: "no-store",
   });
 

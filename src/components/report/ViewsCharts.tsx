@@ -42,6 +42,7 @@ function ChartCard({
   emptyHint,
   valueNoun,
   tracking = true,
+  pendingFirstValue = false,
 }: {
   title: string;
   totalLabel: string;
@@ -53,6 +54,8 @@ function ChartCard({
   valueNoun: string;
   /** Whether the empty state is still waiting on data worth scanning for. */
   tracking?: boolean;
+  /** Draw a dated starting point while the provider prepares its first count. */
+  pendingFirstValue?: boolean;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const plotRef = useRef<HTMLDivElement>(null);
@@ -82,7 +85,8 @@ function ChartCard({
     [chartSeries, mode],
   );
 
-  const hasData = series.length >= 2;
+  const hasData = series.length >= 1;
+  const canCompare = series.length >= 2;
   const showChart = hasData;
   const max = Math.max(...values, mode === "cumulative" ? 1 : 0);
   const min = Math.min(...values, 0);
@@ -173,7 +177,9 @@ function ChartCard({
   const active = hover != null ? points[hover] : null;
   const latest = points[points.length - 1];
   const displayTotal =
-    totalValue != null
+    pendingFirstValue
+      ? null
+      : totalValue != null
       ? totalValue
       : latest
         ? latest.row.cumulative
@@ -285,7 +291,18 @@ function ChartCard({
         <div>
           <p className="report-chart-card__eyebrow">{title}</p>
           {/* No dangling label when there is no figure to label. */}
-          {displayTotal != null ? (
+          {pendingFirstValue ? (
+            <>
+              <p className="report-chart-card__total" aria-label="Count pending">
+                —
+              </p>
+              <p className="report-chart-card__total-label">
+                Tracking started
+                <br />
+                Awaiting first Soundcharts count
+              </p>
+            </>
+          ) : displayTotal != null ? (
             <>
               <p className="report-chart-card__total">
                 <AnimatedValue value={displayTotal} />
@@ -303,7 +320,7 @@ function ChartCard({
           ) : null}
         </div>
         {/* No toggle when there is no chart to toggle. */}
-        {showChart ? (
+        {canCompare ? (
           <div
             ref={toggleRef}
             className="report-toggle"
@@ -419,7 +436,7 @@ function ChartCard({
               </text>
             ))}
 
-            {mode === "cumulative" && area ? (
+            {mode === "cumulative" && points.length >= 2 && area ? (
               <polygon
                 ref={areaRef}
                 points={area}
@@ -490,7 +507,7 @@ function ChartCard({
             ) : null}
 
             {/* Invisible hit targets */}
-            {points.map((p, index) => (
+            {pendingFirstValue ? null : points.map((p, index) => (
               <circle
                 key={p.row.date}
                 cx={p.x}
@@ -559,7 +576,16 @@ export function ViewsCharts({
   viewsTotal: number | null;
   showCreations?: boolean;
 }) {
-  const creationsUnavailable = creations.length === 0 && creationsTotal == null;
+  const creationsPending = creations.length === 0 && creationsTotal == null;
+  const creationsSeries = creationsPending
+    ? [
+        {
+          date: new Date().toISOString().slice(0, 10),
+          daily: 0,
+          cumulative: 0,
+        },
+      ]
+    : creations;
   const creationsDetail = [
     creationsGrowth != null
       ? `${formatSignedFullNumber(creationsGrowth)} since campaign start`
@@ -581,16 +607,11 @@ export function ViewsCharts({
           totalLabel="Total creations"
           totalDetail={creationsDetail || null}
           totalValue={creationsTotal}
-          series={creations}
+          series={creationsSeries}
           valueNoun="creations"
-          emptyTitle={
-            creationsUnavailable ? "No Soundcharts data yet" : "Building history"
-          }
-          emptyHint={
-            creationsUnavailable
-              ? "Soundcharts has not published a TikTok video count for this sound yet."
-              : "One day recorded so far. This chart appears once there are two days to compare."
-          }
+          emptyTitle="No Soundcharts data yet"
+          emptyHint="Soundcharts has not published a TikTok video count for this sound yet."
+          pendingFirstValue={creationsPending}
           tracking
         />
       ) : null}

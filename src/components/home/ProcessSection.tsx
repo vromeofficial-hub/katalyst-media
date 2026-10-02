@@ -54,8 +54,8 @@ type JourneyGeometry = {
 };
 
 const SAMPLE_COUNT = 360;
-const STAGE_HOLD_SVH = 42;
-const INTRO_BEAT_SVH = 24;
+const STAGE_HOLD_SVH = 58;
+const INTRO_BEAT_SVH = 32;
 const OVERVIEW_SHORT = [
   "Music",
   "Audience",
@@ -67,7 +67,7 @@ const OVERVIEW_SHORT = [
 const DESKTOP_GEOMETRY: JourneyGeometry = {
   width: 1000,
   height: 11040,
-  vh: 1104,
+  vh: 1300,
   viewBox: "0 0 1000 11040",
   start: { x: 500, y: 680 },
   nodes: [
@@ -94,7 +94,7 @@ const DESKTOP_GEOMETRY: JourneyGeometry = {
 const TABLET_GEOMETRY: JourneyGeometry = {
   width: 1000,
   height: 10540,
-  vh: 1054,
+  vh: 1240,
   viewBox: "0 0 1000 10540",
   start: { x: 500, y: 660 },
   nodes: [
@@ -121,7 +121,7 @@ const TABLET_GEOMETRY: JourneyGeometry = {
 const PORTRAIT_GEOMETRY: JourneyGeometry = {
   width: 1000,
   height: 10080,
-  vh: 1008,
+  vh: 1190,
   viewBox: "0 0 1000 10080",
   start: { x: 500, y: 660 },
   nodes: [
@@ -148,7 +148,7 @@ const PORTRAIT_GEOMETRY: JourneyGeometry = {
 const MOBILE_GEOMETRY: JourneyGeometry = {
   width: 1000,
   height: 11760,
-  vh: 1298,
+  vh: 1490,
   viewBox: "0 0 1000 11760",
   start: { x: 500, y: 620 },
   nodes: [
@@ -1016,9 +1016,10 @@ export function ProcessSection() {
     const run = () => {
       if (!cancelled) measurePath();
     };
+    let settleFrame = 0;
     const frame = requestAnimationFrame(() => {
       run();
-      requestAnimationFrame(run);
+      settleFrame = requestAnimationFrame(run);
     });
     window.addEventListener("resize", measurePath);
     window.addEventListener("orientationchange", measurePath);
@@ -1031,6 +1032,7 @@ export function ProcessSection() {
     return () => {
       cancelled = true;
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(settleFrame);
       window.removeEventListener("resize", measurePath);
       window.removeEventListener("orientationchange", measurePath);
       window.visualViewport?.removeEventListener("resize", measurePath);

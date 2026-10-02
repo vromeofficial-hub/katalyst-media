@@ -892,7 +892,7 @@
 }
 
 .process-journey--mobile {
-  --process-vh: 1298svh;
+  --process-vh: 1490svh;
 }
 
 .process-journey--mobile .process-overview-end {
@@ -900,15 +900,15 @@
 }
 
 .process-journey--portrait {
-  --process-vh: 1008svh;
+  --process-vh: 1190svh;
 }
 
 .process-journey--tablet {
-  --process-vh: 1054svh;
+  --process-vh: 1240svh;
 }
 
 .process-journey--desktop {
-  --process-vh: 1104svh;
+  --process-vh: 1300svh;
 }
 
 .process-journey--reduced .process-route__complete,
