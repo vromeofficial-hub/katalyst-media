@@ -594,6 +594,8 @@ function IntroAtmosphere({
   );
 }
 
+// Fade complete branches: normalized dash lengths do not stay aligned with
+// non-scaling SVG strokes when this tall canvas changes aspect ratio.
 function BloomStem({
   d,
   revealed,
@@ -613,13 +615,13 @@ function BloomStem({
         strokeLinecap="round"
         initial={
           revealed
-            ? { pathLength: 1, opacity: 0.85 }
-            : { pathLength: 0, opacity: 0 }
+            ? { opacity: 0.85 }
+            : { opacity: 0 }
         }
         animate={
           revealed
-            ? { pathLength: 1, opacity: 0.85 }
-            : { pathLength: 0, opacity: 0 }
+            ? { opacity: 0.85 }
+            : { opacity: 0 }
         }
         transition={{
           duration: motionEnabled ? 0.55 : 0,
@@ -633,13 +635,13 @@ function BloomStem({
         strokeLinecap="round"
         initial={
           revealed
-            ? { pathLength: 1, opacity: 1 }
-            : { pathLength: 0, opacity: 0 }
+            ? { opacity: 1 }
+            : { opacity: 0 }
         }
         animate={
           revealed
-            ? { pathLength: 1, opacity: 1 }
-            : { pathLength: 0, opacity: 0 }
+            ? { opacity: 1 }
+            : { opacity: 0 }
         }
         transition={{
           duration: motionEnabled ? 0.55 : 0,
