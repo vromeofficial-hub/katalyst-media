@@ -5,6 +5,7 @@ import { AnimatedValue } from "@/components/report/ReportMotion";
 import {
   formatCompactNumber,
   formatFullNumber,
+  formatShortDate,
   formatSignedCompactNumber,
   formatSignedFullNumber,
   type ReportChartPoint,
@@ -17,22 +18,9 @@ import { soundTrackingMessage, type SoundTrackingStatus } from "@/lib/portal/sou
 
 type Mode = "cumulative" | "daily";
 
-const AXIS_DATE_FORMATTER = new Intl.DateTimeFormat("en-GB", {
-  day: "numeric",
-  month: "short",
-  timeZone: "Europe/London",
-});
-
-const TOOLTIP_DATE_FORMATTER = new Intl.DateTimeFormat("en-GB", {
-  day: "numeric",
-  month: "short",
-  year: "numeric",
-  timeZone: "Europe/London",
-});
-
 function formatChartDate(iso: string, includeYear = false): string {
-  const d = new Date(`${iso}T12:00:00Z`);
-  return (includeYear ? TOOLTIP_DATE_FORMATTER : AXIS_DATE_FORMATTER).format(d);
+  const label = formatShortDate(`${iso}T12:00:00Z`);
+  return includeYear ? label : label.replace(/ \d{4}$/, "");
 }
 
 function ChartCard({

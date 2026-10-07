@@ -30,7 +30,8 @@
   animation-play-state: paused;
 }
 
-.report-shell {
+.report-shell,
+.report-charts {
   --report-bg: #050605;
   --report-card: #090c0a;
   --report-raised: #0d110e;
@@ -44,6 +45,9 @@
   --report-radius-sm: 8px;
   /* One inset for every large card, so their content shares an edge. */
   --report-pad-card: 1.15rem;
+}
+
+.report-shell {
   --color-deep-black: var(--report-bg);
   --color-graphite: #141816;
   --color-off-white: var(--report-text);
@@ -2199,7 +2203,7 @@
   scroll-snap-align: start;
 }
 
-@media (min-width: 760px) {
+@media (min-width: 900px) {
   .report-top-grid {
     grid-auto-flow: initial;
     grid-auto-columns: initial;

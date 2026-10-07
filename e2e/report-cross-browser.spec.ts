@@ -453,6 +453,12 @@ test.describe("client report cross-browser quality", () => {
 
         const loadedImages = page.locator(".report-vcard__media img");
         for (let index = 0; index < (await loadedImages.count()); index += 1) {
+          // Browsers deliberately defer loading off-screen thumbnails.
+          await loadedImages.nth(index).scrollIntoViewIfNeeded();
+          await expect.poll(() => loadedImages.nth(index).evaluate((image) => {
+            const element = image as HTMLImageElement;
+            return element.complete && element.naturalWidth > 0;
+          })).toBe(true);
           const quality = await loadedImages.nth(index).evaluate((image) => {
             const element = image as HTMLImageElement;
             const rect = element.getBoundingClientRect();

@@ -294,14 +294,20 @@ export function formatGbpExact(value: number): string {
 
 const REPORT_TIME_ZONE = "Europe/London";
 
+// Numeric date parts avoid browser ICU differences such as Sep/Sept and "at".
+const REPORT_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+const REPORT_DATE_PARTS = new Intl.DateTimeFormat("en-GB", {
+  day: "numeric", month: "numeric", year: "numeric", timeZone: REPORT_TIME_ZONE,
+});
+const REPORT_TIME_PARTS = new Intl.DateTimeFormat("en-GB", {
+  hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: REPORT_TIME_ZONE,
+});
+
 export function formatShortDate(value: string | null | undefined): string {
   if (!value) return "—";
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: REPORT_TIME_ZONE,
-  }).format(new Date(value));
+  const parts = REPORT_DATE_PARTS.formatToParts(new Date(value));
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === type)?.value ?? "";
+  return `${Number(part("day"))} ${REPORT_MONTHS[Number(part("month")) - 1]} ${part("year")}`;
 }
 
 export function formatRelativeUpdated(value: string): string {
@@ -438,14 +444,9 @@ export function normalizeHandle(value: string): string {
 
 export function formatDateTime(value: string | null | undefined): string {
   if (!value) return "—";
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    timeZone: REPORT_TIME_ZONE,
-  }).format(new Date(value));
+  const parts = REPORT_TIME_PARTS.formatToParts(new Date(value));
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((item) => item.type === type)?.value ?? "";
+  return `${formatShortDate(value)}, ${part("hour").padStart(2, "0")}:${part("minute").padStart(2, "0")}`;
 }
 
 export type ReportChartPoint = {

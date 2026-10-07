@@ -3,6 +3,7 @@
 import { useId, useMemo, useRef, useState } from "react";
 import {
   formatEngagementRate,
+  formatDateTime,
   formatFullNumber,
 } from "@/lib/portal/metrics";
 import type { ReportMetricHistoryPoint } from "@/lib/portal/report";
@@ -10,14 +11,6 @@ import { gsap, useGSAP } from "@/lib/motion";
 
 type MetricFormat = "number" | "percent";
 
-const TOOLTIP_DATE = new Intl.DateTimeFormat("en-GB", {
-  day: "numeric",
-  month: "short",
-  year: "numeric",
-  hour: "2-digit",
-  minute: "2-digit",
-  timeZone: "Europe/London",
-});
 
 function formatMetric(value: number, format: MetricFormat) {
   return format === "percent"
@@ -252,9 +245,7 @@ export function ReportMetricChart({
             fill="transparent"
             tabIndex={0}
             role="button"
-            aria-label={`${TOOLTIP_DATE.format(
-              new Date(point.capturedAt),
-            )}, ${label} ${formatMetric(point.value, format)}`}
+            aria-label={`${formatDateTime(point.capturedAt)}, ${label} ${formatMetric(point.value, format)}`}
             onMouseEnter={() => setActiveIndex(index)}
             onPointerDown={() => setActiveIndex(index)}
             onFocus={() => setActiveIndex(index)}
@@ -271,7 +262,7 @@ export function ReportMetricChart({
             top: `${Math.min(78, Math.max(12, (active.y / height) * 100))}%`,
           }}
         >
-          <span>{TOOLTIP_DATE.format(new Date(active.capturedAt))}</span>
+          <span>{formatDateTime(active.capturedAt)}</span>
           <strong>{formatMetric(active.value, format)}</strong>
         </span>
       ) : null}
