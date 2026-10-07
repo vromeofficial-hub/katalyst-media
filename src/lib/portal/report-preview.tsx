@@ -36,23 +36,23 @@ export default async function ReportPreview({ params }: {
   const shortTitle = title.length > 100 ? `${title.slice(0, 97)}…` : title;
   const shortArtist = artist && artist.length > 70 ? `${artist.slice(0, 67)}…` : artist;
   return new ImageResponse(
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", background: "#080b09", color: "#f5f5f5", padding: "48px 60px", fontFamily: "sans-serif", borderTop: "8px solid #c6ff00" }}>
-      <div style={{ display: "flex", fontSize: 27, letterSpacing: 4 }}>KATALYST <span style={{ color: "#c6ff00", marginLeft: 12 }}>MEDIA</span></div>
-      <div style={{ display: "flex", alignItems: "center", flex: 1, gap: 44 }}>
-        <div style={{ display: "flex", width: 286, height: 286, flexShrink: 0, borderRadius: 22, overflow: "hidden", background: "#151d10", border: "1px solid #35451c", alignItems: "center", justifyContent: "center" }}>
+    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", background: "#080b09", color: "#f5f5f5", padding: "40px 52px", fontFamily: "sans-serif", borderTop: "2px solid #c6ff00" }}>
+      <div style={{ display: "flex", fontSize: 23, letterSpacing: 3 }}>KATALYST <span style={{ color: "#c6ff00", marginLeft: 12 }}>MEDIA</span></div>
+      <div style={{ display: "flex", alignItems: "center", flex: 1, gap: 48 }}>
+        <div style={{ display: "flex", width: 360, height: 360, flexShrink: 0, borderRadius: 20, overflow: "hidden", background: "#151d10", border: "2px solid #728d26", alignItems: "center", justifyContent: "center" }}>
           {artwork ? (
             // ImageResponse renders these pixels into the preview itself.
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={artwork} alt="" width={286} height={286} style={{ objectFit: "cover" }} />
-          ) : <span style={{ fontSize: 110, color: "#c6ff00" }}>KM</span>}
+            <img src={artwork} alt="" width={360} height={360} style={{ objectFit: "cover" }} />
+          ) : <span style={{ fontSize: 132, color: "#c6ff00" }}>KM</span>}
         </div>
         <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
-          <div style={{ color: "#c6ff00", fontSize: 19, letterSpacing: 3, marginBottom: 20 }}>CAMPAIGN REPORT</div>
-          {shortArtist ? <div style={{ fontSize: 30, color: "#b7beb5", marginBottom: 14 }}>{shortArtist}</div> : null}
-          <div style={{ fontSize: shortTitle.length > 55 ? 42 : 58, fontWeight: 700, lineHeight: 1.12, letterSpacing: -2 }}>{shortTitle}</div>
+          <div style={{ color: "#c6ff00", fontSize: 18, letterSpacing: 3, marginBottom: 24 }}>CAMPAIGN REPORT</div>
+          {shortArtist ? <div style={{ fontSize: shortArtist.length > 35 ? 32 : 44, color: "#e3e7df", fontWeight: 700, lineHeight: 1.15, marginBottom: 14 }}>{shortArtist}</div> : null}
+          <div style={{ fontSize: shortTitle.length > 55 ? 40 : shortTitle.length > 30 ? 54 : 72, fontWeight: 700, lineHeight: 1.06, letterSpacing: -2 }}>{shortTitle}</div>
         </div>
       </div>
-      <div style={{ display: "flex", fontSize: 20, color: "#929b90", borderTop: "1px solid #283026", paddingTop: 22 }}>Campaign performance · katalystmedia.co.uk</div>
+      <div style={{ display: "flex", fontSize: 18, color: "#929b90", justifyContent: "flex-end" }}>katalystmedia.co.uk</div>
     </div>,
     { ...size, headers: { "Cache-Control": "no-store" } },
   );
