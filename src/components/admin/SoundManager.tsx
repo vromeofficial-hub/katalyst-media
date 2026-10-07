@@ -32,6 +32,7 @@ import {
 } from "@/lib/portal/metrics";
 import type { Campaign } from "@/lib/supabase/database.types";
 import type { TikTokSoundData } from "@/lib/tiktok/provider";
+import { soundTrackingMessage } from "@/lib/portal/sound-tracking";
 import { useRouter } from "next/navigation";
 
 function SoundArtwork({
@@ -371,10 +372,10 @@ export function SoundManager({
                         try {
                           const result = await refreshCampaignSound(campaign.id);
                           toast(
-                            result.usageRetrieved
+                            result.error || (result.usageRetrieved
                               ? "✓ Missing TikTok data refreshed"
-                              : "Sound refreshed · some TikTok data remains unavailable",
-                            result.usageRetrieved ? "ok" : "warn",
+                              : "Sound refreshed · some TikTok data remains unavailable"),
+                            result.usageRetrieved && !result.error ? "ok" : "warn",
                           );
                           router.refresh();
                         } catch (err) {
@@ -411,7 +412,7 @@ export function SoundManager({
                 </>
               ) : (
                 <p className="max-w-[12rem] text-sm text-muted-grey">
-                  Creation count not available yet
+                  {soundTrackingMessage(campaign.sound_tracking_status)}
                 </p>
               )}
             </div>

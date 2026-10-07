@@ -1,3 +1,4 @@
+import type { SoundTrackingStatus } from "@/lib/portal/sound-tracking";
 import type { CampaignStatus } from "@/lib/supabase/database.types";
 
 export type ReportCampaign = {
@@ -13,6 +14,8 @@ export type ReportCampaign = {
   artwork_url: string | null;
   sound_artwork_url: string | null;
   sound_usage_count: number | null;
+  sound_tracking_status?: SoundTrackingStatus;
+  sound_tracking_checked_at?: string | null;
   target_posts: number | null;
   post_target_enabled?: boolean;
 };

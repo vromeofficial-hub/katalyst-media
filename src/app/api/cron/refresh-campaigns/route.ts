@@ -20,6 +20,8 @@ type CampaignOutcome = {
   campaignId: string;
   posts?: { total: number; updated: number; failed: number };
   soundOk?: boolean;
+  soundError?: string;
+  postsError?: string;
   creations?: number | null;
   providerDataDate?: string | null;
   checkedAt?: string | null;
@@ -82,6 +84,8 @@ export async function GET(request: Request) {
           failed: outcome.posts.failed,
         },
         soundOk: outcome.sound.ok,
+        soundError: outcome.sound.error,
+        postsError: outcome.posts.error,
         creations: outcome.sound.after,
         providerDataDate: outcome.sound.providerDataDate,
         checkedAt: outcome.sound.checkedAt,
@@ -103,16 +107,17 @@ export async function GET(request: Request) {
     revalidatePath("/admin/clients");
   }
 
+  const failed = (result: CampaignOutcome) => Boolean(result.error || result.soundOk === false || result.postsError || result.posts?.failed);
   const summary = {
-    ok: true,
+    ok: !results.some(failed),
     trigger: cronSchedule ? "vercel-cron" : "manual",
     cronSchedule,
     ukLocalTime: ukWindow.localTime,
     timeZone: ukWindow.timeZone,
     durationMs: Date.now() - startedAt,
     scanned: queue.length,
-    refreshed: results.filter((result) => !result.error).length,
-    errored: results.filter((result) => result.error).length,
+    refreshed: results.filter((result) => !failed(result)).length,
+    errored: results.filter(failed).length,
     skipped,
     campaigns: results,
   };

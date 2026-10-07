@@ -4,6 +4,8 @@ import {
   soundchartsAuthHeaders,
 } from "@/lib/soundcharts/credentials";
 
+import { SoundchartsRequestError } from "@/lib/soundcharts/errors";
+
 const SOUNDCHARTS_EARLIEST_TIKTOK_DATE = "2016-01-01";
 const REQUEST_TIMEOUT_MS = 20_000;
 
@@ -69,8 +71,10 @@ async function requestSoundchartsJson<T extends SoundchartsEnvelope>(
 
   const payload = (await response.json().catch(() => ({}))) as T;
   if (!response.ok) {
-    throw new Error(
+    throw new SoundchartsRequestError(
       `Soundcharts request failed (${path}): ${errorDetail(payload, response.status)}`,
+      response.status,
+      path.includes("/by-platform/") ? "lookup" : "audience",
     );
   }
   return payload;
@@ -108,8 +112,8 @@ export function parseTikTokAudiencePoints(
 
     for (const plot of item.plots ?? []) {
       if (plot.identifier !== tiktokSoundId) continue;
-      const value = Number(plot.value);
-      if (!Number.isFinite(value) || value < 0) continue;
+      const value = plot.value;
+      if (typeof value !== "number" || !Number.isSafeInteger(value) || value < 0) continue;
       points.push({
         providerDataDate,
         creationCount: Math.round(value),

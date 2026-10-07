@@ -12,6 +12,9 @@ import {
 import { gsap, useGSAP } from "@/lib/motion";
 import "@/components/report/report.css";
 
+import { integerAxisTicks } from "@/lib/portal/chart-axis";
+import { soundTrackingMessage, type SoundTrackingStatus } from "@/lib/portal/sound-tracking";
+
 type Mode = "cumulative" | "daily";
 
 const AXIS_DATE_FORMATTER = new Intl.DateTimeFormat("en-GB", {
@@ -43,6 +46,7 @@ function ChartCard({
   valueNoun,
   tracking = true,
   pendingFirstValue = false,
+  trackingStatus,
 }: {
   title: string;
   totalLabel: string;
@@ -54,7 +58,8 @@ function ChartCard({
   valueNoun: string;
   /** Whether the empty state is still waiting on data worth scanning for. */
   tracking?: boolean;
-  /** Draw a dated starting point while the provider prepares its first count. */
+  trackingStatus?: SoundTrackingStatus;
+  /** Show an unavailable count without synthesizing chart data. */
   pendingFirstValue?: boolean;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -147,15 +152,14 @@ function ChartCard({
       ? `${padL},${padT + plotH} ${line} ${padL + plotW},${padT + plotH}`
       : "";
 
-  const yTicks = [0, 0.33, 0.66, 1].map((t) => {
-    const value = min + span * (1 - t);
-    return {
-      y: padT + plotH * t,
-      label:
-        mode === "daily"
-          ? formatSignedCompactNumber(Math.round(value))
-          : formatCompactNumber(Math.round(value)),
-    };
+  const tickLabels = new Set<string>();
+  const yTicks = integerAxisTicks(min, min + span).flatMap((value) => {
+    const label = mode === "daily"
+      ? formatSignedCompactNumber(value)
+      : formatCompactNumber(value);
+    if (tickLabels.has(label)) return [];
+    tickLabels.add(label);
+    return [{ y: padT + plotH - ((value - min) / span) * plotH, label }];
   });
 
   const xLabels = (() => {
@@ -297,9 +301,7 @@ function ChartCard({
                 —
               </p>
               <p className="report-chart-card__total-label">
-                Tracking started
-                <br />
-                Awaiting first Soundcharts count
+                Count unavailable
               </p>
             </>
           ) : displayTotal != null ? (
@@ -316,6 +318,9 @@ function ChartCard({
                   </>
                 ) : null}
               </p>
+              {trackingStatus && ["error", "not_found", "no_data"].includes(trackingStatus) ? (
+                <p className="report-chart-card__total-label">Latest count unavailable · showing last verified count</p>
+              ) : null}
             </>
           ) : null}
         </div>
@@ -565,6 +570,7 @@ export function ViewsCharts({
   creationsTotal,
   creationsGrowth,
   creationsProviderDate,
+  creationsTrackingStatus,
   viewsTotal,
   showCreations = true,
 }: {
@@ -573,19 +579,11 @@ export function ViewsCharts({
   creationsTotal: number | null;
   creationsGrowth?: number | null;
   creationsProviderDate?: string | null;
+  creationsTrackingStatus?: SoundTrackingStatus;
   viewsTotal: number | null;
   showCreations?: boolean;
 }) {
   const creationsPending = creations.length === 0 && creationsTotal == null;
-  const creationsSeries = creationsPending
-    ? [
-        {
-          date: new Date().toISOString().slice(0, 10),
-          daily: 0,
-          cumulative: 0,
-        },
-      ]
-    : creations;
   const creationsDetail = [
     creationsGrowth != null
       ? `${formatSignedFullNumber(creationsGrowth)} since campaign start`
@@ -607,10 +605,11 @@ export function ViewsCharts({
           totalLabel="Total creations"
           totalDetail={creationsDetail || null}
           totalValue={creationsTotal}
-          series={creationsSeries}
+          series={creations}
           valueNoun="creations"
-          emptyTitle="No Soundcharts data yet"
-          emptyHint="Soundcharts has not published a TikTok video count for this sound yet."
+          emptyTitle="No verified count yet"
+          emptyHint={soundTrackingMessage(creationsTrackingStatus)}
+          trackingStatus={creationsTrackingStatus}
           pendingFirstValue={creationsPending}
           tracking
         />

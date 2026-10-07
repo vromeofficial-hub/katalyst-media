@@ -1,3 +1,4 @@
+import type { SoundTrackingStatus } from "@/lib/portal/sound-tracking";
 export type CampaignStatus = "active" | "ended";
 export type ClientType = "artist" | "manager" | "label";
 
@@ -75,6 +76,8 @@ export type Database = {
           sound_artwork_url: string | null;
           sound_usage_count: number | null;
           soundcharts_song_uuid: string | null;
+          sound_tracking_status: SoundTrackingStatus;
+          sound_tracking_checked_at: string | null;
           last_synced_at: string | null;
           trashed_at: string | null;
           ended_at: string | null;
@@ -100,6 +103,8 @@ export type Database = {
           sound_artwork_url?: string | null;
           sound_usage_count?: number | null;
           soundcharts_song_uuid?: string | null;
+          sound_tracking_status?: SoundTrackingStatus;
+          sound_tracking_checked_at?: string | null;
           last_synced_at?: string | null;
           trashed_at?: string | null;
           ended_at?: string | null;
@@ -125,6 +130,8 @@ export type Database = {
           sound_artwork_url?: string | null;
           sound_usage_count?: number | null;
           soundcharts_song_uuid?: string | null;
+          sound_tracking_status?: SoundTrackingStatus;
+          sound_tracking_checked_at?: string | null;
           last_synced_at?: string | null;
           trashed_at?: string | null;
           ended_at?: string | null;

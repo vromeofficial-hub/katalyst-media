@@ -16,6 +16,8 @@ import {
   resolveSoundchartsSong,
   type SoundchartsAudiencePoint,
 } from "@/lib/soundcharts/client";
+import { SoundchartsRequestError } from "@/lib/soundcharts/errors";
+import { soundTrackingMessage, type SoundTrackingStatus } from "@/lib/portal/sound-tracking";
 import type { Database } from "@/lib/supabase/database.types";
 import { tiktokProvider } from "@/lib/tiktok/provider";
 
@@ -151,97 +153,136 @@ export async function refreshCampaignSoundchartsWithClient(
   }
 
   const soundId = campaign.tiktok_sound_id;
-  let songUuid = campaign.soundcharts_song_uuid;
-  if (!songUuid) {
-    const resolved = await resolveSoundchartsSong(soundId);
-    songUuid = resolved.uuid;
+  async function saveStatus(status: SoundTrackingStatus) {
     const { error } = await supabase
       .from("campaigns")
-      .update({ soundcharts_song_uuid: songUuid })
+      .update({
+        sound_tracking_status: status,
+        sound_tracking_checked_at: new Date().toISOString(),
+      })
       .eq("id", campaignId)
-      .eq("tiktok_sound_id", soundId);
-    if (error) throw new Error(error.message);
+      .eq("tiktok_sound_id", soundId)
+      .select("id")
+      .single();
+    if (error) throw new Error("Could not save sound tracking status");
   }
 
-  const today = new Date().toISOString().slice(0, 10);
-  const campaignStartDate = new Date(campaign.created_at)
-    .toISOString()
-    .slice(0, 10);
-  const latest = await getLatestTikTokAudiencePoint(
-    songUuid,
-    soundId,
-    today,
-  );
-  if (!latest) {
+  try {
+    let songUuid = campaign.soundcharts_song_uuid;
+    if (!songUuid) {
+      const resolved = await resolveSoundchartsSong(soundId);
+      songUuid = resolved.uuid;
+      const { error } = await supabase
+        .from("campaigns")
+        .update({ soundcharts_song_uuid: songUuid })
+        .eq("id", campaignId)
+        .eq("tiktok_sound_id", soundId)
+        .select("id")
+        .single();
+      if (error) throw new Error(error.message);
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+    const campaignStartDate = new Date(campaign.created_at)
+      .toISOString()
+      .slice(0, 10);
+    const latest = await getLatestTikTokAudiencePoint(
+      songUuid,
+      soundId,
+      today,
+    );
+    if (!latest) {
+      await saveStatus("no_data");
+      return {
+        skipped: false,
+        songUuid,
+        creationCount: campaign.sound_usage_count,
+        providerDataDate: null,
+        checkedAt: new Date().toISOString(),
+        inserted: false,
+        baselineInserted: false,
+      };
+    }
+
+    const checkedAt = new Date().toISOString();
+    const { count: existingProviderPoints, error: historyError } = await supabase
+      .from("sound_metric_snapshots")
+      .select("id", { count: "exact", head: true })
+      .eq("campaign_id", campaignId)
+      .eq("sound_id", soundId)
+      .not("provider_data_date", "is", null);
+    if (historyError) throw new Error(historyError.message);
+
+    let baselineInserted = false;
+    if ((existingProviderPoints ?? 0) === 0) {
+      const baseline = await getCampaignStartTikTokAudiencePoint(
+        songUuid,
+        soundId,
+        campaignStartDate,
+        today,
+      );
+      if (
+        baseline &&
+        baseline.providerDataDate !== latest.providerDataDate
+      ) {
+        const baselineWrite = await upsertSoundchartsSnapshot(
+          supabase,
+          campaignId,
+          soundId,
+          baseline,
+          checkedAt,
+        );
+        baselineInserted = baselineWrite.inserted;
+      }
+    }
+
+    const latestWrite = await upsertSoundchartsSnapshot(
+      supabase,
+      campaignId,
+      soundId,
+      latest,
+      checkedAt,
+    );
+    const { error: updateError } = await supabase
+      .from("campaigns")
+      .update({
+        sound_usage_count: latest.creationCount,
+        updated_at: checkedAt,
+      })
+      .eq("id", campaignId)
+      .eq("tiktok_sound_id", soundId);
+    if (updateError) throw new Error(updateError.message);
+    await saveStatus("ready");
+
     return {
       skipped: false,
       songUuid,
-      creationCount: campaign.sound_usage_count,
-      providerDataDate: null,
-      checkedAt: new Date().toISOString(),
-      inserted: false,
-      baselineInserted: false,
+      creationCount: latest.creationCount,
+      providerDataDate: latest.providerDataDate,
+      checkedAt,
+      inserted: latestWrite.inserted,
+      baselineInserted,
     };
-  }
-
-  const checkedAt = new Date().toISOString();
-  const { count: existingProviderPoints, error: historyError } = await supabase
-    .from("sound_metric_snapshots")
-    .select("id", { count: "exact", head: true })
-    .eq("campaign_id", campaignId)
-    .eq("sound_id", soundId)
-    .not("provider_data_date", "is", null);
-  if (historyError) throw new Error(historyError.message);
-
-  let baselineInserted = false;
-  if ((existingProviderPoints ?? 0) === 0) {
-    const baseline = await getCampaignStartTikTokAudiencePoint(
-      songUuid,
+  } catch (cause) {
+    const missingSound =
+      cause instanceof SoundchartsRequestError &&
+      cause.stage === "lookup" && cause.status === 404;
+    const status = missingSound ? "not_found" : "error";
+    // Deliberately omit response bodies, headers, tokens and credentials.
+    console.warn("[soundcharts] refresh failed", {
+      campaignId,
       soundId,
-      campaignStartDate,
-      today,
-    );
-    if (
-      baseline &&
-      baseline.providerDataDate !== latest.providerDataDate
-    ) {
-      const baselineWrite = await upsertSoundchartsSnapshot(
-        supabase,
-        campaignId,
-        soundId,
-        baseline,
-        checkedAt,
-      );
-      baselineInserted = baselineWrite.inserted;
+      stage: cause instanceof SoundchartsRequestError ? cause.stage : "refresh",
+      httpStatus: cause instanceof SoundchartsRequestError ? cause.status : null,
+      trackingStatus: status,
+    });
+    try {
+      await saveStatus(status);
+    } catch {
+      console.error("[soundcharts] could not persist tracking status", { campaignId });
     }
+    throw new Error(soundTrackingMessage(status));
   }
-
-  const latestWrite = await upsertSoundchartsSnapshot(
-    supabase,
-    campaignId,
-    soundId,
-    latest,
-    checkedAt,
-  );
-  const { error: updateError } = await supabase
-    .from("campaigns")
-    .update({
-      sound_usage_count: latest.creationCount,
-      updated_at: checkedAt,
-    })
-    .eq("id", campaignId)
-    .eq("tiktok_sound_id", soundId);
-  if (updateError) throw new Error(updateError.message);
-
-  return {
-    skipped: false,
-    songUuid,
-    creationCount: latest.creationCount,
-    providerDataDate: latest.providerDataDate,
-    checkedAt,
-    inserted: latestWrite.inserted,
-    baselineInserted,
-  };
 }
 
 export async function insertCampaignSnapshot(

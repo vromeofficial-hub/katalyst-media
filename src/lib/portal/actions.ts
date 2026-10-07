@@ -378,7 +378,7 @@ export async function attachCampaignSound(campaignId: string, soundUrl: string) 
   const { data: campaign, error: campaignError } = await supabase
     .from("campaigns")
     .select(
-      "share_token, client_id, tiktok_sound_id, sound_title, sound_artist, sound_artwork_url, sound_usage_count, soundcharts_song_uuid, sound_title_override, sound_artist_override, artwork_url",
+      "share_token, client_id, tiktok_sound_id, sound_title, sound_artist, sound_artwork_url, sound_usage_count, soundcharts_song_uuid, sound_tracking_status, sound_tracking_checked_at, sound_title_override, sound_artist_override, artwork_url",
     )
     .eq("id", campaignId)
     .single();
@@ -397,6 +397,8 @@ export async function attachCampaignSound(campaignId: string, soundUrl: string) 
       sound_artwork_url:
         sound.artworkUrl ?? (sameSound ? campaign.sound_artwork_url : null),
       sound_usage_count: sameSound ? campaign.sound_usage_count : null,
+      sound_tracking_status: sameSound ? campaign.sound_tracking_status : "pending",
+      sound_tracking_checked_at: sameSound ? campaign.sound_tracking_checked_at : null,
       soundcharts_song_uuid: sameSound
         ? campaign.soundcharts_song_uuid
         : null,
@@ -428,19 +430,22 @@ export async function attachCampaignSound(campaignId: string, soundUrl: string) 
 
 export async function refreshCampaignSound(campaignId: string) {
   const supabase = await requireUser();
-  const metadata = await refreshCampaignSoundWithClient(supabase, campaignId);
-  const tracked = await refreshCampaignSoundchartsWithClient(
-    supabase,
-    campaignId,
-  );
+  // Metadata failure must not prevent the independent creation-count request.
+  const metadata = await refreshCampaignSoundWithClient(supabase, campaignId)
+    .catch(() => null);
+  let trackingError: string | undefined;
+  const tracked = await refreshCampaignSoundchartsWithClient(supabase, campaignId).catch((cause) => {
+    trackingError = cause instanceof Error ? cause.message : "Creation count check failed";
+    return null;
+  });
   const campaign = await campaignContext(supabase, campaignId);
   revalidateCampaign(campaignId, campaign.share_token);
   revalidatePath(`/admin/clients/${campaign.client_id}`);
   return {
-    ...metadata,
-    usageRetrieved: tracked.creationCount != null,
-    usageCount: tracked.creationCount,
-    providerDataDate: tracked.providerDataDate,
+    usageRetrieved: tracked?.creationCount != null,
+    usageCount: tracked?.creationCount ?? metadata?.usageCount ?? null,
+    providerDataDate: tracked?.providerDataDate ?? null,
+    error: trackingError,
   };
 }
 
@@ -554,6 +559,8 @@ export async function removeCampaignSound(campaignId: string) {
       sound_artwork_url: null,
       sound_usage_count: null,
       soundcharts_song_uuid: null,
+      sound_tracking_status: "pending",
+      sound_tracking_checked_at: null,
       artwork_url: null,
       updated_at: new Date().toISOString(),
     })

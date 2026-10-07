@@ -9,6 +9,8 @@
  * Import only from route handlers, server components or scheduled jobs.
  */
 
+import { SoundchartsRequestError } from "@/lib/soundcharts/errors";
+
 export const SOUNDCHARTS_API_BASE_URL = "https://customer.api.soundcharts.com";
 export const SOUNDCHARTS_TOKEN_URL = "https://account.soundcharts.com/oauth/token";
 
@@ -73,6 +75,7 @@ async function requestAccessToken(): Promise<CachedToken> {
     },
     body,
     cache: "no-store",
+    signal: AbortSignal.timeout(20_000),
   });
 
   const payload = (await response.json().catch(() => ({}))) as TokenResponse;
@@ -82,7 +85,11 @@ async function requestAccessToken(): Promise<CachedToken> {
       payload.error_description ||
       payload.error ||
       `HTTP ${response.status}`;
-    throw new Error(`Soundcharts token request failed: ${detail}`);
+    throw new SoundchartsRequestError(
+      `Soundcharts token request failed: ${detail}`,
+      response.status,
+      "authentication",
+    );
   }
 
   const expiresInSec =

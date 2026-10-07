@@ -497,7 +497,7 @@ export function CampaignEditor({
                       `${result.posts.updated}/${result.posts.total} posts refreshed`,
                       `Views ${formatCompactNumber(result.posts.before.views)} → ${formatCompactNumber(result.posts.after.views)}`,
                     ];
-                    if (!result.sound.ok) parts.push("Sound refresh failed");
+                    if (!result.sound.ok) parts.push(result.sound.error || "Sound refresh failed");
                     if (result.posts.failed) {
                       parts.push(`${result.posts.failed} posts failed`);
                     }
@@ -599,6 +599,7 @@ export function CampaignEditor({
               }
               creationsGrowth={creations.growthFromCampaignStart}
               creationsProviderDate={creations.providerDataDate}
+              creationsTrackingStatus={campaign.sound_tracking_status}
               viewsTotal={metrics.views}
               showCreations={Boolean(campaign.tiktok_sound_id)}
             />

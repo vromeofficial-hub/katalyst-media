@@ -502,6 +502,7 @@ export function CampaignReportView({
           }
           creationsGrowth={creations.growthFromCampaignStart}
           creationsProviderDate={creations.providerDataDate}
+          creationsTrackingStatus={campaign.sound_tracking_status}
           viewsTotal={metrics.views}
           showCreations={Boolean(campaign.tiktok_sound_url)}
         />
