@@ -908,6 +908,30 @@
   min-width: 0;
 }
 
+.report-delivery-card.report-delivery-card--count-only {
+  min-height: 0;
+  justify-content: center;
+}
+
+.report-delivery-card--count-only .report-delivery-card__divider {
+  margin-top: 0.9rem;
+  margin-bottom: 0.85rem;
+}
+
+.report-delivery__count {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.report-delivery__posts-unit {
+  color: var(--report-neon);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+
 .report-delivery__separator {
   color: var(--color-muted-grey);
   font-weight: 500;

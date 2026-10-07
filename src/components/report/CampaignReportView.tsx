@@ -322,8 +322,12 @@ export function CampaignReportView({
           </article>
 
           <section
-            className="report-overview-card report-delivery-card"
-            aria-label="Campaign budget and delivery"
+            className={`report-overview-card report-delivery-card${targetPosts == null ? " report-delivery-card--count-only" : ""}`}
+            aria-label={
+              targetPosts == null
+                ? "Campaign budget and posts"
+                : "Campaign budget and delivery"
+            }
           >
             <div className="report-delivery-card__budget">
               <p className="report-summary__budget-label">Campaign Budget</p>
@@ -338,10 +342,18 @@ export function CampaignReportView({
             <div className="report-delivery-card__divider" aria-hidden="true" />
 
             <div className="report-delivery-card__content">
-              <div className="report-card__eyebrow">Campaign Delivery</div>
+              <div className="report-card__eyebrow">
+                {targetPosts == null ? "Campaign Posts" : "Campaign Delivery"}
+              </div>
               <div className="report-delivery__row">
                 <div className="report-delivery__stats">
-                  <p className="report-card__value">
+                  <p
+                    className={
+                      targetPosts == null
+                        ? "report-card__value report-delivery__count"
+                        : "report-card__value"
+                    }
+                  >
                     {targetPosts != null ? (
                       <>
                         <AnimatedValue value={metrics.posts} />
@@ -349,10 +361,15 @@ export function CampaignReportView({
                         {formatFullNumber(Number(targetPosts))}
                       </>
                     ) : (
-                      <AnimatedValue value={metrics.posts} />
+                      <>
+                        <AnimatedValue value={metrics.posts} />
+                        <span className="report-delivery__posts-unit">Posts</span>
+                      </>
                     )}
                   </p>
-                  <p className="report-delivery__label">Campaign Posts</p>
+                  {targetPosts != null ? (
+                    <p className="report-delivery__label">Campaign Posts</p>
+                  ) : null}
                 </div>
                 {targetPosts != null ? (
                   <span className="report-delivery__pct">
@@ -378,11 +395,7 @@ export function CampaignReportView({
                     <span className="report-progress__glow" aria-hidden="true" />
                   </div>
                 </div>
-              ) : (
-                <p className="report-card__hint">
-                  Tracked posts delivered in this campaign.
-                </p>
-              )}
+              ) : null}
             </div>
           </section>
         </section>
