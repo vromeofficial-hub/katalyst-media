@@ -135,7 +135,7 @@ export async function refreshCampaignSoundchartsWithClient(
   const { data: campaign, error: campaignError } = await supabase
     .from("campaigns")
     .select(
-      "created_at, tiktok_sound_id, soundcharts_song_uuid, sound_usage_count",
+      "created_at, tiktok_sound_id, sound_title, sound_artist, soundcharts_song_uuid, sound_usage_count",
     )
     .eq("id", campaignId)
     .single();
@@ -170,7 +170,10 @@ export async function refreshCampaignSoundchartsWithClient(
   try {
     let songUuid = campaign.soundcharts_song_uuid;
     if (!songUuid) {
-      const resolved = await resolveSoundchartsSong(soundId);
+      const resolved = await resolveSoundchartsSong(soundId, {
+        title: campaign.sound_title,
+        artist: campaign.sound_artist,
+      });
       songUuid = resolved.uuid;
       const { error } = await supabase
         .from("campaigns")

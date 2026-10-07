@@ -10,6 +10,52 @@ import {
 } from "../src/lib/soundcharts/credentials";
 import { summarizeSoundTracking } from "../src/lib/portal/metrics";
 
+for (const scenario of ["verified", "different", "ambiguous", "forbidden", "paginated"] as const) {
+  test(`reverse lookup fallback requires a verified exact sound: ${scenario}`, async () => {
+    const originalFetch = global.fetch;
+    const originalId = process.env.SOUNDCHARTS_CLIENT_ID;
+    const originalSecret = process.env.SOUNDCHARTS_CLIENT_SECRET;
+    process.env.SOUNDCHARTS_CLIENT_ID = "fixture";
+    process.env.SOUNDCHARTS_CLIENT_SECRET = "fixture-secret";
+    clearSoundchartsAccessToken();
+    const paths: string[] = [];
+    global.fetch = (async (input) => {
+      const url = new URL(String(input));
+      paths.push(url.pathname);
+      if (url.pathname.includes("/oauth/token")) return Response.json({ access_token: "fixture", expires_in: 900 });
+      if (url.pathname.includes("/by-platform/")) return Response.json({}, { status: scenario === "forbidden" ? 403 : 404 });
+      if (url.pathname.includes("/search/")) return Response.json({ items: [
+        { uuid: "song-a", name: "Example Song", creditName: "Example Artist" },
+        ...(scenario === "ambiguous" ? [{ uuid: "song-b", name: "Example Song", creditName: "Example Artist" }] : []),
+      ] });
+      if (url.pathname.includes("/identifiers")) {
+        expect(url.searchParams.get("onlyDefault")).toBe("false");
+        if (scenario === "paginated" && url.searchParams.get("offset") === "0") {
+          return Response.json({ items: [{ platformCode: "tiktok", identifier: "other" }], page: { next: "next-page" } });
+        }
+        return Response.json({ items: [
+          { platformCode: "spotify", identifier: "exact" },
+          { platformCode: "tiktok", identifier: scenario === "different" ? "other" : "exact" },
+        ], page: { next: null } });
+      }
+      throw new Error(`Unexpected request ${url.pathname}`);
+    }) as typeof fetch;
+    try {
+      const result = resolveSoundchartsSong("exact", { title: "Example Song", artist: "Example Artist" });
+      if (scenario === "verified" || scenario === "paginated") expect((await result).uuid).toBe("song-a");
+      else await expect(result).rejects.toMatchObject({ status: scenario === "forbidden" ? 403 : 404, stage: "lookup" });
+      if (scenario === "forbidden") expect(paths.some((path) => path.includes("/search/"))).toBe(false);
+    } finally {
+      global.fetch = originalFetch;
+      if (originalId == null) delete process.env.SOUNDCHARTS_CLIENT_ID;
+      else process.env.SOUNDCHARTS_CLIENT_ID = originalId;
+      if (originalSecret == null) delete process.env.SOUNDCHARTS_CLIENT_SECRET;
+      else process.env.SOUNDCHARTS_CLIENT_SECRET = originalSecret;
+      clearSoundchartsAccessToken();
+    }
+  });
+}
+
 test("uses only the exact TikTok identifier and valid counts", () => {
   const points = parseTikTokAudiencePoints(
     {

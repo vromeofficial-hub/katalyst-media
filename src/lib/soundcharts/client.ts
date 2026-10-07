@@ -74,7 +74,7 @@ async function requestSoundchartsJson<T extends SoundchartsEnvelope>(
     throw new SoundchartsRequestError(
       `Soundcharts request failed (${path}): ${errorDetail(payload, response.status)}`,
       response.status,
-      path.includes("/by-platform/") ? "lookup" : "audience",
+      path.includes("/audience/") ? "audience" : "lookup",
     );
   }
   return payload;
@@ -82,10 +82,47 @@ async function requestSoundchartsJson<T extends SoundchartsEnvelope>(
 
 export async function resolveSoundchartsSong(
   tiktokSoundId: string,
+  metadata?: { title?: string | null; artist?: string | null },
 ): Promise<{ uuid: string; name: string | null; creditName: string | null }> {
-  const payload = await requestSoundchartsJson<SongByPlatformResponse>(
-    `/api/v2.25/song/by-platform/tiktok/${encodeURIComponent(tiktokSoundId)}`,
-  );
+  let payload: SongByPlatformResponse;
+  try {
+    payload = await requestSoundchartsJson<SongByPlatformResponse>(
+      `/api/v2.25/song/by-platform/tiktok/${encodeURIComponent(tiktokSoundId)}`,
+    );
+  } catch (error) {
+    if (!(error instanceof SoundchartsRequestError) || error.status !== 404 ||
+        !metadata?.title?.trim() || !metadata.artist?.trim()) throw error;
+
+    // Soundcharts' reverse index can miss a sound already listed on a song.
+    // Metadata only finds candidates; the exact TikTok ID proves the mapping.
+    const search = await requestSoundchartsJson<SoundchartsEnvelope & {
+      items?: NonNullable<SongByPlatformResponse["object"]>[];
+    }>(`/api/v2/song/search/${encodeURIComponent(`${metadata.title.trim()} ${metadata.artist.trim()}`)}?limit=20`);
+    const normalize = (value?: string | null) => value?.trim().toLowerCase().replace(/\s+/g, " ");
+    const candidates = [...new Map((search.items ?? [])
+      .filter((song) => song.uuid && normalize(song.name) === normalize(metadata.title) &&
+        normalize(song.creditName) === normalize(metadata.artist))
+      .map((song) => [song.uuid!, song])).values()];
+    // Bound API work and refuse an incomplete/ambiguous candidate set.
+    if (!candidates.length || candidates.length > 5) throw error;
+    const matches: NonNullable<SongByPlatformResponse["object"]>[] = [];
+    for (const song of candidates) {
+      for (let offset = 0; offset < 500; offset += 100) {
+        const ids = await requestSoundchartsJson<SoundchartsEnvelope & {
+          items?: { platformCode?: string; identifier?: string }[];
+          page?: { next?: string | null };
+        }>(`/api/v2/song/${encodeURIComponent(song.uuid!)}/identifiers?platform=tiktok&onlyDefault=false&limit=100&offset=${offset}`);
+        if (ids.items?.some((id) => id.platformCode === "tiktok" && id.identifier === tiktokSoundId)) {
+          matches.push(song);
+          break;
+        }
+        if (!ids.page?.next) break;
+        if (offset === 400) throw error;
+      }
+    }
+    if (matches.length !== 1) throw error;
+    payload = { object: matches[0] };
+  }
   const uuid = payload.object?.uuid?.trim();
   if (!uuid) {
     throw new Error(

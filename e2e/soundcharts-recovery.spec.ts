@@ -24,7 +24,7 @@ test("missing or invalid provider values never become zero observations", () => 
   ]);
 });
 
-for (const scenario of ["not_found", "authentication", "empty", "count"] as const) {
+for (const scenario of ["not_found", "authentication", "empty", "count", "verified_empty"] as const) {
   test(`refresh handles ${scenario} without inventing or erasing counts`, async () => {
     const originalFetch = global.fetch;
     const originalId = process.env.SOUNDCHARTS_CLIENT_ID;
@@ -36,6 +36,7 @@ for (const scenario of ["not_found", "authentication", "empty", "count"] as cons
       id: "campaign-fixture", created_at: "2026-10-01T00:00:00Z",
       tiktok_sound_id: "exact", soundcharts_song_uuid: null,
       sound_usage_count: scenario === "empty" ? 25 : null,
+      sound_title: "Example Song", sound_artist: "Example Artist",
     };
     const observations: Record<string, unknown>[] = [];
     const client = { from(table: string) {
@@ -68,10 +69,16 @@ for (const scenario of ["not_found", "authentication", "empty", "count"] as cons
           : Response.json({ access_token: "fixture-token", expires_in: 900 });
       }
       if (url.includes("/by-platform/")) {
-        return scenario === "not_found"
+        return scenario === "not_found" || scenario === "verified_empty"
           ? Response.json({ errors: [{ message: "No song found" }] }, { status: 404 })
           : Response.json({ object: { uuid: "11111111-1111-4111-8111-111111111111" } });
       }
+      if (url.includes("/search/")) return Response.json({ items: scenario === "verified_empty" ? [
+        { uuid: "verified-song", name: "Example Song", creditName: "Example Artist" },
+      ] : [] });
+      if (url.includes("/identifiers")) return Response.json({ items: [
+        { platformCode: "tiktok", identifier: "exact" },
+      ] });
       return Response.json({ items: scenario === "count" ? [{
         date: "2026-10-06", plots: [{ identifier: "exact", value: 42 }, { identifier: "different", value: 999 }],
       }] : [] });
@@ -79,16 +86,17 @@ for (const scenario of ["not_found", "authentication", "empty", "count"] as cons
     try {
       if (scenario === "not_found" || scenario === "authentication") {
         await expect(refreshCampaignSoundchartsWithClient(client, "campaign-fixture")).rejects.toThrow(
-          scenario === "not_found" ? "not linked" : "check failed",
+          scenario === "not_found" ? "could not resolve" : "check failed",
         );
         expect(campaign.sound_tracking_status).toBe(scenario === "not_found" ? "not_found" : "error");
         expect(campaign.sound_usage_count).toBeNull();
         expect(observations).toHaveLength(0);
       } else {
         const result = await refreshCampaignSoundchartsWithClient(client, "campaign-fixture");
-        expect(campaign.sound_tracking_status).toBe(scenario === "empty" ? "no_data" : "ready");
-        expect(result.creationCount).toBe(scenario === "empty" ? 25 : 42);
-        expect(observations).toHaveLength(scenario === "empty" ? 0 : 1);
+        expect(campaign.sound_tracking_status).toBe(scenario === "count" ? "ready" : "no_data");
+        expect(result.creationCount).toBe(scenario === "empty" ? 25 : scenario === "verified_empty" ? null : 42);
+        expect(observations).toHaveLength(scenario === "count" ? 1 : 0);
+        if (scenario === "verified_empty") expect(campaign.soundcharts_song_uuid).toBe("verified-song");
         if (scenario === "count") expect(observations[0]).toMatchObject({
           sound_id: "exact", creation_count: 42, provider_data_date: "2026-10-06",
         });

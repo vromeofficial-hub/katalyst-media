@@ -322,6 +322,9 @@ export async function createCampaignFromSound(formData: FormData) {
 
   if (error) throw new Error(error.message);
 
+  // Start tracking from the pasted URL immediately; a provider outage must
+  // not undo campaign creation. The refresh records its status for the UI.
+  await refreshCampaignSoundchartsWithClient(supabase, data.id).catch(() => null);
   await insertCampaignSnapshot(supabase, data.id);
 
   revalidatePath("/admin");
@@ -418,12 +421,14 @@ export async function attachCampaignSound(campaignId: string, soundUrl: string) 
     await removePortalAssetWithClient(supabase, campaign.artwork_url);
   }
 
+  const tracked = await refreshCampaignSoundchartsWithClient(supabase, campaignId)
+    .catch(() => null);
   revalidateCampaign(campaignId, campaign.share_token);
   revalidatePath(`/admin/clients/${campaign.client_id}`);
   return {
     sameSound,
-    usageRetrieved: sameSound && campaign.sound_usage_count != null,
-    usageCount: sameSound ? campaign.sound_usage_count : null,
+    usageRetrieved: tracked?.creationCount != null || (sameSound && campaign.sound_usage_count != null),
+    usageCount: tracked?.creationCount ?? (sameSound ? campaign.sound_usage_count : null),
     sound,
   };
 }
@@ -1296,4 +1301,3 @@ async function removePortalAssetWithClient(
     console.error("Could not remove old portal asset", error.message);
   }
 }
-
