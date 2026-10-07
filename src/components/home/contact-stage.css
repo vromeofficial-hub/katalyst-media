@@ -310,7 +310,9 @@
   }
 
   .contact-stage__glow {
-    left: calc(var(--sidebar-width) + 2%);
+    /* Anchor the glow to the divider, independent of viewport width. */
+    left: var(--sidebar-width);
+    transform: translateY(-52%);
   }
 
   .contact-hud-slot {
