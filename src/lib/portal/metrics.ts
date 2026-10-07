@@ -469,7 +469,7 @@ export type SoundTrackingSummary = {
 };
 
 /**
- * Soundcharts' provider date is the chart date. `checked_at` only says when
+ * The provider observation date is the chart date. `checked_at` only says when
  * Katalyst looked, so it must never create a synthetic fresh point.
  */
 export function summarizeSoundTracking(

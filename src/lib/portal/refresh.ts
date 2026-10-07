@@ -10,14 +10,8 @@
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { calculateMetrics, reportSnapshotDate } from "@/lib/portal/metrics";
-import {
-  getCampaignStartTikTokAudiencePoint,
-  getLatestTikTokAudiencePoint,
-  resolveSoundchartsSong,
-  type SoundchartsAudiencePoint,
-} from "@/lib/soundcharts/client";
-import { SoundchartsRequestError } from "@/lib/soundcharts/errors";
-import { soundTrackingMessage, type SoundTrackingStatus } from "@/lib/portal/sound-tracking";
+import { getApifySoundCount, SoundCountError } from "@/lib/apify/sound-count";
+import { soundTrackingMessage } from "@/lib/portal/sound-tracking";
 import type { Database } from "@/lib/supabase/database.types";
 import { tiktokProvider } from "@/lib/tiktok/provider";
 
@@ -57,11 +51,11 @@ export async function insertSnapshot(
   if (error && error.code !== "23505") throw new Error(error.message);
 }
 
-async function upsertSoundchartsSnapshot(
+async function upsertSoundCountSnapshot(
   supabase: PortalClient,
   campaignId: string,
   soundId: string,
-  point: SoundchartsAudiencePoint,
+  point: { providerDataDate: string; creationCount: number; runId: string },
   checkedAt: string,
 ) {
   const key = {
@@ -83,6 +77,8 @@ async function upsertSoundchartsSnapshot(
       .from("sound_metric_snapshots")
       .update({
         creation_count: point.creationCount,
+        source: "apify",
+        provider_run_id: point.runId,
         checked_at: checkedAt,
       })
       .eq("id", existing.id);
@@ -93,6 +89,8 @@ async function upsertSoundchartsSnapshot(
   const { error } = await supabase.from("sound_metric_snapshots").insert({
     ...key,
     creation_count: point.creationCount,
+    source: "apify",
+    provider_run_id: point.runId,
     checked_at: checkedAt,
   });
   if (!error) return { inserted: true };
@@ -104,6 +102,8 @@ async function upsertSoundchartsSnapshot(
     .from("sound_metric_snapshots")
     .update({
       creation_count: point.creationCount,
+      source: "apify",
+      provider_run_id: point.runId,
       checked_at: checkedAt,
     })
     .eq("campaign_id", key.campaign_id)
@@ -113,177 +113,59 @@ async function upsertSoundchartsSnapshot(
   return { inserted: false };
 }
 
-export type SoundchartsRefreshResult = {
+export type SoundCountRefreshResult = {
   skipped: boolean;
-  songUuid: string | null;
   creationCount: number | null;
   providerDataDate: string | null;
   checkedAt: string | null;
   inserted: boolean;
-  baselineInserted: boolean;
 };
 
-/**
- * Resolve/cache the Soundcharts song and persist provider-dated TikTok video
- * totals. A stale provider date is retained as stale; the Katalyst check time
- * never substitutes for the date of the actual Soundcharts datapoint.
- */
-export async function refreshCampaignSoundchartsWithClient(
+/** Current exact-sound counts. Scheduled calls reuse today's successful check. */
+export async function refreshCampaignSoundCountWithClient(
   supabase: PortalClient,
   campaignId: string,
-): Promise<SoundchartsRefreshResult> {
-  const { data: campaign, error: campaignError } = await supabase
-    .from("campaigns")
-    .select(
-      "created_at, tiktok_sound_id, sound_title, sound_artist, soundcharts_song_uuid, sound_usage_count",
-    )
-    .eq("id", campaignId)
-    .single();
-  if (campaignError) throw new Error(campaignError.message);
-  if (!campaign?.tiktok_sound_id) {
-    return {
-      skipped: true,
-      songUuid: null,
-      creationCount: campaign?.sound_usage_count ?? null,
-      providerDataDate: null,
-      checkedAt: null,
-      inserted: false,
-      baselineInserted: false,
-    };
+  options: { force?: boolean } = {},
+): Promise<SoundCountRefreshResult> {
+  const { data: campaign, error } = await supabase.from("campaigns")
+    .select("tiktok_sound_id, sound_usage_count, sound_tracking_status, sound_tracking_checked_at")
+    .eq("id", campaignId).single();
+  if (error) throw new Error(error.message);
+  const soundId = campaign?.tiktok_sound_id;
+  const today = new Date().toISOString().slice(0, 10);
+  if (!soundId) return { skipped: true, creationCount: campaign?.sound_usage_count ?? null,
+    providerDataDate: null, checkedAt: null, inserted: false };
+  // Use saved provenance to avoid treating a previous provider check as Apify data.
+  if (!options.force && campaign.sound_tracking_status === "ready") {
+    const { data: existing, error: cacheError } = await supabase.from("sound_metric_snapshots")
+      .select("creation_count, checked_at").eq("campaign_id", campaignId)
+      .eq("sound_id", soundId).eq("provider_data_date", today).eq("source", "apify").maybeSingle();
+    if (cacheError) throw new Error(cacheError.message);
+    if (existing) return { skipped: true, creationCount: existing.creation_count,
+      providerDataDate: today, checkedAt: existing.checked_at, inserted: false };
   }
-
-  const soundId = campaign.tiktok_sound_id;
-  async function saveStatus(status: SoundTrackingStatus) {
-    const { error } = await supabase
-      .from("campaigns")
-      .update({
-        sound_tracking_status: status,
-        sound_tracking_checked_at: new Date().toISOString(),
-      })
-      .eq("id", campaignId)
-      .eq("tiktok_sound_id", soundId)
-      .select("id")
-      .single();
-    if (error) throw new Error("Could not save sound tracking status");
-  }
-
   try {
-    let songUuid = campaign.soundcharts_song_uuid;
-    if (!songUuid) {
-      const resolved = await resolveSoundchartsSong(soundId, {
-        title: campaign.sound_title,
-        artist: campaign.sound_artist,
-      });
-      songUuid = resolved.uuid;
-      const { error } = await supabase
-        .from("campaigns")
-        .update({ soundcharts_song_uuid: songUuid })
-        .eq("id", campaignId)
-        .eq("tiktok_sound_id", soundId)
-        .select("id")
-        .single();
-      if (error) throw new Error(error.message);
-    }
-
-    const today = new Date().toISOString().slice(0, 10);
-    const campaignStartDate = new Date(campaign.created_at)
-      .toISOString()
-      .slice(0, 10);
-    const latest = await getLatestTikTokAudiencePoint(
-      songUuid,
-      soundId,
-      today,
-    );
-    if (!latest) {
-      await saveStatus("no_data");
-      return {
-        skipped: false,
-        songUuid,
-        creationCount: campaign.sound_usage_count,
-        providerDataDate: null,
-        checkedAt: new Date().toISOString(),
-        inserted: false,
-        baselineInserted: false,
-      };
-    }
-
+    const point = await getApifySoundCount(soundId);
     const checkedAt = new Date().toISOString();
-    const { count: existingProviderPoints, error: historyError } = await supabase
-      .from("sound_metric_snapshots")
-      .select("id", { count: "exact", head: true })
-      .eq("campaign_id", campaignId)
-      .eq("sound_id", soundId)
-      .not("provider_data_date", "is", null);
-    if (historyError) throw new Error(historyError.message);
-
-    let baselineInserted = false;
-    if ((existingProviderPoints ?? 0) === 0) {
-      const baseline = await getCampaignStartTikTokAudiencePoint(
-        songUuid,
-        soundId,
-        campaignStartDate,
-        today,
-      );
-      if (
-        baseline &&
-        baseline.providerDataDate !== latest.providerDataDate
-      ) {
-        const baselineWrite = await upsertSoundchartsSnapshot(
-          supabase,
-          campaignId,
-          soundId,
-          baseline,
-          checkedAt,
-        );
-        baselineInserted = baselineWrite.inserted;
-      }
-    }
-
-    const latestWrite = await upsertSoundchartsSnapshot(
-      supabase,
-      campaignId,
-      soundId,
-      latest,
-      checkedAt,
-    );
-    const { error: updateError } = await supabase
-      .from("campaigns")
-      .update({
-        sound_usage_count: latest.creationCount,
-        updated_at: checkedAt,
-      })
-      .eq("id", campaignId)
-      .eq("tiktok_sound_id", soundId);
-    if (updateError) throw new Error(updateError.message);
-    await saveStatus("ready");
-
-    return {
-      skipped: false,
-      songUuid,
-      creationCount: latest.creationCount,
-      providerDataDate: latest.providerDataDate,
-      checkedAt,
-      inserted: latestWrite.inserted,
-      baselineInserted,
-    };
+    // A sound changed during the request must never receive another sound's count.
+    const { data: current, error: currentError } = await supabase.from("campaigns")
+      .select("tiktok_sound_id").eq("id", campaignId).single();
+    if (currentError || current?.tiktok_sound_id !== soundId) throw new SoundCountError("error");
+    const write = await upsertSoundCountSnapshot(supabase, campaignId, soundId, point, checkedAt);
+    const { error: updateError } = await supabase.from("campaigns").update({
+      sound_usage_count: point.creationCount, sound_tracking_status: "ready",
+      sound_tracking_checked_at: checkedAt, updated_at: checkedAt,
+    }).eq("id", campaignId).eq("tiktok_sound_id", soundId).select("id").single();
+    if (updateError) throw new SoundCountError("error");
+    return { skipped: false, creationCount: point.creationCount,
+      providerDataDate: point.providerDataDate, checkedAt, inserted: write.inserted };
   } catch (cause) {
-    const missingSound =
-      cause instanceof SoundchartsRequestError &&
-      cause.stage === "lookup" && cause.status === 404;
-    const status = missingSound ? "not_found" : "error";
-    // Deliberately omit response bodies, headers, tokens and credentials.
-    console.warn("[soundcharts] refresh failed", {
-      campaignId,
-      soundId,
-      stage: cause instanceof SoundchartsRequestError ? cause.stage : "refresh",
-      httpStatus: cause instanceof SoundchartsRequestError ? cause.status : null,
-      trackingStatus: status,
-    });
-    try {
-      await saveStatus(status);
-    } catch {
-      console.error("[soundcharts] could not persist tracking status", { campaignId });
-    }
+    const status = cause instanceof SoundCountError ? cause.kind : "error";
+    console.warn("[apify] sound check failed", { campaignId, soundId, status });
+    const { error: statusError } = await supabase.from("campaigns").update({
+      sound_tracking_status: status, sound_tracking_checked_at: new Date().toISOString(),
+    }).eq("id", campaignId).eq("tiktok_sound_id", soundId).select("id").single();
+    if (statusError) console.error("[apify] could not save tracking status", { campaignId });
     throw new Error(soundTrackingMessage(status));
   }
 }
@@ -355,14 +237,13 @@ export async function refreshCampaignSoundWithClient(
       "This URL now resolves to a different TikTok sound. Use Change Sound to review it first.",
     );
   }
-  // TikTok's HTML is still useful for display metadata, but Soundcharts is
+  // TikTok's HTML is still useful for display metadata, but Apify is
   // now the authoritative source for reportable creation counts.
   const nextUsage = campaign.sound_usage_count;
 
   const update: {
     tiktok_sound_url: string;
     tiktok_sound_id: string;
-    sound_usage_count: number | null;
     updated_at: string;
     sound_title?: string;
     sound_artist?: string;
@@ -370,7 +251,6 @@ export async function refreshCampaignSoundWithClient(
   } = {
     tiktok_sound_url: sound.soundUrl,
     tiktok_sound_id: sound.soundId,
-    sound_usage_count: nextUsage,
     updated_at: new Date().toISOString(),
   };
   if (sound.title) update.sound_title = sound.title;
@@ -515,7 +395,6 @@ export type CampaignRefreshResult = {
     after: number | null;
     usageRetrieved: boolean;
     skipped?: boolean;
-    songUuid?: string | null;
     providerDataDate?: string | null;
     checkedAt?: string | null;
     snapshotInserted?: boolean;
@@ -557,22 +436,21 @@ export async function refreshCampaignDataWithClient(
 
   if (beforeCampaign?.tiktok_sound_id) {
     try {
-      const tracked = await refreshCampaignSoundchartsWithClient(
+      const tracked = await refreshCampaignSoundCountWithClient(
         supabase,
         campaignId,
       );
       soundResult.after = tracked.creationCount;
       soundResult.usageRetrieved = tracked.creationCount != null;
-      soundResult.songUuid = tracked.songUuid;
       soundResult.providerDataDate = tracked.providerDataDate;
       soundResult.checkedAt = tracked.checkedAt;
       soundResult.snapshotInserted =
-        tracked.inserted || tracked.baselineInserted;
+        tracked.inserted;
     } catch (error) {
       soundErrors.push(
         error instanceof Error
           ? error.message
-          : "Soundcharts refresh failed",
+          : "Sound count check failed",
       );
     }
   } else {

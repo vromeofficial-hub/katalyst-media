@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { integerAxisTicks } from "../src/lib/portal/chart-axis";
-import { refreshCampaignSoundchartsWithClient, type PortalClient } from "../src/lib/portal/refresh";
+import { refreshCampaignSoundCountWithClient, type PortalClient } from "../src/lib/portal/refresh";
 import { parseTikTokAudiencePoints } from "../src/lib/soundcharts/client";
-import { clearSoundchartsAccessToken } from "../src/lib/soundcharts/credentials";
+
 
 test("integer axes have distinct labels for small counts and negative daily changes", () => {
   expect(integerAxisTicks(0, 1)).toEqual([1, 0]);
@@ -24,18 +24,19 @@ test("missing or invalid provider values never become zero observations", () => 
   ]);
 });
 
-for (const scenario of ["not_found", "authentication", "empty", "count", "verified_empty"] as const) {
+for (const scenario of ["not_found", "authentication", "empty", "count", "zero", "cached", "forced", "changed"] as const) {
   test(`refresh handles ${scenario} without inventing or erasing counts`, async () => {
     const originalFetch = global.fetch;
-    const originalId = process.env.SOUNDCHARTS_CLIENT_ID;
-    const originalSecret = process.env.SOUNDCHARTS_CLIENT_SECRET;
-    process.env.SOUNDCHARTS_CLIENT_ID = "fixture";
-    process.env.SOUNDCHARTS_CLIENT_SECRET = "fixture-secret";
-    clearSoundchartsAccessToken();
+    const originalToken = process.env.APIFY_API_TOKEN;
+    process.env.APIFY_API_TOKEN = "fixture-token";
+    let requests = 0;
+    let campaignReads = 0;
+    const now = new Date().toISOString();
     const campaign: Record<string, unknown> = {
       id: "campaign-fixture", created_at: "2026-10-01T00:00:00Z",
-      tiktok_sound_id: "exact", soundcharts_song_uuid: null,
-      sound_usage_count: scenario === "empty" ? 25 : null,
+      tiktok_sound_id: "123", soundcharts_song_uuid: null,
+      sound_usage_count: 25,
+      sound_tracking_status: scenario === "cached" ? "ready" : "pending",
       sound_title: "Example Song", sound_artist: "Example Artist",
     };
     const observations: Record<string, unknown>[] = [];
@@ -50,10 +51,14 @@ for (const scenario of ["not_found", "authentication", "empty", "count", "verifi
         then(resolve: (value: unknown) => unknown) {
           if (write) {
             if (table === "campaigns") Object.assign(campaign, write);
-            else if (insert) observations.push(write);
+            else if (insert || scenario === "forced") observations.push(write);
           }
+          if (table === "campaigns" && !write) campaignReads++;
           return Promise.resolve(resolve({
-            data: table === "campaigns" ? campaign : null,
+            data: table === "campaigns"
+              ? (scenario === "changed" && campaignReads > 1 ? { ...campaign, tiktok_sound_id: "456" } : campaign)
+              : scenario === "cached" && !write ? { creation_count: 25, checked_at: now }
+                : scenario === "forced" && !write ? { id: "existing-observation" } : null,
             count: 1, error: null,
           }));
         },
@@ -61,54 +66,43 @@ for (const scenario of ["not_found", "authentication", "empty", "count", "verifi
       return query;
     } } as unknown as PortalClient;
 
-    global.fetch = (async (input) => {
+    global.fetch = (async (input, init) => {
+      requests++;
       const url = String(input);
-      if (url.includes("/oauth/token")) {
-        return scenario === "authentication"
-          ? Response.json({ error: "invalid_client" }, { status: 401 })
-          : Response.json({ access_token: "fixture-token", expires_in: 900 });
+      expect(new Headers(init?.headers).get("Authorization")).toBe("Bearer fixture-token");
+      expect(url).not.toContain("fixture-token");
+      if (url.includes("/runs?")) {
+        const body = JSON.parse(String(init?.body));
+        expect(body).toMatchObject({ sounds: ["123"], includeVideoFields: false, enrichCreators: false, downloadCovers: false });
+        expect(new URL(url).searchParams.get("maxTotalChargeUsd")).toBe("0.01");
+        return scenario === "authentication" ? Response.json({}, { status: 401 })
+          : Response.json({ data: { status: "SUCCEEDED", id: "test-run", defaultDatasetId: "test-dataset" } });
       }
-      if (url.includes("/by-platform/")) {
-        return scenario === "not_found" || scenario === "verified_empty"
-          ? Response.json({ errors: [{ message: "No song found" }] }, { status: 404 })
-          : Response.json({ object: { uuid: "11111111-1111-4111-8111-111111111111" } });
-      }
-      if (url.includes("/search/")) return Response.json({ items: scenario === "verified_empty" ? [
-        { uuid: "verified-song", name: "Example Song", creditName: "Example Artist" },
-      ] : [] });
-      if (url.includes("/identifiers")) return Response.json({ items: [
-        { platformCode: "tiktok", identifier: "exact" },
-      ] });
-      return Response.json({ items: scenario === "count" ? [{
-        date: "2026-10-06", plots: [{ identifier: "exact", value: 42 }, { identifier: "different", value: 999 }],
-      }] : [] });
+      return Response.json([{ recordType: "sound-summary", soundId: "123",
+        runStatus: scenario === "not_found" ? "not_found" : "no_videos",
+        soundUsageCount: scenario === "empty" ? null : scenario === "zero" ? 0 : 42,
+        finishedAt: now, returnedVideos: 0 }]);
     }) as typeof fetch;
     try {
-      if (scenario === "not_found" || scenario === "authentication") {
-        await expect(refreshCampaignSoundchartsWithClient(client, "campaign-fixture")).rejects.toThrow(
-          scenario === "not_found" ? "could not resolve" : "check failed",
-        );
-        expect(campaign.sound_tracking_status).toBe(scenario === "not_found" ? "not_found" : "error");
-        expect(campaign.sound_usage_count).toBeNull();
+      if (["not_found", "authentication", "empty", "changed"].includes(scenario)) {
+        await expect(refreshCampaignSoundCountWithClient(client, "campaign-fixture")).rejects.toThrow();
+        expect(campaign.sound_tracking_status).toBe(scenario === "not_found" ? "not_found" : scenario === "empty" ? "no_data" : "error");
+        expect(campaign.sound_usage_count).toBe(25);
         expect(observations).toHaveLength(0);
       } else {
-        const result = await refreshCampaignSoundchartsWithClient(client, "campaign-fixture");
-        expect(campaign.sound_tracking_status).toBe(scenario === "count" ? "ready" : "no_data");
-        expect(result.creationCount).toBe(scenario === "empty" ? 25 : scenario === "verified_empty" ? null : 42);
-        expect(observations).toHaveLength(scenario === "count" ? 1 : 0);
-        if (scenario === "verified_empty") expect(campaign.soundcharts_song_uuid).toBe("verified-song");
-        if (scenario === "count") expect(observations[0]).toMatchObject({
-          sound_id: "exact", creation_count: 42, provider_data_date: "2026-10-06",
-        });
+        const result = await refreshCampaignSoundCountWithClient(client, "campaign-fixture", { force: scenario === "forced" });
+        expect(result.creationCount).toBe(scenario === "cached" ? 25 : scenario === "zero" ? 0 : 42);
+        expect(observations).toHaveLength(scenario === "cached" ? 0 : 1);
+        if (scenario === "cached") expect(requests).toBe(0);
+        else if (scenario === "forced") {
+          expect(result.inserted).toBe(false);
+          expect(observations[0]).toMatchObject({ creation_count: 42, source: "apify", provider_run_id: "test-run" });
+        } else expect(observations[0]).toMatchObject({ sound_id: "123", source: "apify", provider_run_id: "test-run", provider_data_date: now.slice(0, 10) });
       }
-      expect(campaign.sound_tracking_checked_at).toEqual(expect.any(String));
     } finally {
       global.fetch = originalFetch;
-      if (originalId == null) delete process.env.SOUNDCHARTS_CLIENT_ID;
-      else process.env.SOUNDCHARTS_CLIENT_ID = originalId;
-      if (originalSecret == null) delete process.env.SOUNDCHARTS_CLIENT_SECRET;
-      else process.env.SOUNDCHARTS_CLIENT_SECRET = originalSecret;
-      clearSoundchartsAccessToken();
+      if (originalToken == null) delete process.env.APIFY_API_TOKEN;
+      else process.env.APIFY_API_TOKEN = originalToken;
     }
   });
 }

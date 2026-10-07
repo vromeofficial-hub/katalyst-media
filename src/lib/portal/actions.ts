@@ -15,7 +15,7 @@ import {
   refreshCampaignDataWithClient,
   refreshCampaignPostsWithClient,
   refreshCampaignSoundWithClient,
-  refreshCampaignSoundchartsWithClient,
+  refreshCampaignSoundCountWithClient,
   refreshTikTokPostWithClient,
 } from "@/lib/portal/refresh";
 import type { ClientType } from "@/lib/supabase/database.types";
@@ -324,7 +324,7 @@ export async function createCampaignFromSound(formData: FormData) {
 
   // Start tracking from the pasted URL immediately; a provider outage must
   // not undo campaign creation. The refresh records its status for the UI.
-  await refreshCampaignSoundchartsWithClient(supabase, data.id).catch(() => null);
+  await refreshCampaignSoundCountWithClient(supabase, data.id, { force: true }).catch(() => null);
   await insertCampaignSnapshot(supabase, data.id);
 
   revalidatePath("/admin");
@@ -421,7 +421,7 @@ export async function attachCampaignSound(campaignId: string, soundUrl: string) 
     await removePortalAssetWithClient(supabase, campaign.artwork_url);
   }
 
-  const tracked = await refreshCampaignSoundchartsWithClient(supabase, campaignId)
+  const tracked = await refreshCampaignSoundCountWithClient(supabase, campaignId, { force: true })
     .catch(() => null);
   revalidateCampaign(campaignId, campaign.share_token);
   revalidatePath(`/admin/clients/${campaign.client_id}`);
@@ -439,7 +439,7 @@ export async function refreshCampaignSound(campaignId: string) {
   const metadata = await refreshCampaignSoundWithClient(supabase, campaignId)
     .catch(() => null);
   let trackingError: string | undefined;
-  const tracked = await refreshCampaignSoundchartsWithClient(supabase, campaignId).catch((cause) => {
+  const tracked = await refreshCampaignSoundCountWithClient(supabase, campaignId, { force: true }).catch((cause) => {
     trackingError = cause instanceof Error ? cause.message : "Creation count check failed";
     return null;
   });
@@ -685,7 +685,7 @@ async function addFetchedPost(
 
   await insertSnapshot(supabase, inserted.id, post);
 
-  // Post metadata can still fill missing artwork. Soundcharts is the
+  // Post metadata can still fill missing artwork. Apify is the
   // authoritative source for reportable TikTok creation counts.
   const { data: campaign } = await supabase
     .from("campaigns")

@@ -266,6 +266,8 @@ export type Database = {
           captured_at: string;
           provider_data_date: string | null;
           checked_at: string;
+          source: string;
+          provider_run_id: string | null;
         };
         Insert: {
           id?: string;
@@ -275,6 +277,8 @@ export type Database = {
           captured_at?: string;
           provider_data_date?: string | null;
           checked_at?: string;
+          source?: string;
+          provider_run_id?: string | null;
         };
         Update: {
           id?: string;
@@ -284,6 +288,8 @@ export type Database = {
           captured_at?: string;
           provider_data_date?: string | null;
           checked_at?: string;
+          source?: string;
+          provider_run_id?: string | null;
         };
         Relationships: [
           {

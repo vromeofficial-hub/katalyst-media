@@ -4,9 +4,9 @@ export type SoundTrackingStatus = "pending" | "not_found" | "no_data" | "error" 
 export function soundTrackingMessage(status?: SoundTrackingStatus | null): string {
   switch (status) {
     case "not_found":
-      return "Soundcharts could not resolve this exact TikTok sound yet.";
+      return "The tracker could not resolve this exact TikTok sound yet.";
     case "no_data":
-      return "Soundcharts has not returned a count for this exact sound yet.";
+      return "The tracker has not returned a count for this exact sound yet.";
     case "error":
       return "The latest count check failed. Tracking will retry automatically.";
     default:
