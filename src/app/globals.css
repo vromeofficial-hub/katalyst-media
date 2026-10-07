@@ -146,3 +146,50 @@
     background-size: 48px 48px;
   }
 }
+
+/* Keep wide-screen sections on the same content frame beside the sidebar. */
+@media (min-width: 1600px) {
+  #overview .home-hero-layout {
+    max-width: 1920px;
+    grid-template-columns: clamp(34rem, 27.5vw, 44rem) minmax(0, 1fr);
+    column-gap: clamp(1.5rem, 2vw, 3rem);
+    padding-inline: clamp(2rem, 2.5vw, 4rem);
+  }
+
+  #overview .hero-copy__heading {
+    font-size: clamp(3.75rem, 3.125vw, 5rem);
+  }
+
+  #overview .hero-copy__eyebrow {
+    font-size: clamp(0.68rem, 0.58vw, 0.9rem);
+  }
+
+  #overview .hero-copy__carousel {
+    margin-left: -2rem;
+  }
+
+  #overview .hero-creator-reel {
+    --creator-reel-card-width: clamp(12.15rem, 11.5vw, 18rem);
+    --creator-reel-gap: clamp(0.82rem, 0.8vw, 1.25rem);
+  }
+
+  .home-ending .contact-stage__copy,
+  .home-ending .site-footer__inner {
+    width: calc(100% - var(--sidebar-width));
+    max-width: 1920px;
+    margin-left: calc(var(--sidebar-width) + max(0px, (100% - var(--sidebar-width) - 1920px) / 2));
+    padding-inline: clamp(2rem, 2.5vw, 4rem);
+  }
+
+  .home-ending .contact-stage__headline {
+    font-size: clamp(2.55rem, 2.8vw, 4.5rem);
+    white-space: normal;
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+
+  .home-ending .contact-stage__description {
+    max-width: 48rem;
+    font-size: clamp(0.95rem, 0.8vw, 1.2rem);
+  }
+}

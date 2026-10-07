@@ -82,7 +82,7 @@ export function OverviewSection() {
     >
       <DirectionalLineBackground className="opacity-[0.48]" />
 
-      <div className="relative mx-auto grid w-full max-w-[1680px] items-center gap-8 px-5 py-12 md:gap-9 md:px-8 md:py-14 lg:grid-cols-[minmax(26rem,28rem)_minmax(0,1fr)] lg:gap-x-5 lg:gap-y-0 lg:py-8 lg:pl-8 lg:pr-8 xl:grid-cols-[34rem_minmax(0,1fr)] xl:gap-x-6">
+      <div className="home-hero-layout relative mx-auto grid w-full max-w-[1680px] items-center gap-8 px-5 py-12 md:gap-9 md:px-8 md:py-14 lg:grid-cols-[minmax(26rem,28rem)_minmax(0,1fr)] lg:gap-x-5 lg:gap-y-0 lg:py-8 lg:pl-8 lg:pr-8 xl:grid-cols-[34rem_minmax(0,1fr)] xl:gap-x-6">
         <div className="min-w-0">
           <p className="hero-copy__eyebrow label-caps text-[0.68rem] tracking-[0.14em] text-acid-lime xl:whitespace-nowrap">
             {company.heroEyebrow}
