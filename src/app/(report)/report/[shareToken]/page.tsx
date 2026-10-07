@@ -1,13 +1,29 @@
 import type { Metadata } from "next";
 import { Wordmark } from "@/components/ui/Wordmark";
 import { CampaignReportView } from "@/components/report/CampaignReportView";
-import { createPublicClient } from "@/lib/supabase/server";
-import type { SharedReport } from "@/lib/portal/report";
+import { getSharedReport } from "@/lib/portal/shared-report";
+import { resolveReportTitles } from "@/lib/portal/report-titles";
+import { company } from "@/content/company";
 
-export const metadata: Metadata = {
-  title: "Campaign Report | Katalyst Media",
-  robots: { index: false, follow: false, nocache: true },
-};
+export async function generateMetadata({ params }: {
+  params: Promise<{ shareToken: string }>;
+}): Promise<Metadata> {
+  const { shareToken } = await params;
+  const report = await getSharedReport(shareToken);
+  const names = report?.campaign ? resolveReportTitles(report.campaign, report.client) : null;
+  const label = names ? [names.artist, names.title].filter(Boolean).join(" — ") : "Campaign report unavailable";
+  const title = `${label} | Katalyst Media`;
+  const description = names ? `View the campaign report for ${label}, powered by Katalyst Media.` : "This campaign report is no longer available.";
+  const url = `${company.url}/report/${encodeURIComponent(shareToken)}`;
+  const images = names ? [{ url: `${url}/preview-image`, width: 1200, height: 630, alt: `${label} — campaign report` }] : [];
+  return {
+    title: { absolute: title }, description,
+    robots: { index: false, follow: false, nocache: true },
+    alternates: { canonical: url },
+    openGraph: { title, description, url, siteName: company.name, type: "website", images },
+    twitter: { card: "summary_large_image", title, description, images },
+  };
+}
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -18,13 +34,7 @@ export default async function ReportPage({
   params: Promise<{ shareToken: string }>;
 }) {
   const { shareToken } = await params;
-  const supabase = createPublicClient();
-
-  const { data, error } = await supabase.rpc("fetch_shared_report", {
-    p_token: shareToken,
-  });
-
-  const report = error ? null : (data as SharedReport | null);
+  const report = await getSharedReport(shareToken);
 
   if (!report?.campaign) {
     return (

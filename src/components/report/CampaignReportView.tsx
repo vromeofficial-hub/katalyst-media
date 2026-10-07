@@ -1,3 +1,4 @@
+import { resolveReportTitles } from "@/lib/portal/report-titles";
 
 import { campaignPostTarget } from "@/lib/portal/post-target";
 import {
@@ -18,8 +19,6 @@ import {
   buildSeriesFromCumulativeSnapshots,
   calculateMetrics,
   campaignArtwork,
-  campaignSoundArtist,
-  campaignSoundTitle,
   formatCompactNumber,
   formatFullNumber,
   formatPostsVsTargetLabel,
@@ -46,23 +45,6 @@ function statusClass(status: ReportCampaign["status"]) {
 function statusLabelUi(status: ReportCampaign["status"]) {
   if (status === "active") return "Active";
   return "Ended";
-}
-
-function resolveTitles(
-  campaign: ReportCampaign,
-  client: ReportClient | null,
-): { title: string; artist: string | null } {
-  const release = campaignSoundTitle(campaign) || "";
-  const display = campaign.display_title?.trim() || "";
-  const title = display || release || client?.name?.trim() || "Campaign";
-  const soundArtist = campaignSoundArtist(campaign) || "";
-  const artist =
-    soundArtist && soundArtist.toLowerCase() !== title.toLowerCase()
-      ? soundArtist
-      : client?.name?.trim() || "";
-  const artistLine = artist.toLowerCase() !== title.toLowerCase() ? artist : null;
-
-  return { title, artist: artistLine };
 }
 
 type SnapshotMetric =
@@ -172,7 +154,7 @@ export function CampaignReportView({
   const postList = posts ?? [];
   const metrics = calculateMetrics(postList);
   const artwork = campaignArtwork(campaign);
-  const { title, artist } = resolveTitles(campaign, client);
+  const { title, artist } = resolveReportTitles(campaign, client);
 
   const targetPosts = campaignPostTarget(campaign);
   const delivery = formatPostsVsTargetLabel(
