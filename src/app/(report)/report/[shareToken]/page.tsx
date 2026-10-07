@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: {
   const title = `${label} | Katalyst Media`;
   const description = names ? `View the campaign report for ${label}, powered by Katalyst Media.` : "This campaign report is no longer available.";
   const url = `${company.url}/report/${encodeURIComponent(shareToken)}`;
-  const images = names ? [{ url: `${url}/preview-image`, width: 1200, height: 630, alt: `${label} — campaign report` }] : [];
+  const images = names ? [{ url: `${url}/preview-image?v=4`, width: 1200, height: 630, alt: `${label} — campaign report` }] : [];
   return {
     title: { absolute: title }, description,
     robots: { index: false, follow: false, nocache: true },

@@ -37,9 +37,9 @@ export default async function ReportPreview({ params }: {
   const shortArtist = artist && artist.length > 70 ? `${artist.slice(0, 67)}…` : artist;
   return new ImageResponse(
     <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", background: "#080b09", color: "#f5f5f5", padding: "40px 52px", fontFamily: "sans-serif", borderTop: "2px solid #c6ff00" }}>
-      <div style={{ display: "flex", fontSize: 23, letterSpacing: 3 }}>KATALYST<span style={{ color: "#c6ff00", marginLeft: 6 }}>MEDIA</span></div>
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "baseline", gap: 0, fontSize: 34, fontWeight: 700, letterSpacing: 0.5 }}><span>KATALYST</span><span style={{ color: "#c6ff00" }}>MEDIA</span></div>
       <div style={{ display: "flex", alignItems: "center", flex: 1, gap: 48 }}>
-        <div style={{ display: "flex", width: 360, height: 360, flexShrink: 0, borderRadius: 20, overflow: "hidden", background: "#151d10", border: "2px solid #728d26", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ display: "flex", width: 360, height: 360, flexShrink: 0, borderRadius: 20, overflow: "hidden", background: "#151d10", alignItems: "center", justifyContent: "center" }}>
           {artwork ? (
             // ImageResponse renders these pixels into the preview itself.
             // eslint-disable-next-line @next/next/no-img-element
@@ -52,7 +52,7 @@ export default async function ReportPreview({ params }: {
           <div style={{ fontSize: shortTitle.length > 55 ? 40 : shortTitle.length > 30 ? 54 : 72, fontWeight: 700, lineHeight: 1.06, letterSpacing: -2 }}>{shortTitle}</div>
         </div>
       </div>
-      <div style={{ display: "flex", fontSize: 18, color: "#929b90", justifyContent: "flex-end" }}>katalystmedia.co.uk</div>
+      <div style={{ display: "flex", fontSize: 18, color: "#929b90", justifyContent: "center" }}>katalystmedia.co.uk</div>
     </div>,
     { ...size, headers: { "Cache-Control": "no-store" } },
   );
