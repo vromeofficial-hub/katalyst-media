@@ -1060,7 +1060,12 @@ export function ProcessSection() {
       updateFromScroll();
       return () => trigger.kill();
     },
-    { dependencies: [updateFromScroll, geometry.route, layoutMode] },
+    {
+      dependencies: [updateFromScroll, geometry.route, layoutMode],
+      // Replace the old trigger on hydration / breakpoint changes. Otherwise
+      // reverse scrolling lets its stale static-motion callback win.
+      revertOnUpdate: true,
+    },
   );
 
   // Pauses the intro's blurred haze and orbit rings once the intro scene has
