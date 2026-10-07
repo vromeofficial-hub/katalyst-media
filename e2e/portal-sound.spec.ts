@@ -341,7 +341,7 @@ test.describe.serial("TikTok sound management", () => {
       .filter({ hasText: "TikTok Creations" });
     await reportCreations.scrollIntoViewIfNeeded();
     await expect(reportCreations).toContainText("222");
-    await expect(reportCreations).toContainText("0 since campaign start");
+    await expect(reportCreations).toContainText("0 since first tracked count");
     await expect(reportCreations).toContainText("Data through 16 Sept 2026");
 
     // Case F: remove only sound-specific active data.

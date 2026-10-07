@@ -586,7 +586,7 @@ export function ViewsCharts({
   const creationsPending = creations.length === 0 && creationsTotal == null;
   const creationsDetail = [
     creationsGrowth != null
-      ? `${formatSignedFullNumber(creationsGrowth)} since campaign start`
+      ? `${formatSignedFullNumber(creationsGrowth)} since first tracked count`
       : null,
     creationsProviderDate
       ? `Data through ${formatChartDate(creationsProviderDate, true)}`

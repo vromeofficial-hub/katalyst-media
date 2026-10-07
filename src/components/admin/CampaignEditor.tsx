@@ -588,7 +588,8 @@ export function CampaignEditor({
                 Add Posts
               </button>
             </div>
-          ) : (
+          ) : null}
+          {posts.length > 0 || campaign.tiktok_sound_id ? (
             <ViewsCharts
               creations={creations.series}
               views={viewsSeries}
@@ -603,7 +604,7 @@ export function CampaignEditor({
               viewsTotal={metrics.views}
               showCreations={Boolean(campaign.tiktok_sound_id)}
             />
-          )}
+          ) : null}
 
           <form
             className="admin-panel space-y-3 p-5"
