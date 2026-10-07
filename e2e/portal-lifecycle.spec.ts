@@ -161,13 +161,14 @@ test.describe.serial("Disposable real-world portal lifecycle", () => {
     await expect(campaignForm.getByRole("alert")).toContainText(/post url/i);
 
     await campaignForm.locator("#tiktok_sound_url").fill(SOUND_URL);
+    await campaignForm.getByRole("switch", { name: "Post Target" }).check();
     await campaignForm.locator("#budget").fill("-1");
-    await campaignForm.locator("#target_posts").fill("2.5");
+    await campaignForm.locator("[name=target_posts]").fill("2.5");
     await campaignForm.getByRole("button", { name: /create campaign/i }).click();
     await expect(campaignForm.locator("#budget:invalid")).toHaveCount(1);
 
     await campaignForm.locator("#budget").fill("2500.50");
-    await campaignForm.locator("#target_posts").fill("3");
+    await campaignForm.locator("[name=target_posts]").fill("3");
     await campaignForm.getByRole("button", { name: /create campaign/i }).click();
     await expect(page).toHaveURL(/\/admin\/campaigns\/[^/?]+\?tab=content/, {
       timeout: 45_000,

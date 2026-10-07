@@ -1,5 +1,7 @@
 "use client";
 
+import { PostTargetControl } from "@/components/admin/PostTargetControl";
+import { readPostTargetSettings } from "@/lib/portal/post-target";
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import {
@@ -24,7 +26,6 @@ export function NewCampaignForm({
   const [creating, setCreating] = useState(false);
   const [soundUrl, setSoundUrl] = useState("");
   const [budget, setBudget] = useState("");
-  const [targetPosts, setTargetPosts] = useState("");
   const [preview, setPreview] = useState<TikTokSoundData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -79,10 +80,10 @@ export function NewCampaignForm({
         if (!budgetRaw || !Number.isFinite(budgetValue) || budgetValue < 0) {
           nextErrors.budget = "Enter a valid budget.";
         }
-        const targetRaw = String(formData.get("target_posts") || "").trim();
-        const targetValue = Number(targetRaw);
-        if (!targetRaw || !Number.isInteger(targetValue) || targetValue < 1) {
-          nextErrors.target_posts = "Enter a whole number of target posts.";
+        try {
+          readPostTargetSettings(formData);
+        } catch (error) {
+          nextErrors.target_posts = (error as Error).message;
         }
         setFieldErrors(nextErrors);
         if (Object.keys(nextErrors).length > 0) {
@@ -296,30 +297,7 @@ export function NewCampaignForm({
         ) : null}
       </div>
 
-      <div>
-        <label className="admin-label" htmlFor="target_posts">
-          Target Posts *
-        </label>
-        <input
-          id="target_posts"
-          name="target_posts"
-          type="number"
-          min="1"
-          step="1"
-          className="admin-input"
-          required
-          placeholder="30"
-          value={targetPosts}
-          onChange={(e) => setTargetPosts(e.target.value)}
-        />
-        <p className="mt-1 text-xs text-muted-grey">
-          Number of campaign posts Katalyst intends to deliver. Separate from
-          TikTok Creations.
-        </p>
-        {fieldErrors.target_posts ? (
-          <p className="admin-field-error">{fieldErrors.target_posts}</p>
-        ) : null}
-      </div>
+      <PostTargetControl error={fieldErrors.target_posts} />
 
       <div className="flex flex-wrap justify-end gap-2 pt-2">
         <Link

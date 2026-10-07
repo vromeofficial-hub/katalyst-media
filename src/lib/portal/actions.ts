@@ -1,5 +1,6 @@
 "use server";
 
+import { readPostTargetSettings } from "@/lib/portal/post-target";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import {
@@ -273,22 +274,13 @@ export async function createCampaignFromSound(formData: FormData) {
   const clientId = String(formData.get("client_id") || "").trim();
   const soundUrl = String(formData.get("tiktok_sound_url") || "").trim();
   const budgetRaw = String(formData.get("budget") || "").trim();
-  const targetRaw = String(formData.get("target_posts") || "").trim();
   const budget = Number(budgetRaw);
-  const targetPosts = Number(targetRaw);
+  const postTarget = readPostTargetSettings(formData);
 
   if (!clientId) throw new Error("Select a client");
   if (!soundUrl) throw new Error("TikTok sound URL is required");
   if (!budgetRaw || !Number.isFinite(budget) || budget < 0 || budget > 100_000_000) {
     throw new Error("Enter a valid budget");
-  }
-  if (
-    !targetRaw ||
-    !Number.isInteger(targetPosts) ||
-    targetPosts < 1 ||
-    targetPosts > 10_000
-  ) {
-    throw new Error("Target posts must be a whole number between 1 and 10,000");
   }
 
   const { data: client } = await supabase
@@ -314,7 +306,8 @@ export async function createCampaignFromSound(formData: FormData) {
       artwork_url: null,
       status: "active",
       budget,
-      target_posts: targetPosts,
+      target_posts: postTarget.target_posts ?? null,
+      post_target_enabled: postTarget.post_target_enabled,
       tiktok_sound_url: sound.soundUrl,
       tiktok_sound_id: sound.soundId,
       sound_title: title,
@@ -344,21 +337,12 @@ export async function updateCampaignBudget(
   const supabase = await requireUser();
   const budgetRaw = String(formData.get("budget") || "").trim();
   const budget = Number(budgetRaw);
-  const targetRaw = String(formData.get("target_posts") || "").trim();
-  const targetPosts = Number(targetRaw);
+  const postTarget = readPostTargetSettings(formData);
   const displayTitle =
     String(formData.get("display_title") || "").trim() || null;
 
   if (!budgetRaw || !Number.isFinite(budget) || budget < 0 || budget > 100_000_000) {
     throw new Error("Enter a valid budget");
-  }
-  if (
-    !targetRaw ||
-    !Number.isInteger(targetPosts) ||
-    targetPosts < 1 ||
-    targetPosts > 10_000
-  ) {
-    throw new Error("Target posts must be a whole number between 1 and 10,000");
   }
   if (displayTitle && displayTitle.length > 160) {
     throw new Error("Display title must be 160 characters or fewer");
@@ -369,7 +353,7 @@ export async function updateCampaignBudget(
     .from("campaigns")
     .update({
       budget,
-      target_posts: targetPosts,
+      ...postTarget,
       display_title: displayTitle,
       updated_at: new Date().toISOString(),
     })

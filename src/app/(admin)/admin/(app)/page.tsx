@@ -1,3 +1,5 @@
+
+import { campaignPostTarget } from "@/lib/portal/post-target";
 import Link from "next/link";
 import { Plus, Search } from "lucide-react";
 import { StatusBadge } from "@/components/admin/AdminSidebar";
@@ -340,7 +342,7 @@ export default async function CampaignLibraryPage({
                   <div className="mt-3 grid grid-cols-2 gap-x-3 gap-y-1 text-[0.72rem] text-soft-grey">
                     <span>{formatCompactNumber(metrics.views)} Views</span>
                     <span>
-                      {formatPostsVsTarget(metrics.posts, campaign.target_posts)}{" "}
+                      {formatPostsVsTarget(metrics.posts, campaignPostTarget(campaign))}{" "}
                       Posts
                     </span>
                     <span>

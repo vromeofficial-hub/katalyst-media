@@ -13,7 +13,8 @@ export type ReportCampaign = {
   artwork_url: string | null;
   sound_artwork_url: string | null;
   sound_usage_count: number | null;
-  target_posts: number;
+  target_posts: number | null;
+  post_target_enabled?: boolean;
 };
 
 export type ReportClient = {

@@ -1,5 +1,7 @@
 "use client";
 
+import { campaignPostTarget } from "@/lib/portal/post-target";
+
 import {
   createTikTokPostManual,
   deleteSelectedTikTokPosts,
@@ -63,6 +65,7 @@ import {
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { PostTargetControl } from "@/components/admin/PostTargetControl";
 import { Music2 } from "lucide-react";
 
 const tabs = ["overview", "content", "sharing"] as const;
@@ -172,7 +175,10 @@ export function CampaignEditor({
   const reportUrl = campaign.share_token
     ? `${company.url}/report/${campaign.share_token}`
     : null;
-  const postsVsTarget = formatPostsVsTarget(metrics.posts, campaign.target_posts);
+  const postsVsTarget = formatPostsVsTarget(
+    metrics.posts,
+    campaignPostTarget(campaign),
+  );
   const viewsWeekly = weeklyDeltaFromSnapshots(
     campaignSnapshots.map((s) => ({
       captured_at: s.captured_at,
@@ -640,23 +646,11 @@ export function CampaignEditor({
                 />
               </div>
               <div>
-                <label className="admin-label" htmlFor="campaign-target-posts">
-                  Target Posts
-                </label>
-                <input
-                  id="campaign-target-posts"
-                  name="target_posts"
-                  type="number"
-                  min="1"
-                  step="1"
-                  className="admin-input"
-                  defaultValue={campaign.target_posts}
-                  placeholder="e.g. 30"
-                  required
+                <PostTargetControl
+                  key={campaign.id + campaign.updated_at}
+                  defaultEnabled={campaign.post_target_enabled === true}
+                  defaultTarget={campaign.target_posts}
                 />
-                <p className="mt-1 text-xs text-muted-grey">
-                  Changing target does not affect tracked metrics.
-                </p>
               </div>
             </div>
             <div>

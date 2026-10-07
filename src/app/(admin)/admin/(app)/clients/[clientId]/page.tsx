@@ -1,3 +1,5 @@
+
+import { campaignPostTarget } from "@/lib/portal/post-target";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Plus } from "lucide-react";
@@ -200,7 +202,7 @@ export default async function ClientProfilePage({
                       <span>
                         {formatPostsVsTarget(
                           metrics.posts,
-                          campaign.target_posts,
+                          campaignPostTarget(campaign),
                         )}{" "}
                         posts
                       </span>

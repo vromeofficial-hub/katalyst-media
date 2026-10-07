@@ -1,3 +1,5 @@
+
+import { campaignPostTarget } from "@/lib/portal/post-target";
 import {
   ExternalLink,
   ImageOff,
@@ -172,9 +174,10 @@ export function CampaignReportView({
   const artwork = campaignArtwork(campaign);
   const { title, artist } = resolveTitles(campaign, client);
 
+  const targetPosts = campaignPostTarget(campaign);
   const delivery = formatPostsVsTargetLabel(
     metrics.posts,
-    campaign.target_posts,
+    targetPosts,
   );
   const deliveryPct = Math.round(delivery.progress * 100);
   const deliveryBarPct = Math.min(100, deliveryPct);
@@ -339,11 +342,11 @@ export function CampaignReportView({
               <div className="report-delivery__row">
                 <div className="report-delivery__stats">
                   <p className="report-card__value">
-                    {campaign.target_posts != null ? (
+                    {targetPosts != null ? (
                       <>
                         <AnimatedValue value={metrics.posts} />
                         <span className="report-delivery__separator"> / </span>
-                        {formatFullNumber(Number(campaign.target_posts))}
+                        {formatFullNumber(Number(targetPosts))}
                       </>
                     ) : (
                       <AnimatedValue value={metrics.posts} />
@@ -351,13 +354,13 @@ export function CampaignReportView({
                   </p>
                   <p className="report-delivery__label">Campaign Posts</p>
                 </div>
-                {campaign.target_posts != null ? (
+                {targetPosts != null ? (
                   <span className="report-delivery__pct">
                     {deliveryPct}% complete
                   </span>
                 ) : null}
               </div>
-              {campaign.target_posts != null ? (
+              {targetPosts != null ? (
                 <div
                   className="report-progress"
                   role="progressbar"
@@ -365,7 +368,7 @@ export function CampaignReportView({
                   aria-valuemin={0}
                   aria-valuemax={Math.max(100, deliveryPct)}
                   aria-valuetext={`${metrics.posts} of ${Number(
-                    campaign.target_posts,
+                    targetPosts,
                   )} campaign posts, ${deliveryPct}% complete`}
                 >
                   <div

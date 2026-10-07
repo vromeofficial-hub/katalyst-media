@@ -63,7 +63,8 @@ export type Database = {
           status: CampaignStatus;
           budget: number;
           /** Manual Katalyst delivery goal — not TikTok Creations */
-          target_posts: number;
+          target_posts: number | null;
+          post_target_enabled: boolean;
           share_token: string;
           tiktok_sound_url: string | null;
           tiktok_sound_id: string | null;
@@ -87,7 +88,8 @@ export type Database = {
           artwork_url?: string | null;
           status?: CampaignStatus;
           budget?: number;
-          target_posts: number;
+          target_posts: number | null;
+          post_target_enabled?: boolean;
           share_token: string;
           tiktok_sound_url?: string | null;
           tiktok_sound_id?: string | null;
@@ -111,7 +113,8 @@ export type Database = {
           artwork_url?: string | null;
           status?: CampaignStatus;
           budget?: number;
-          target_posts?: number;
+          target_posts?: number | null;
+          post_target_enabled?: boolean;
           share_token?: string;
           tiktok_sound_url?: string | null;
           tiktok_sound_id?: string | null;
